@@ -230,9 +230,42 @@ Esse modelo já antecipa princípios da arquitetura MVC, mesmo antes de formaliz
 
 ## 4. Construção de um Servidor HTTP com Módulo Nativo
 
-Antes de utilizar frameworks, é pedagogicamente relevante compreender o funcionamento do módulo HTTP nativo.
+Antes de utilizar frameworks como Express, é fundamental compreender o funcionamento do módulo HTTP nativo do Node.js. Um servidor HTTP básico pode ser construído da seguinte forma:
 
 Arquivo `server.js`:
+
+```javascript
+import http from 'http';
+
+const server = http.createServer((req, res) => {
+  if (req.url === '/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok' }));
+    return;
+  }
+
+  res.writeHead(404);
+  res.end();
+});
+
+server.listen(3000);
+```
+
+Esse exemplo revela elementos centrais:
+
+O servidor é orientado a eventos.
+
+Cada requisição gera um objeto req e res.
+
+O roteamento é manual.
+
+O protocolo HTTP é manipulado explicitamente.
+
+Em aplicações reais, esse modelo rapidamente se torna complexo. A ausência de abstrações para roteamento estruturado, middlewares e tratamento centralizado de erros motiva o uso de frameworks como Express, que serão abordados posteriormente.
+
+vejam um segundo exemplo abaixo.
+
+Arquivo `server2.js`:
 
 ```javascript
 import http from "http";
