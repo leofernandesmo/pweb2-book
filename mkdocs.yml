@@ -1,4 +1,4 @@
-site_name: "Programação Web 2 - Uma abordagem usando Java/Spring"
+site_name: "Programação Web 2 - Uma abordagem usando Node/Express"
 site_description: "Material do Curso de Programação Web 2 do curso de Bacharelado em Desenvolvimento de Sistemas do IFAL-Maceió"
 site_url: "https://leofernandesmo.github.io/pweb2-book/"
 repo_url: "https://github.com/leofernandesmo/pweb2-book/"
@@ -70,7 +70,7 @@ nav:
   - Preface: preface.md
   - Chapters:
       - "0. Como User Este Material": chapters/00-how-to-use.md
-      - "1. Introdução a Web e Navegadores": chapters/01-introducao.md
+      - "1. Introdução a Programação Web": chapters/01-introducao.md
       - "2. Fundamentos do HTML": chapters/02-html-fundamentos.md
       - "3. HTML Semântico": chapters/03-html-semantico.md
       - "4. Acessibilidade e Boas Práticas com HTML": chapters/04-html-acessibilidade-e-boas-praticas.md      
