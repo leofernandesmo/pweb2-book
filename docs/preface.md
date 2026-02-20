@@ -1,18 +1,19 @@
-# Preface
+# Prefácio
 
-This open book was created for students of **[Course Name]**.  
-It is designed to be:
+Este conteúdo aberto foi criado para estudantes do curso **[Bacharelado em Sistemas de Informação do IFAL-Maceió]**.  
+Ele foi projetado para ser:
 
-- **Open**: hosted on GitHub and freely accessible.
-- **Living**: updated as the course evolves.
-- **Multimodal**: combining text, code, images, video, and audio.
+- **Aberto**: hospedado no GitHub e livremente acessível.
+- **Vivo**: atualizado conforme o curso evolui.
+- **Multimodal**: combinando texto, código, imagens, vídeo e áudio.
 
-!!! note "How to Use This Book"
-    - Read the chapters in order if you are new to the topic.  
-    - Use the appendix as a quick reference.  
-    - Explore links to videos and podcasts for deeper understanding.
+### Como Usar Este Livro
+    - Leia os capítulos na ordem se você é iniciante no assunto.  
+    - Use o apêndice como referência rápida.  
+    - Explore os links para vídeos e podcasts para um entendimento mais profundo.
 
 ---
 
 [:material-book-open-page-variant: Start Chapter 1 – Introduction](chapters/01-introduction.md)  
 [:material-arrow-left: Back to Title Page](title-page.md)
+
