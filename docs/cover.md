@@ -1,4 +1,4 @@
-# 📘 Programação Web 2 
+# Programação Web 2 
 
 **Subtitle:** Uma Abordagem com Node/Express
 
