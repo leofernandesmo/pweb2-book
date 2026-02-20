@@ -1,20 +1,23 @@
-# My Open Book Title
+# Programação Web 2
 
-_A Gentle Introduction to [Topic]_
+_Uma abordagem usando Node/Express_
 
 **Author**  
-Your Name  
-Your Institution  
-Your Contact (optional)
+Your Leo Fernandes, PhD  
+IFAL  
+leonardo.fernandes@ifal.edu.br
 
 ---
 
 **Edition:** 1st Edition  
-**Year:** 2025  
+**Year:** 2026  
 
-**License:** CC BY-SA 4.0  
-You are free to share and adapt this material, as long as you attribute the author and share alike.
-
+**License:** CC BY-NC-ND 4.0  
+Ela garante:
+- o autor mantém todos os direitos autorais,
+- ninguém pode vender este material,
+- ninguém pode modificar diretamente (apenas através de contribuição, ou PR),
+- e ainda assim o conteúdo é aberto para leitura e estudo.
 ---
 
 [:material-book-open-page-variant: Go to Preface](preface.md)  
