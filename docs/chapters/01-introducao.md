@@ -235,20 +235,27 @@ Antes de utilizar frameworks como Express, é fundamental compreender o funciona
 Arquivo `server.js`:
 
 ```javascript
-import http from 'http';
+import http from 'http'; // Importa o módulo HTTP nativo do Node.js
 
-const server = http.createServer((req, res) => {
-  if (req.url === '/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok' }));
-    return;
+const server = http.createServer((req, res) => { // Cria o servidor e define o callback para cada requisição
+
+  if (req.url === '/health') { // Verifica se a rota solicitada é "/health"
+
+    res.writeHead(200, { 'Content-Type': 'application/json' }); // Define status 200 e cabeçalho JSON
+
+    res.end(JSON.stringify({ status: 'ok' })); // Envia resposta JSON e encerra a requisição
+
+    return; // Interrompe a execução para evitar cair no 404
+
   }
 
-  res.writeHead(404);
-  res.end();
+  res.writeHead(404); // Define status 404 para rota não encontrada
+
+  res.end(); // Finaliza a resposta sem corpo
+
 });
 
-server.listen(3000);
+server.listen(3000); // Inicia o servidor na porta 3000
 ```
 
 Esse exemplo revela elementos centrais:
