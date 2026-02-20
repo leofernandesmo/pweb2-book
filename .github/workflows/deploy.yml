@@ -6,7 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-# 👇 This is the important part
 permissions:
   contents: write
 
@@ -25,7 +24,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install mkdocs-material mkdocs-print-site-plugin
+          pip install mkdocs==1.6.1 \
+                      mkdocs-material==9.5.18 \
+                      mkdocs-print-site-plugin==2.3.6
 
       - name: Build site
         run: mkdocs build --strict
