@@ -230,9 +230,49 @@ Esse modelo já antecipa princípios da arquitetura MVC, mesmo antes de formaliz
 
 ## 4. Construção de um Servidor HTTP com Módulo Nativo
 
-Antes de utilizar frameworks como Express, é fundamental compreender o funcionamento do módulo HTTP nativo do Node.js. Um servidor HTTP básico pode ser construído da seguinte forma:
+Antes de utilizar frameworks como Express, é fundamental compreender o funcionamento do módulo HTTP nativo do Node.js. 
+Um servidor HTTP básico pode ser construído da seguinte forma:
 
 Arquivo `server.js`:
+
+```javascript
+const http = require('http');
+
+// 2. Define o endereço e a porta
+const hostname = '127.0.0.1'; // localhost
+const port = 3000;
+
+// 3. Cria o servidor web
+const server = http.createServer((req, res) => {
+  // Configura o status HTTP (200 = OK) e o tipo de conteúdo (texto simples)
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/html;');
+  
+  // Envia a resposta "Olá Mundo!"
+  res.end('<h1>Olá, Mundo! Servidor Node.js simples rodando.</h1>');
+});
+
+// 4. Inicia o servidor e escuta na porta definida
+server.listen(port, hostname, () => {
+  console.log(`Servidor rodando em http://${hostname}:${port}/`);
+});
+```
+
+- require('http'): Carrega o módulo HTTP, que permite ao Node.js transferir dados por HTTP.
+- http.createServer(): Cria um servidor TCP que ouve requisições na porta especificada.
+- req (request): O objeto de requisição, usado para ler dados vindo do cliente.
+- res (response): O objeto de resposta, usado para enviar dados de volta ao cliente.
+- res.end(): Encerra a resposta e envia o conteúdo.
+
+para executar o código acima, digite no terminal:
+
+```
+node server.js
+```
+
+Abra o seu navegador e acesse: http://localhost:3000 
+
+Vamos ver agora um segundo exemplo:
 
 ```javascript
 import http from 'http'; // Importa o módulo HTTP nativo do Node.js
@@ -258,7 +298,7 @@ const server = http.createServer((req, res) => { // Cria o servidor e define o c
 server.listen(3000); // Inicia o servidor na porta 3000
 ```
 
-Esse exemplo revela elementos centrais:
+Aqui, vemos alguns elementos centrais:
 
 O servidor é orientado a eventos.
 
@@ -270,42 +310,43 @@ O protocolo HTTP é manipulado explicitamente.
 
 Em aplicações reais, esse modelo rapidamente se torna complexo. A ausência de abstrações para roteamento estruturado, middlewares e tratamento centralizado de erros motiva o uso de frameworks como Express, que serão abordados posteriormente.
 
-vejam um segundo exemplo abaixo.
+Veja um terceiro exemplo abaixo.
 
-Arquivo `server2.js`:
 
 ```javascript
-import http from "http";
+import http from "http"; // Importa o módulo HTTP nativo
 
-const server = http.createServer((req, res) => {
-  if (req.method === "GET" && req.url === "/health") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ status: "ok" }));
-    return;
+const server = http.createServer((req, res) => { // Cria o servidor e define a função para cada requisição
+
+  if (req.method === "GET" && req.url === "/health") { // Verifica rota GET /health
+    res.writeHead(200, { "Content-Type": "application/json" }); // Define status 200 e tipo JSON
+    res.end(JSON.stringify({ status: "ok" })); // Envia JSON e encerra
+    return; // Interrompe execução
   }
 
-  if (req.method === "GET" && req.url.startsWith("/student")) {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ id: 1, name: "João Silva" }));
-    return;
+  if (req.method === "GET" && req.url.startsWith("/student")) { // Verifica rota GET /student
+    res.writeHead(200, { "Content-Type": "application/json" }); // Define status 200 e tipo JSON
+    res.end(JSON.stringify({ id: 1, name: "João Silva" })); // Retorna estudante fictício
+    return; // Interrompe execução
   }
 
-  res.writeHead(404);
-  res.end();
+  if (req.method === "POST" && req.url === "/student") { // Verifica rota POST /student
+    res.writeHead(201, { "Content-Type": "text/html" }); // Define status 201 e tipo HTML
+    res.end("<h1>Estudante cadastrado com sucesso</h1>"); // Retorna mensagem HTML
+    return; // Interrompe execução
+  }
+
+  res.writeHead(404); // Define status 404 para rota inexistente
+  res.end(); // Finaliza resposta
 });
 
-server.listen(3000, () => {
-  console.log("Servidor HTTP executando na porta 3000");
+server.listen(3000, () => { // Inicia o servidor na porta 3000
+  console.log("Servidor HTTP executando na porta 3000"); // Log informativo
 });
 ```
 
-Esse código evidencia:
+Consegue observar como começa a ficar complexo gerenciar mais rotas?
 
-* Controle manual de método HTTP.
-* Controle manual de rota.
-* Manipulação explícita de cabeçalhos.
-
-Essa abordagem torna-se rapidamente insustentável em sistemas maiores, justificando o uso de abstrações como Express.
 
 ---
 
@@ -341,6 +382,10 @@ Resposta esperada:
 
 ```bash
 curl -X GET http://localhost:3000/student
+```
+
+```bash
+curl -X POST http://localhost:3000/student -H "Content-Type: application/json" -d '{"name":"Maria"}'
 ```
 
 ### 5.3 Visualizando Cabeçalhos
