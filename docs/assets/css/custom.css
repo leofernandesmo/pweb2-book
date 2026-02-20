@@ -1,11 +1,32 @@
-/* ================================
-   QUIZ ESTILO "FORMULÁRIO REAL"
-   ================================ */
+/* =====================================
+   PALETA INSTITUCIONAL IFAL (VERDE)
+===================================== */
 
 :root {
-  --md-primary-fg-color: #3FA34D;       /* Verde institucional aproximado IFAL */
-  --md-accent-fg-color: #6BCB77;        /* Verde claro complementar */
+  --md-primary-fg-color: #3FA34D;   /* Verde institucional aproximado */
+  --md-accent-fg-color: #6BCB77;    /* Verde claro complementar */
 }
+
+
+/* =====================================
+   AJUSTES TIPOGRÁFICOS (ESTILO LIVRO)
+===================================== */
+
+.md-typeset {
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-weight: 600;
+}
+
+
+/* ================================
+   QUIZ ESTILO "FORMULÁRIO REAL"
+================================ */
 
 .quiz {
   background: #f9fafb;
@@ -36,26 +57,26 @@
   transition: all 0.2s ease;
 }
 
-/* Hover: destaque suave */
+/* Hover */
 .quiz button:hover {
   background: #f3f4f6;
   border-color: #9ca3af;
 }
 
-/* Quando o aluno clicar (JS adiciona classe) */
+/* Selecionado */
 .quiz button.selected {
   background: #e8f5e9;
   border-color: #3FA34D;
 }
 
-/* Quando a resposta estiver correta */
+/* Correto */
 .quiz button.correct {
   background: #dcfce7;
   border-color: #16a34a;
   color: #065f46;
 }
 
-/* Quando a resposta estiver errada */
+/* Incorreto */
 .quiz button.incorrect {
   background: #fee2e2;
   border-color: #dc2626;
@@ -69,7 +90,10 @@
   font-size: 0.95rem;
 }
 
-/* ================================== */
+
+/* ==================================
+   CODE RUNNER
+================================== */
 
 .code-runner textarea {
   width: 100%;
@@ -84,8 +108,11 @@
   margin-top: 10px;
 }
 
-/* Container da grade */
-/* Grade responsiva */
+
+/* ==================================
+   GRID DE CARDS
+================================== */
+
 .grid.cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -93,7 +120,6 @@
   margin: 1.5rem 0;
 }
 
-/* Cada card */
 .grid.cards > ul > li {
   list-style: none;
   background: var(--md-surface);
@@ -104,13 +130,11 @@
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Hover */
 .grid.cards > ul > li:hover {
   transform: translateY(-3px);
   box-shadow: var(--md-shadow-z2);
 }
 
-/* Título do card */
 .grid.cards > ul > li strong {
   display: block;
   margin-bottom: 0.5rem;
@@ -119,75 +143,49 @@
 }
 
 
+/* ==================================
+   CAIXA DE DESTAQUE (ESTUDO DE CASO)
+================================== */
 
-/* Estilo da caixa container */
 .box-destaque {
-    /* Cor de fundo suave (um cinza azulado muito claro) */
-    background-color: #f4f9f5;
-    
-    /* Borda lateral grossa para chamar atenção */
-    border-left: 5px solid #3FA34D;
-    
-    /* Espaçamento interno para o texto não colar na borda */
-    padding: 20px;
-    
-    /* Espaçamento externo para separar dos outros parágrafos */
-    margin: 25px 0;
-    
-    /* Arredondar levemente os cantos direitos */
-    border-radius: 0 5px 5px 0;
-    
-    /* Sombra suave para dar profundidade (opcional) */
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
-    
-    /* Garante que a fonte seja legível */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f9f5;
+  border-left: 5px solid #3FA34D;
+  padding: 20px;
+  margin: 25px 0;
+  border-radius: 0 5px 5px 0;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Estilo do título dentro da caixa */
 .box-destaque .box-titulo {
-    /* Remove a margem superior padrão para alinhar com a caixa */
-    margin-top: 0;
-    
-    /* Cor do título combinando com a borda lateral */
-    color: #2f5d36;
-    
-    /* Tamanho da fonte */
-    font-size: 1.1em;
-    
-    /* Peso da fonte */
-    font-weight: bold;
-    
-    /* Espaço abaixo do título */
-    margin-bottom: 10px;
+  margin-top: 0;
+  color: #2f5d36;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-/* Estilo do texto do parágrafo dentro da caixa */
 .box-destaque p {
-    /* Cor do texto para bom contraste */
-    color: #34495e;
-    
-    /* Altura da linha para melhorar leitura */
-    line-height: 1.6;
-    
-    /* Remove margem inferior do último parágrafo */
-    margin-bottom: 0;
+  color: #34495e;
+  line-height: 1.6;
+  margin-bottom: 0;
 }
 
 
+/* ==================================
+   VÍDEOS EMBUTIDOS
+================================== */
 
-
-<!-- Videos embutidos -->
 .video-wrapper {
   position: relative;
   width: 100%;
-  /* 16:9 aspect ratio */
   padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
   border-radius: 8px;
   background: #000;
 }
+
 .video-wrapper iframe {
   position: absolute;
   top: 0;
@@ -196,16 +194,16 @@
   height: 100%;
   border: 0;
 }
+
 .video-actions {
   margin-top: 0.5rem;
-  display:flex;
-  gap:0.5rem;
-  align-items:center;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
+
 .video-actions a {
-  color: var(--md-primary-fg);
+  color: var(--md-primary-fg-color);
   text-decoration: none;
   font-weight: 600;
 }
-
-
