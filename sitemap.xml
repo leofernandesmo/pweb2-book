@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/</loc>
+         <lastmod>2026-02-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/back-cover/</loc>
+         <lastmod>2026-02-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/cover/</loc>
+         <lastmod>2026-02-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/preface/</loc>
+         <lastmod>2026-02-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/title-page/</loc>
+         <lastmod>2026-02-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/chapters/01-introduction/</loc>
+         <lastmod>2026-02-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/chapters/02-first-steps/</loc>
+         <lastmod>2026-02-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/chapters/99-appendix/</loc>
+         <lastmod>2026-02-20</lastmod>
+    </url>
+</urlset>
