@@ -1,0 +1,206 @@
+/* ================================
+   QUIZ ESTILO "FORMULÁRIO REAL"
+   ================================ */
+
+.quiz {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 25px 0;
+}
+
+.quiz p {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  color: #111827;
+}
+
+/* Estilo base das opções */
+.quiz button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #ffffff;
+  border: 2px solid #d1d5db;
+  padding: 12px 14px;
+  margin: 8px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+/* Hover: destaque suave */
+.quiz button:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+/* Quando o aluno clicar (JS adiciona classe) */
+.quiz button.selected {
+  background: #e0f2fe;
+  border-color: #0284c7;
+}
+
+/* Quando a resposta estiver correta */
+.quiz button.correct {
+  background: #dcfce7;
+  border-color: #16a34a;
+  color: #065f46;
+}
+
+/* Quando a resposta estiver errada */
+.quiz button.incorrect {
+  background: #fee2e2;
+  border-color: #dc2626;
+  color: #7f1d1d;
+}
+
+/* Feedback */
+.quiz .feedback {
+  margin-top: 12px;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+/* ================================== */
+
+.code-runner textarea {
+  width: 100%;
+  height: 150px;
+  font-family: monospace;
+}
+
+.code-runner iframe {
+  width: 100%;
+  height: 200px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+/* Container da grade */
+/* Grade responsiva */
+.grid.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+/* Cada card */
+.grid.cards > ul > li {
+  list-style: none;
+  background: var(--md-surface);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  box-shadow: var(--md-shadow-z1);
+  border: 1px solid rgba(0,0,0,0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Hover */
+.grid.cards > ul > li:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--md-shadow-z2);
+}
+
+/* Título do card */
+.grid.cards > ul > li strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+
+
+/* Estilo da caixa container */
+.box-destaque {
+    /* Cor de fundo suave (um cinza azulado muito claro) */
+    background-color: #f0f4f8;
+    
+    /* Borda lateral grossa para chamar atenção */
+    border-left: 5px solid #2980b9;
+    
+    /* Espaçamento interno para o texto não colar na borda */
+    padding: 20px;
+    
+    /* Espaçamento externo para separar dos outros parágrafos */
+    margin: 25px 0;
+    
+    /* Arredondar levemente os cantos direitos */
+    border-radius: 0 5px 5px 0;
+    
+    /* Sombra suave para dar profundidade (opcional) */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+    
+    /* Garante que a fonte seja legível */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estilo do título dentro da caixa */
+.box-destaque .box-titulo {
+    /* Remove a margem superior padrão para alinhar com a caixa */
+    margin-top: 0;
+    
+    /* Cor do título combinando com a borda lateral */
+    color: #2c3e50;
+    
+    /* Tamanho da fonte */
+    font-size: 1.1em;
+    
+    /* Peso da fonte */
+    font-weight: bold;
+    
+    /* Espaço abaixo do título */
+    margin-bottom: 10px;
+}
+
+/* Estilo do texto do parágrafo dentro da caixa */
+.box-destaque p {
+    /* Cor do texto para bom contraste */
+    color: #34495e;
+    
+    /* Altura da linha para melhorar leitura */
+    line-height: 1.6;
+    
+    /* Remove margem inferior do último parágrafo */
+    margin-bottom: 0;
+}
+
+
+
+
+<!-- Videos embutidos -->
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  /* 16:9 aspect ratio */
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #000;
+}
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.video-actions {
+  margin-top: 0.5rem;
+  display:flex;
+  gap:0.5rem;
+  align-items:center;
+}
+.video-actions a {
+  color: var(--md-primary-fg);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+
