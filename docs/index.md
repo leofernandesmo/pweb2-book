@@ -1,50 +1,57 @@
 <!-- File: docs/index.md -->
 
-# My Open Book Title
+# Programação Web 1
 
-**Author:** Your Name  
-**Version:** 0.1 (Draft)  
-**License:** CC BY-SA 4.0 _(example – change as needed)_
+**Author:** Leo Fernandes, PhD
 
-Welcome to the open version of **My Open Book Title**.  
-This site is generated from Markdown files and is optimized for reading on:
+**Version:** 1.0
+
+**License:** CC BY-NC-ND 4.0
+
+---
+
+Bem-vindo à versão aberta de **Programação Web 2**.  
+Este site é gerado a partir de arquivos Markdown e é otimizado para leitura em:
 
 - 📱 Smartphones  
-- 💻 Computer browsers  
-- 🧾 Printable / PDF output (via “Print / Save PDF” in the menu)
+- 💻 Navegadores de computador  
+- 🧾 Impressão / saída em PDF (via “Imprimir / Salvar PDF” no menu)
 
 ---
 
-## How to Navigate
+## Como Navegar
 
-1. Start with the **[Cover](cover.md)** and **[Title Page](title-page.md)**.
-2. Then read the **[Preface](preface.md)**.
-3. Follow the chapters in order from the **navigation bar**.
-
----
-
-## Reading as PDF
-
-To get a PDF:
-
-1. Click **“Print / Save PDF”** in the navigation.  
-2. Your browser opens a single-page version of the book.  
-3. Use the browser’s **Print** function:
-   - Destination: **Save as PDF**
-   - Layout: Portrait  
-   - Margins: Default (or “None” for full-page)
-
-This works on both **desktop** and **mobile** browsers.
+1. Comece pela **[Capa](cover.md)** e **[Folha de Rosto](title-page.md)**.  
+2. Em seguida, leia o **[Prefácio](preface.md)**.  
+3. Depois, siga os capítulos na ordem pela **barra de navegação**.
 
 ---
 
-## About the Project
+## Lendo como PDF
 
-This is an **open educational resource**.  
-You are welcome to **read, fork, adapt, and contribute** via pull requests.
+Para gerar um PDF:
 
-If you want to contribute:
+1. Clique em **“Imprimir / Salvar PDF”** na navegação.  
+2. O navegador abrirá uma versão do livro em página única.  
+3. Use a função **Imprimir** do navegador:  
+   - Destino: **Salvar como PDF**  
+   - Layout: Retrato  
+   - Margens: Padrão (ou “Nenhuma” para página cheia)
 
-1. Fork this repository on GitHub.
-2. Edit or add Markdown files in the `docs/` folder.
-3. Submit a pull request describing your changes.
+Isso funciona tanto em navegadores de **desktop** quanto de **dispositivos móveis**.
+
+---
+
+## Sobre o Projeto
+
+Este é um **recurso educacional aberto**.  
+Você pode **ler, fazer fork, adaptar e contribuir** por meio de pull requests, mas não pode usar este conteúdo comercialmente (ver detalhes da licença).
+
+Se quiser contribuir:
+
+1. Faça fork deste repositório no GitHub.  
+2. Edite ou adicione arquivos Markdown na pasta `docs/`.  
+3. Envie um pull request descrevendo suas alterações.
+
+---
+
