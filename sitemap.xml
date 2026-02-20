@@ -1,35 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/</loc>
+         <loc>https://leofernandesmo.github.io/pweb2-book/</loc>
          <lastmod>2026-02-20</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/back-cover/</loc>
+         <loc>https://leofernandesmo.github.io/pweb2-book/back-cover/</loc>
          <lastmod>2026-02-20</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/cover/</loc>
+         <loc>https://leofernandesmo.github.io/pweb2-book/cover/</loc>
          <lastmod>2026-02-20</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/preface/</loc>
+         <loc>https://leofernandesmo.github.io/pweb2-book/preface/</loc>
          <lastmod>2026-02-20</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/title-page/</loc>
+         <loc>https://leofernandesmo.github.io/pweb2-book/title-page/</loc>
          <lastmod>2026-02-20</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/chapters/01-introduction/</loc>
+         <loc>https://leofernandesmo.github.io/pweb2-book/chapters/00-how-to-use/</loc>
          <lastmod>2026-02-20</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/chapters/02-first-steps/</loc>
+         <loc>https://leofernandesmo.github.io/pweb2-book/chapters/01-introducao/</loc>
          <lastmod>2026-02-20</lastmod>
+         <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://&lt;github-username&gt;.github.io/&lt;book-repo-name&gt;/chapters/99-appendix/</loc>
+         <loc>https://leofernandesmo.github.io/pweb2-book/chapters/02-first-steps/</loc>
          <lastmod>2026-02-20</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://leofernandesmo.github.io/pweb2-book/chapters/99-appendix/</loc>
+         <lastmod>2026-02-20</lastmod>
+         <changefreq>daily</changefreq>
     </url>
 </urlset>
