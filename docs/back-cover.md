@@ -1,16 +1,17 @@
-# Back Cover
+# Contracapa
 
-**My Open Book Title**
+**Programação Web 2**
+_Uma abordagem com Node/Express_
 
-This book is part of an open education initiative.  
-You can:
+Este livro faz parte de uma iniciativa de educação aberta.  
+Você pode:
 
-- Read it online on GitHub Pages.
-- Download or clone the repository.
-- Suggest improvements via issues and pull requests.
+- Lê-lo online no GitHub Pages ou impresso (PDF).
+- Baixar ou clonar o repositório.
+- Sugerir melhorias por meio de issues e pull requests.
 
 ---
 
-Thank you for reading!
+Obrigado pela leitura!
 
 [:material-home: Back to Home](index.md)
