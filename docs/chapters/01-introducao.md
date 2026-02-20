@@ -403,7 +403,7 @@ O parâmetro `-i` exibe cabeçalhos HTTP, permitindo observar código de status 
 Considere um cenário institucional: um sistema que fornece dados de matrícula para integração com outro serviço governamental. Esse sistema precisa:
 
 1. Receber requisição HTTP.
-2. Validar método.
+2. Validar dados en entrada e regras de negócio.
 3. Consultar base de dados.
 4. Serializar resultado.
 5. Retornar código HTTP apropriado.
