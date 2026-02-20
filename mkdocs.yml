@@ -1,0 +1,71 @@
+site_name: "My Open Book Title (REPLACE ME)"
+site_description: "An open textbook about <topic> (REPLACE ME)"
+site_url: "https://<github-username>.github.io/<book-repo-name>/"
+repo_url: "https://github.com/<github-username>/<book-repo-name>"
+repo_name: "GitHub"
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.sections
+    - navigation.indexes
+    - content.code.copy
+    - content.action.edit
+    - content.action.view
+    - toc.integrate
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: "https://github.com/<your-github-username>"
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - toc:
+      permalink: true
+  - codehilite:
+      guess_lang: false
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.emoji
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+plugins:
+  - search
+  - print-site:
+      add_to_navigation: true
+      print_page_title: "Print / Save PDF"
+
+
+
+extra_css:
+  - assets/extra.css
+
+nav:
+  - Home: index.md
+  - Cover: cover.md
+  - Title Page: title-page.md
+  - Preface: preface.md
+  - Chapters:
+      - "1. Introduction": chapters/01-introduction.md
+      - "2. First Steps": chapters/02-first-steps.md
+      - "Appendix": chapters/99-appendix.md
+  - Back Cover: back-cover.md

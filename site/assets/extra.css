@@ -1,0 +1,31 @@
+/* File: docs/assets/extra.css */
+
+/* Slightly wider content for larger screens */
+.md-main__inner {
+  max-width: 900px;
+}
+
+/* Code blocks: smaller font in print */
+@media print {
+  pre, code {
+    font-size: 0.85em;
+  }
+
+  /* Hide navigation, search, footer in print/PDF */
+  .md-header,
+  .md-sidebar,
+  .md-footer {
+    display: none !important;
+  }
+
+  .md-main__inner {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

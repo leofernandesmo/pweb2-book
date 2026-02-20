@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://&lt;your-github-username&gt;.github.io/my-open-book/</loc>
+         <lastmod>2025-11-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;your-github-username&gt;.github.io/my-open-book/back-cover/</loc>
+         <lastmod>2025-11-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;your-github-username&gt;.github.io/my-open-book/cover/</loc>
+         <lastmod>2025-11-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;your-github-username&gt;.github.io/my-open-book/preface/</loc>
+         <lastmod>2025-11-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;your-github-username&gt;.github.io/my-open-book/title-page/</loc>
+         <lastmod>2025-11-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;your-github-username&gt;.github.io/my-open-book/chapters/01-introduction/</loc>
+         <lastmod>2025-11-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;your-github-username&gt;.github.io/my-open-book/chapters/02-first-steps/</loc>
+         <lastmod>2025-11-20</lastmod>
+    </url>
+    <url>
+         <loc>https://&lt;your-github-username&gt;.github.io/my-open-book/chapters/99-appendix/</loc>
+         <lastmod>2025-11-20</lastmod>
+    </url>
+</urlset>
