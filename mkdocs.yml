@@ -1,12 +1,12 @@
-site_name: "My Open Book Title (REPLACE ME)"
-site_description: "An open textbook about <topic> (REPLACE ME)"
-site_url: "https://<github-username>.github.io/<book-repo-name>/"
-repo_url: "https://github.com/<github-username>/<book-repo-name>"
+site_name: "Programação Web 2 - Uma abordagem usando Java/Spring"
+site_description: "Material do Curso de Programação Web 2 do curso de Bacharelado em Desenvolvimento de Sistemas do IFAL-Maceió"
+site_url: "https://leofernandesmo.github.io/pweb2-book/"
+repo_url: "https://github.com/leofernandesmo/pweb2-book/"
 repo_name: "GitHub"
 
 theme:
   name: material
-  language: en
+  language: pt
   features:
     - navigation.tabs
     - navigation.top
@@ -30,7 +30,7 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: "https://github.com/<your-github-username>"
+      link: "https://github.com/leofernandesmo"
 
 markdown_extensions:
   - admonition
@@ -52,12 +52,16 @@ plugins:
   - search
   - print-site:
       add_to_navigation: true
-      print_page_title: "Print / Save PDF"
+      print_page_title: "Print / Save PDF"  
 
 
+extra_javascript:
+  - assets/js/quiz.js
+  - assets/js/code-runner.js
 
 extra_css:
   - assets/extra.css
+  - assets/css/custom.css
 
 nav:
   - Home: index.md
@@ -65,7 +69,11 @@ nav:
   - Title Page: title-page.md
   - Preface: preface.md
   - Chapters:
-      - "1. Introduction": chapters/01-introduction.md
-      - "2. First Steps": chapters/02-first-steps.md
-      - "Appendix": chapters/99-appendix.md
+      - "0. Como User Este Material": chapters/00-how-to-use.md
+      - "1. Introdução a Web e Navegadores": chapters/01-introducao.md
+      - "2. Fundamentos do HTML": chapters/02-html-fundamentos.md
+      - "3. HTML Semântico": chapters/03-html-semantico.md
+      - "4. Acessibilidade e Boas Práticas com HTML": chapters/04-html-acessibilidade-e-boas-praticas.md      
+      - "Appendix": chapters/99-appendix.md      
   - Back Cover: back-cover.md
+
