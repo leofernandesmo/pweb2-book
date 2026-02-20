@@ -3,22 +3,22 @@
 # -------------------------------------------------------
 # Create base folder for your book
 # -------------------------------------------------------
-mkdir -p my-open-book
-cd my-open-book
+mkdir -p pweb2-book
+cd pweb2-book
 
 # -------------------------------------------------------
 # Create MkDocs main config file
 # -------------------------------------------------------
 cat > mkdocs.yml << 'EOF'
-site_name: My Open Book
-site_description: "An open textbook for students"
-site_url: "https://YOUR-USERNAME.github.io/my-open-book/"
-repo_url: "https://github.com/YOUR-USERNAME/my-open-book"
+site_name: PWeb2 Book
+site_description: "Um material aberto para os estudantes"
+site_url: "https://leofernandesmo.github.io/pweb2-book/"
+repo_url: "https://github.com/leofernandesmo/pweb2-book"
 repo_name: "GitHub"
 
 theme:
   name: material
-  language: en
+  language: pt
   features:
     - navigation.tabs
     - navigation.top
@@ -124,8 +124,8 @@ cat > docs/title-page.md << 'EOF'
 _A Gentle Introduction to [Topic]_
 
 **Author:**  
-Your Name  
-Your Institution
+Leo Fernandes  
+IFAL
 
 **Edition:** 1st Edition  
 **Year:** 2025  
