@@ -2,6 +2,11 @@
    QUIZ ESTILO "FORMULÁRIO REAL"
    ================================ */
 
+:root {
+  --md-primary-fg-color: #3FA34D;       /* Verde institucional aproximado IFAL */
+  --md-accent-fg-color: #6BCB77;        /* Verde claro complementar */
+}
+
 .quiz {
   background: #f9fafb;
   border: 1px solid #e5e7eb;
@@ -39,8 +44,8 @@
 
 /* Quando o aluno clicar (JS adiciona classe) */
 .quiz button.selected {
-  background: #e0f2fe;
-  border-color: #0284c7;
+  background: #e8f5e9;
+  border-color: #3FA34D;
 }
 
 /* Quando a resposta estiver correta */
@@ -118,10 +123,10 @@
 /* Estilo da caixa container */
 .box-destaque {
     /* Cor de fundo suave (um cinza azulado muito claro) */
-    background-color: #f0f4f8;
+    background-color: #f4f9f5;
     
     /* Borda lateral grossa para chamar atenção */
-    border-left: 5px solid #2980b9;
+    border-left: 5px solid #3FA34D;
     
     /* Espaçamento interno para o texto não colar na borda */
     padding: 20px;
@@ -145,7 +150,7 @@
     margin-top: 0;
     
     /* Cor do título combinando com a borda lateral */
-    color: #2c3e50;
+    color: #2f5d36;
     
     /* Tamanho da fonte */
     font-size: 1.1em;
