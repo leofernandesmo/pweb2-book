@@ -72,6 +72,6 @@ nav:
   - Preface: preface.md
   - Chapters:
       - "0. Como Usar Este Material": chapters/00-how-to-use.md
-      - "1. Introdução à Programação Web": chapters/01-introducao.md
+      - "1. Fundamentos do Node.js": chapters/01-introducao.md
       - "Appendix": chapters/99-appendix.md
   - Back Cover: back-cover.md
