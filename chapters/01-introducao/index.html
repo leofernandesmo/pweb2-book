@@ -1030,7 +1030,7 @@ npm<span class="w"> </span>audit<span class="w"> </span>fix
 <p>Antes de utilizar frameworks como Express, é fundamental compreender o funcionamento do módulo HTTP nativo do Node.js. 
 Um servidor HTTP básico pode ser construído da seguinte forma:</p>
 <p>Arquivo <code>server.js</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;http&#39;</span><span class="p">;</span>
 
 <span class="c1">// 2. Define o endereço e a porta</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">;</span><span class="w"> </span><span class="c1">// localhost</span>
@@ -1040,7 +1040,7 @@ Um servidor HTTP básico pode ser construído da seguinte forma:</p>
 <span class="kd">const</span><span class="w"> </span><span class="nx">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="c1">// Configura o status HTTP (200 = OK) e o tipo de conteúdo (texto simples)</span>
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">200</span><span class="p">;</span>
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;text/html;&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;text/html&#39;</span><span class="p">);</span>
 
 <span class="w">  </span><span class="c1">// Envia a resposta &quot;Olá Mundo!&quot;</span>
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">&#39;&lt;h1&gt;Olá, Mundo! Servidor Node.js simples rodando.&lt;/h1&gt;&#39;</span><span class="p">);</span>
@@ -1051,14 +1051,10 @@ Um servidor HTTP básico pode ser construído da seguinte forma:</p>
 <span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Servidor rodando em http://</span><span class="si">${</span><span class="nx">hostname</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">port</span><span class="si">}</span><span class="sb">/`</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></div>
-<ul>
-<li>require('http'): Carrega o módulo HTTP, que permite ao Node.js transferir dados por HTTP.</li>
-<li>http.createServer(): Cria um servidor TCP que ouve requisições na porta especificada.</li>
-<li>req (request): O objeto de requisição, usado para ler dados vindo do cliente.</li>
-<li>res (response): O objeto de resposta, usado para enviar dados de volta ao cliente.</li>
-<li>res.end(): Encerra a resposta e envia o conteúdo.</li>
-</ul>
-<p>para executar o código acima, digite no terminal:</p>
+<p>O método createServer instancia um servidor TCP capaz de processar requisições HTTP. 
+O objeto req representa a requisição recebida, enquanto res encapsula os mecanismos de resposta ao cliente. 
+A chamada a res.end() encerra o fluxo da resposta e envia os dados ao consumidor.</p>
+<p>Para executar o servidor, utilize o comando abaixo no terminal:</p>
 <div class="highlight"><pre><span></span><code>node server.js
 </code></pre></div>
 <p>Abra o seu navegador e acesse: http://localhost:3000 </p>
@@ -1122,7 +1118,7 @@ Um servidor HTTP básico pode ser construído da seguinte forma:</p>
 <span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Servidor HTTP executando na porta 3000&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// Log informativo</span>
 <span class="p">});</span>
 </code></pre></div>
-<p>Consegue observar como começa a ficar complexo gerenciar mais rotas?</p>
+<p>Observa-se que, à medida que novas rotas e métodos HTTP são adicionados, o código tende a se tornar progressivamente menos coeso e mais difícil de manter. Esse fenômeno evidencia a necessidade de abstrações arquiteturais adequadas, como roteadores e middlewares, que serão explorados no capítulo seguinte.</p>
 <hr />
 <h2 id="5-testando-a-api-com-curl">5. Testando a API com cURL<a class="headerlink" href="#5-testando-a-api-com-curl" title="Permanent link">&para;</a></h2>
 <p>Após iniciar o servidor:</p>
@@ -1152,7 +1148,7 @@ Um servidor HTTP básico pode ser construído da seguinte forma:</p>
 <p>Considere um cenário institucional: um sistema que fornece dados de matrícula para integração com outro serviço governamental. Esse sistema precisa:</p>
 <ol>
 <li>Receber requisição HTTP.</li>
-<li>Validar dados en entrada e regras de negócio.</li>
+<li>Validar dados de entrada e regras de negócio.</li>
 <li>Consultar base de dados.</li>
 <li>Serializar resultado.</li>
 <li>Retornar código HTTP apropriado.</li>
