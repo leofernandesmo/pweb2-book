@@ -236,7 +236,7 @@ Um servidor HTTP básico pode ser construído da seguinte forma:
 Arquivo `server.js`:
 
 ```javascript
-const http = require('http');
+import http from 'http';
 
 // 2. Define o endereço e a porta
 const hostname = '127.0.0.1'; // localhost
@@ -246,7 +246,7 @@ const port = 3000;
 const server = http.createServer((req, res) => {
   // Configura o status HTTP (200 = OK) e o tipo de conteúdo (texto simples)
   res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/html;');
+  res.setHeader('Content-Type', 'text/html');
   
   // Envia a resposta "Olá Mundo!"
   res.end('<h1>Olá, Mundo! Servidor Node.js simples rodando.</h1>');
@@ -258,13 +258,11 @@ server.listen(port, hostname, () => {
 });
 ```
 
-- require('http'): Carrega o módulo HTTP, que permite ao Node.js transferir dados por HTTP.
-- http.createServer(): Cria um servidor TCP que ouve requisições na porta especificada.
-- req (request): O objeto de requisição, usado para ler dados vindo do cliente.
-- res (response): O objeto de resposta, usado para enviar dados de volta ao cliente.
-- res.end(): Encerra a resposta e envia o conteúdo.
+O método createServer instancia um servidor TCP capaz de processar requisições HTTP. 
+O objeto req representa a requisição recebida, enquanto res encapsula os mecanismos de resposta ao cliente. 
+A chamada a res.end() encerra o fluxo da resposta e envia os dados ao consumidor.
 
-para executar o código acima, digite no terminal:
+Para executar o servidor, utilize o comando abaixo no terminal:
 
 ```
 node server.js
@@ -345,7 +343,7 @@ server.listen(3000, () => { // Inicia o servidor na porta 3000
 });
 ```
 
-Consegue observar como começa a ficar complexo gerenciar mais rotas?
+Observa-se que, à medida que novas rotas e métodos HTTP são adicionados, o código tende a se tornar progressivamente menos coeso e mais difícil de manter. Esse fenômeno evidencia a necessidade de abstrações arquiteturais adequadas, como roteadores e middlewares, que serão explorados no capítulo seguinte.
 
 
 ---
@@ -403,7 +401,7 @@ O parâmetro `-i` exibe cabeçalhos HTTP, permitindo observar código de status 
 Considere um cenário institucional: um sistema que fornece dados de matrícula para integração com outro serviço governamental. Esse sistema precisa:
 
 1. Receber requisição HTTP.
-2. Validar dados en entrada e regras de negócio.
+2. Validar dados de entrada e regras de negócio.
 3. Consultar base de dados.
 4. Serializar resultado.
 5. Retornar código HTTP apropriado.
