@@ -1,6 +1,6 @@
 <!-- File: docs/index.md -->
 
-# Programação Web 1
+# Programação Web 2
 
 **Author:** Leo Fernandes, PhD
 
