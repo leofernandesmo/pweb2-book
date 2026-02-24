@@ -1,4 +1,4 @@
-# Capítulo 1 — Fundamentos do Node.js (Versão Expandida com Exemplos)
+# Capítulo 1 — Fundamentos do Node.js
 
 > **Vídeo curto explicativo**  
 > *(link será adicionado posteriormente)*
