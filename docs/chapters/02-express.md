@@ -123,24 +123,7 @@ Vale observar um detalhe importante de ordem: se `req.body` contiver uma proprie
 res.json({ ...req.body, id }); // id de req.params nunca será sobrescrito
 ```
 
-Para testar as rotas criadas no exemplo anterior, você pode usar o cURL:
-
-```bash
-# POST — cria um novo produto
-curl -X POST http://localhost:3000/produtos \
-  -H "Content-Type: application/json" \
-  -d '{"nome": "Cadeira", "preco": 299}'
-
-# PUT — substitui completamente o produto de id 42
-curl -X PUT http://localhost:3000/produtos/42 \
-  -H "Content-Type: application/json" \
-  -d '{"nome": "Cadeira Ergonômica", "preco": 350}'
-
-# DELETE — remove o produto de id 42
-curl -X DELETE http://localhost:3000/produtos/42
-```
-
-O cabeçalho `-H "Content-Type: application/json"` é obrigatório nas rotas POST e PUT — é ele que instrui o servidor a interpretar o corpo como JSON, ativando o `express.json()`. Sem ele, `req.body` chegará como `undefined`. O DELETE dispensa cabeçalho e corpo, pois toda a informação necessária está na própria URL.
+O código anterior pode dar erro, porque ainda não foi feito o registro do midleware _express.json_ não foi registrado. Veja na próxima seção para entender melhor.
 
 
 ### 2.2.3 Parâmetros de rota, de consulta e corpo da requisição
@@ -170,7 +153,7 @@ app.post('/produtos', (req, res) => {
 });
 ```
 
-O conceito de middleware — o que é, como funciona internamente e como criar os seus próprios — será explicado em profundidade na seção 2.3 deste capítulo.
+> O conceito de middleware — o que é, como funciona internamente e como criar os seus próprios — será explicado em profundidade na seção 2.3 deste capítulo.
 
 Os **parâmetros de consulta** (*query params*) são pares chave-valor transmitidos na URL após o caractere `?`. São acessados via `req.query` e frequentemente empregados em operações de filtragem, ordenação ou paginação.
 
@@ -182,6 +165,13 @@ app.get('/produtos', (req, res) => {
 });
 ```
 
+A URL `/produtos?categoria=eletronicos&pagina=2` possui dois query params: `categoria` com valor `"eletronicos"` e `pagina` com valor `"2"`. Eles são separados do caminho (_path_) pelo caractere `?` e entre si pelo caractere `&`.
+
+No Express, todos esses pares chave-valor são automaticamente parseados e disponibilizados em `req.query` como um objeto JavaScript — no caso, `{ categoria: "eletronicos", pagina: "2" }`. A desestruturação na primeira linha do handler simplesmente extrai essas duas propriedades em variáveis independentes.
+
+Um ponto que merece atenção: assim como `req.params`, os valores de `req.query` chegam **sempre como string**, mesmo quando representam números. O valor de `pagina` é `"2"`, não `2`. Caso seja necessário utilizá-lo como número em alguma operação — uma consulta ao banco de dados com `LIMIT` e `OFFSET`, por exemplo — a conversão explícita é obrigatória: `Number(pagina)` ou `parseInt(pagina, 10)`.
+
+
 O **corpo da requisição** (*request body*) é utilizado em operações de escrita (`POST`, `PUT`, `PATCH`) para transmitir dados estruturados. O acesso ocorre via `req.body`, mas requer a utilização de um middleware de parsing — tópico detalhado na seção seguinte.
 
 ```javascript
@@ -191,6 +181,9 @@ app.post('/usuarios', (req, res) => {
   res.status(201).json({ nome, email });
 });
 ```
+
+> **Em síntese:** uma rota no Express é sempre a combinação de três elementos — um verbo HTTP, um caminho e uma função handler. Os dados de uma requisição chegam por três canais distintos: `req.params` para identificadores na URL, `req.query` para filtros e parâmetros opcionais, e `req.body` para dados estruturados no corpo. O objeto `Router` permite modularizar essas rotas por recurso, mantendo o código organizado e de fácil navegação. Por fim, cada verbo HTTP carrega uma semântica precisa que deve ser respeitada: GET para leitura, POST para criação (201), PUT para substituição (200), PATCH para atualização parcial e DELETE para remoção (204) — seguir essa convenção torna a API previsível para qualquer cliente que a consuma.
+
 
 ### 2.2.4 O objeto Router
 
