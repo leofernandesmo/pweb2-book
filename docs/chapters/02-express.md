@@ -56,33 +56,92 @@ Neste exemplo, a aplicação responde às requisições `GET /usuarios` com um o
 
 O Express expõe métodos correspondentes aos verbos HTTP mais utilizados: `app.get()`, `app.post()`, `app.put()`, `app.patch()` e `app.delete()`. Em uma API REST bem projetada, cada verbo carrega uma semântica específica que deve ser respeitada, conforme descrito a seguir.
 
-O método `GET` é utilizado para a recuperação de recursos, sem produzir efeitos colaterais no servidor. O `POST` destina-se à criação de novos recursos. O `PUT` realiza a substituição completa de um recurso existente, ao passo que o `PATCH` aplica modificações parciais. Por fim, o `DELETE` remove um recurso identificado.
+O método `GET` é utilizado para a recuperação de **recursos**, sem produzir efeitos colaterais no servidor. O `POST` destina-se à criação de **novos recursos**. O `PUT` realiza a substituição completa de um **recurso existente**, ao passo que o `PATCH` aplica modificações parciais. Por fim, o `DELETE` remove um **recurso** identificado.
 
 O exemplo abaixo demonstra a definição de rotas para um recurso `produtos`, seguindo a semântica REST:
 
 ```javascript
-// Listagem de todos os produtos
-app.get('/produtos', (req, res) => {
-  res.json([]);
-});
-
-// Criação de um novo produto
+// Define uma rota POST em /produtos — usada para criar novos recursos
 app.post('/produtos', (req, res) => {
-  const novoProduto = req.body;
-  res.status(201).json(novoProduto);
+  const novoProduto = req.body; // Lê o corpo da requisição (ex: { nome: 'Cadeira', preco: 299 })                                
+  res.status(201).json(novoProduto); // 201 Created: convenção HTTP para criação bem-sucedida
+                                     // Retorna o recurso criado como confirmação ao cliente
 });
 
-// Atualização completa de um produto
+// Define uma rota PUT em /produtos/:id — substitui completamente um recurso existente
 app.put('/produtos/:id', (req, res) => {
-  const { id } = req.params;
-  res.json({ id, ...req.body });
+  const { id } = req.params; // Extrai o segmento dinâmico da URL
+                             // Ex: PUT /produtos/42  →  id === "42"
+                             // Atenção: params sempre retorna string, mesmo que o valor seja numérico
+  res.json({ id, ...req.body }); // Combina o id com os dados recebidos no corpo
+                                 // Ex: { id: "42", nome: "Cadeira", preco: 350 }
+                                 // O spread ...req.body "espalha" as propriedades do objeto recebido (ver explicação abaixo)
 });
 
-// Remoção de um produto
+// Define uma rota DELETE em /produtos/:id — remove o recurso identificado pelo id
 app.delete('/produtos/:id', (req, res) => {
-  res.status(204).send();
+  res.status(204).send(); // 204 No Content: operação bem-sucedida, sem corpo na resposta
+                          // Usar res.json() aqui seria incorreto — 204 não deve ter body
 });
+
 ```
+
+Veja alguns comentários abaixo sobre o código.
+
+A semântica em relação as respostas de status segue a especificação HTTP:
+
+- **POST** cria um recurso que ainda não existia → **201 Created** — um novo estado surgiu no servidor, portanto o código deve comunicar algo além do simples "deu certo".
+- **PUT** substitui um recurso que já existia → **200 OK** — o recurso já estava lá, foi atualizado, e a resposta devolve sua representação atual. Nada de novo foi criado.
+- **DELETE** conclui com sucesso mas não tem nada a devolver → **204 No Content** — exige declaração explícita justamente por fugir do padrão 200.
+
+**Atenção ao PUT**. Como 200 é o padrão do Express, omitir `res.status()` no PUT é uma escolha consciente, não um esquecimento. Escrever `res.status(200).json(...)` seria válido, porém redundante — a convenção entre desenvolvedores Express é omitir o status quando ele é 200, reservando a chamada explícita apenas para os casos que se desviam desse padrão.
+
+
+O operador spread (`...`) copia todas as propriedades enumeráveis de um objeto para dentro de outro. No contexto da rota PUT, ele é usado assim:
+
+```javascript
+res.json({ id, ...req.body });
+```
+
+Suponha que o cliente envie no corpo da requisição:
+
+```json
+{ "nome": "Cadeira", "preco": 350 }
+```
+
+O spread "espalha" essas propriedades dentro do novo objeto literal, produzindo o resultado equivalente a:
+
+```javascript
+res.json({ id: "42", nome: "Cadeira", preco: 350 });
+```
+
+Sem o spread, seria necessário construir esse objeto manualmente, propriedade por propriedade — o que é inviável quando o corpo da requisição tem estrutura variável ou muitos campos. O spread resolve isso de forma genérica, independentemente de quantas ou quais propriedades `req.body` contenha.
+
+Vale observar um detalhe importante de ordem: se `req.body` contiver uma propriedade chamada `id`, ela **sobrescreveria** o `id` vindo de `req.params`, pois propriedades declaradas depois prevalecem sobre as anteriores. Por isso, em situações reais, é recomendável colocar o `id` do params **após** o spread, garantindo que ele sempre prevaleça:
+
+```javascript
+res.json({ ...req.body, id }); // id de req.params nunca será sobrescrito
+```
+
+Para testar as rotas criadas no exemplo anterior, você pode usar o cURL:
+
+```bash
+# POST — cria um novo produto
+curl -X POST http://localhost:3000/produtos \
+  -H "Content-Type: application/json" \
+  -d '{"nome": "Cadeira", "preco": 299}'
+
+# PUT — substitui completamente o produto de id 42
+curl -X PUT http://localhost:3000/produtos/42 \
+  -H "Content-Type: application/json" \
+  -d '{"nome": "Cadeira Ergonômica", "preco": 350}'
+
+# DELETE — remove o produto de id 42
+curl -X DELETE http://localhost:3000/produtos/42
+```
+
+O cabeçalho `-H "Content-Type: application/json"` é obrigatório nas rotas POST e PUT — é ele que instrui o servidor a interpretar o corpo como JSON, ativando o `express.json()`. Sem ele, `req.body` chegará como `undefined`. O DELETE dispensa cabeçalho e corpo, pois toda a informação necessária está na própria URL.
+
 
 ### 2.2.3 Parâmetros de rota, de consulta e corpo da requisição
 
@@ -97,6 +156,21 @@ app.get('/usuarios/:id', (req, res) => {
   res.json({ usuarioId: id });
 });
 ```
+
+Para que `req.body` esteja disponível nas rotas, é necessário registrar o middleware de parsing de JSON **antes** das definições de rota, por meio de `app.use(express.json())`:
+
+```javascript
+const app = express();
+
+app.use(express.json()); // Habilita a leitura do corpo da requisição em formato JSON
+
+app.post('/produtos', (req, res) => {
+  console.log(req.body); // Agora acessível. Sem a linha acima, seria undefined.
+  res.status(201).json(req.body);
+});
+```
+
+O conceito de middleware — o que é, como funciona internamente e como criar os seus próprios — será explicado em profundidade na seção 2.3 deste capítulo.
 
 Os **parâmetros de consulta** (*query params*) são pares chave-valor transmitidos na URL após o caractere `?`. São acessados via `req.query` e frequentemente empregados em operações de filtragem, ordenação ou paginação.
 
