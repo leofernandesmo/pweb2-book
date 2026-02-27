@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" font-family="'Segoe UI', Arial, sans-serif">
+
+  <!-- Background -->
+  <rect width="900" height="540" fill="#0f172a" rx="16"/>
+
+  <!-- Title -->
+  <text x="450" y="38" text-anchor="middle" font-size="15" font-weight="700" fill="#94a3b8" letter-spacing="2">FLUXO DE UMA REQUISIÇÃO HTTP NO EXPRESS</text>
+
+  <!-- ─── CLIENTE ─── -->
+  <rect x="30" y="70" width="130" height="64" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  <text x="95" y="97" text-anchor="middle" font-size="11" fill="#94a3b8" font-weight="600">CLIENTE</text>
+  <text x="95" y="116" text-anchor="middle" font-size="10.5" fill="#64748b">GET /usuarios/42</text>
+
+  <!-- seta cliente → app.use() -->
+  <line x1="160" y1="102" x2="215" y2="102" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ─── app.use() bloco ─── -->
+  <rect x="216" y="55" width="148" height="200" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  <text x="290" y="77" text-anchor="middle" font-size="11" fill="#94a3b8" font-weight="700">app.js</text>
+
+  <!-- middleware 1 -->
+  <rect x="228" y="86" width="124" height="36" rx="6" fill="#0f2d1f" stroke="#166534" stroke-width="1.2"/>
+  <text x="290" y="100" text-anchor="middle" font-size="9.5" fill="#4ade80" font-weight="600">helmet()</text>
+  <text x="290" y="114" text-anchor="middle" font-size="8.5" fill="#86efac">Segurança HTTP</text>
+
+  <!-- middleware 2 -->
+  <rect x="228" y="130" width="124" height="36" rx="6" fill="#0f2d1f" stroke="#166534" stroke-width="1.2"/>
+  <text x="290" y="144" text-anchor="middle" font-size="9.5" fill="#4ade80" font-weight="600">cors()</text>
+  <text x="290" y="158" text-anchor="middle" font-size="8.5" fill="#86efac">Controle de origem</text>
+
+  <!-- middleware 3 -->
+  <rect x="228" y="174" width="124" height="36" rx="6" fill="#0f2d1f" stroke="#166534" stroke-width="1.2"/>
+  <text x="290" y="188" text-anchor="middle" font-size="9.5" fill="#4ade80" font-weight="600">express.json()</text>
+  <text x="290" y="202" text-anchor="middle" font-size="8.5" fill="#86efac">Parsing do body</text>
+
+  <!-- middleware 4 -->
+  <rect x="228" y="218" width="124" height="36" rx="6" fill="#0f2d1f" stroke="#166534" stroke-width="1.2"/>
+  <text x="290" y="232" text-anchor="middle" font-size="9.5" fill="#4ade80" font-weight="600">morgan()</text>
+  <text x="290" y="246" text-anchor="middle" font-size="8.5" fill="#86efac">Log de requisições</text>
+
+  <!-- seta app.use() → routes/index -->
+  <line x1="364" y1="155" x2="418" y2="155" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="391" y="147" text-anchor="middle" font-size="8.5" fill="#64748b">next()</text>
+
+  <!-- ─── routes/index.js ─── -->
+  <rect x="419" y="100" width="148" height="110" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  <text x="493" y="122" text-anchor="middle" font-size="11" fill="#94a3b8" font-weight="700">routes/index.js</text>
+
+  <!-- /usuarios -->
+  <rect x="431" y="132" width="124" height="28" rx="5" fill="#1a1f35" stroke="#3730a3" stroke-width="1.2"/>
+  <text x="493" y="150" text-anchor="middle" font-size="9.5" fill="#818cf8">/api/usuarios</text>
+
+  <!-- /produtos -->
+  <rect x="431" y="168" width="124" height="28" rx="5" fill="#1a1f35" stroke="#3730a3" stroke-width="1.2"/>
+  <text x="493" y="186" text-anchor="middle" font-size="9.5" fill="#818cf8">/api/produtos</text>
+
+  <!-- seta index → usuarios.routes -->
+  <line x1="555" y1="146" x2="613" y2="146" stroke="#475569" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+  <!-- seta index → produtos.routes (vai para baixo) -->
+  <line x1="555" y1="182" x2="580" y2="182" stroke="#334155" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <line x1="580" y1="182" x2="580" y2="370" stroke="#334155" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <line x1="580" y1="370" x2="613" y2="370" stroke="#334155" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arr)"/>
+
+  <!-- ─── usuarios.routes.js ─── -->
+  <rect x="614" y="80" width="168" height="160" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  <text x="698" y="102" text-anchor="middle" font-size="10.5" fill="#94a3b8" font-weight="700">usuarios.routes.js</text>
+
+  <!-- GET / -->
+  <rect x="626" y="110" width="144" height="26" rx="5" fill="#172032" stroke="#0369a1" stroke-width="1.2"/>
+  <text x="698" y="127" text-anchor="middle" font-size="9" fill="#38bdf8"><tspan font-weight="700">GET</tspan>  /   →  listarUsuarios</text>
+
+  <!-- GET /:id — destacado -->
+  <rect x="626" y="143" width="144" height="26" rx="5" fill="#0c2340" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="698" y="160" text-anchor="middle" font-size="9" fill="#7dd3fc"><tspan font-weight="700">GET</tspan>  /:id → obterUsuario</text>
+
+  <!-- POST / -->
+  <rect x="626" y="176" width="144" height="26" rx="5" fill="#172032" stroke="#0369a1" stroke-width="1.2"/>
+  <text x="698" y="193" text-anchor="middle" font-size="9" fill="#38bdf8"><tspan font-weight="700">POST</tspan>  /   →  criarUsuario</text>
+
+  <!-- DELETE /:id -->
+  <rect x="626" y="209" width="144" height="26" rx="5" fill="#172032" stroke="#0369a1" stroke-width="1.2"/>
+  <text x="698" y="226" text-anchor="middle" font-size="9" fill="#38bdf8"><tspan font-weight="700">DEL</tspan>  /:id → removerUsuario</text>
+
+  <!-- ─── produtos.routes.js ─── -->
+  <rect x="614" y="305" width="168" height="110" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  <text x="698" y="327" text-anchor="middle" font-size="10.5" fill="#94a3b8" font-weight="700">produtos.routes.js</text>
+
+  <rect x="626" y="336" width="144" height="26" rx="5" fill="#172032" stroke="#0369a1" stroke-width="1.2"/>
+  <text x="698" y="353" text-anchor="middle" font-size="9" fill="#38bdf8"><tspan font-weight="700">GET</tspan>  /   →  listarProdutos</text>
+
+  <rect x="626" y="369" width="144" height="26" rx="5" fill="#172032" stroke="#0369a1" stroke-width="1.2"/>
+  <text x="698" y="386" text-anchor="middle" font-size="9" fill="#38bdf8"><tspan font-weight="700">POST</tspan>  /   →  criarProduto</text>
+
+  <!-- seta GET /:id → controller -->
+  <line x1="770" y1="156" x2="820" y2="156" stroke="#0ea5e9" stroke-width="2" marker-end="url(#arrBlue)"/>
+
+  <!-- ─── CONTROLLER / HANDLER ─── -->
+  <rect x="821" y="100" width="60" height="370" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  <text x="851" y="130" text-anchor="middle" font-size="9.5" fill="#94a3b8" font-weight="700">Con</text>
+  <text x="851" y="145" text-anchor="middle" font-size="9.5" fill="#94a3b8" font-weight="700">tro</text>
+  <text x="851" y="160" text-anchor="middle" font-size="9.5" fill="#94a3b8" font-weight="700">ller</text>
+
+  <!-- handler destacado -->
+  <rect x="828" y="175" width="46" height="58" rx="6" fill="#0c2340" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="851" y="196" text-anchor="middle" font-size="8" fill="#7dd3fc">obter</text>
+  <text x="851" y="210" text-anchor="middle" font-size="8" fill="#7dd3fc">Usuario</text>
+  <text x="851" y="224" text-anchor="middle" font-size="7.5" fill="#38bdf8">(req,res)</text>
+
+  <!-- seta resposta volta ao cliente -->
+  <path d="M851 470 Q451 510 95 170" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrBlue)"/>
+  <text x="460" y="508" text-anchor="middle" font-size="9" fill="#38bdf8">res.json({ id: "42", nome: "Ana" })  →  200 OK</text>
+
+  <!-- ─── LEGENDA ─── -->
+  <rect x="30" y="430" width="340" height="88" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="200" y="450" text-anchor="middle" font-size="10" fill="#64748b" font-weight="700">LEGENDA</text>
+
+  <rect x="44" y="460" width="12" height="12" rx="2" fill="#0c2340" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="62" y="471" font-size="9.5" fill="#7dd3fc">Caminho da requisição GET /usuarios/42</text>
+
+  <rect x="44" y="480" width="12" height="12" rx="2" fill="#0f2d1f" stroke="#166534" stroke-width="1.2"/>
+  <text x="62" y="491" font-size="9.5" fill="#86efac">Middlewares globais (executados em todos os requests)</text>
+
+  <line x1="44" y1="506" x2="56" y2="506" stroke="#334155" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="62" y="510" font-size="9.5" fill="#64748b">Rotas não atingidas por esta requisição</text>
+
+  <!-- Defs: setas -->
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
+    </marker>
+    <marker id="arrBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#0ea5e9"/>
+    </marker>
+  </defs>
+
+</svg>

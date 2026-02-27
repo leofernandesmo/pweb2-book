@@ -10,24 +10,28 @@
       
       
       
-        <link rel="canonical" href="https://leofernandesmo.github.io/pweb2-book/print_page/">
+        <link rel="canonical" href="https://leofernandesmo.github.io/pweb2-book/chapters/02-express/">
       
       
+        <link rel="prev" href="../01-introducao/">
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+        <link rel="next" href="../99-appendix/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.18">
     
     
       
-        <title>Print / Save PDF - Programação Web 2 - Uma abordagem usando Node/Express</title>
+        <title>2. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto - Programação Web 2 - Uma abordagem usando Node/Express</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.66ac8b77.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.66ac8b77.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -46,40 +50,34 @@
       
     
     
-      <link rel="stylesheet" href="../css/print-site-enum-headings1.css">
+      <link rel="stylesheet" href="../../css/print-site-enum-headings1.css">
     
-      <link rel="stylesheet" href="../css/print-site-enum-headings2.css">
+      <link rel="stylesheet" href="../../css/print-site-enum-headings2.css">
     
-      <link rel="stylesheet" href="../css/print-site-enum-headings3.css">
+      <link rel="stylesheet" href="../../css/print-site-enum-headings3.css">
     
-      <link rel="stylesheet" href="../css/print-site-enum-headings4.css">
+      <link rel="stylesheet" href="../../css/print-site-enum-headings4.css">
     
-      <link rel="stylesheet" href="../css/print-site-enum-headings5.css">
+      <link rel="stylesheet" href="../../css/print-site-enum-headings5.css">
     
-      <link rel="stylesheet" href="../css/print-site-enum-headings6.css">
+      <link rel="stylesheet" href="../../css/print-site-enum-headings6.css">
     
-      <link rel="stylesheet" href="../css/print-site.css">
+      <link rel="stylesheet" href="../../css/print-site.css">
     
-      <link rel="stylesheet" href="../css/print-site-material.css">
+      <link rel="stylesheet" href="../../css/print-site-material.css">
     
-      <link rel="stylesheet" href="../assets/extra.css">
+      <link rel="stylesheet" href="../../assets/extra.css">
     
-      <link rel="stylesheet" href="../assets/css/custom.css">
+      <link rel="stylesheet" href="../../assets/css/custom.css">
     
-    <script>__md_scope=new URL("/pweb2-book/",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
     
     
     
-  
-        <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function () {
-            remove_material_navigation();remove_mkdocs_theme_navigation();generate_toc();
-        })
-        </script>
-        </head>
+  </head>
   
   
     
@@ -98,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#" class="md-skip">
+        <a href="#capitulo-2-express-rotas-middlewares-controllers-e-estrutura-de-projeto" class="md-skip">
           Ir para o conteúdo
         </a>
       
@@ -112,7 +110,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
-    <a href=".." title="Programação Web 2 - Uma abordagem usando Node/Express" class="md-header__button md-logo" aria-label="Programação Web 2 - Uma abordagem usando Node/Express" data-md-component="logo">
+    <a href="../.." title="Programação Web 2 - Uma abordagem usando Node/Express" class="md-header__button md-logo" aria-label="Programação Web 2 - Uma abordagem usando Node/Express" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -132,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Print / Save PDF
+              2. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
             
           </span>
         </div>
@@ -239,7 +237,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
     
@@ -256,7 +254,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../cover/" class="md-tabs__link">
+      <a href="../../cover/" class="md-tabs__link">
         
   
     
@@ -273,7 +271,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../title-page/" class="md-tabs__link">
+      <a href="../../title-page/" class="md-tabs__link">
         
   
     
@@ -290,7 +288,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../preface/" class="md-tabs__link">
+      <a href="../../preface/" class="md-tabs__link">
         
   
     
@@ -305,11 +303,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../chapters/00-how-to-use/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../00-how-to-use/" class="md-tabs__link">
           
   
     
@@ -327,7 +327,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../back-cover/" class="md-tabs__link">
+      <a href="../../back-cover/" class="md-tabs__link">
         
   
     
@@ -344,7 +344,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="./" class="md-tabs__link">
+      <a href="../../print_page/" class="md-tabs__link">
         
   
     
@@ -380,7 +380,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navegação" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Programação Web 2 - Uma abordagem usando Node/Express" class="md-nav__button md-logo" aria-label="Programação Web 2 - Uma abordagem usando Node/Express" data-md-component="logo">
+    <a href="../.." title="Programação Web 2 - Uma abordagem usando Node/Express" class="md-nav__button md-logo" aria-label="Programação Web 2 - Uma abordagem usando Node/Express" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -410,7 +410,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -430,7 +430,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cover/" class="md-nav__link">
+      <a href="../../cover/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -450,7 +450,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../title-page/" class="md-nav__link">
+      <a href="../../title-page/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -470,7 +470,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../preface/" class="md-nav__link">
+      <a href="../../preface/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -487,8 +487,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -503,19 +505,22 @@
     
     
       
+        
+        
+      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -526,7 +531,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Chapters
@@ -540,7 +545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../chapters/00-how-to-use/" class="md-nav__link">
+      <a href="../00-how-to-use/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -561,7 +566,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../chapters/01-introducao/" class="md-nav__link">
+      <a href="../01-introducao/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -579,10 +584,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../chapters/02-express/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    2. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -591,6 +616,326 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#21-introducao" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Introdução
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-o-sistema-de-rotas" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 O Sistema de Rotas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 O Sistema de Rotas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#221-o-que-e-uma-rota" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2.1 O que é uma rota?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#222-metodos-http-e-semantica-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2.2 Métodos HTTP e semântica REST
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#223-parametros-de-rota-de-consulta-e-corpo-da-requisicao" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2.3 Parâmetros de rota, de consulta e corpo da requisição
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#224-o-objeto-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2.4 O objeto Router
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-middlewares" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 Middlewares
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Middlewares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#231-a-natureza-do-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3.1 A natureza do middleware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#232-o-pipeline-de-execucao" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3.2 O pipeline de execução
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#233-tipos-de-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3.3 Tipos de middleware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#234-middlewares-de-terceiros-amplamente-utilizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3.4 Middlewares de terceiros amplamente utilizados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3.4 Middlewares de terceiros amplamente utilizados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#helmet" class="md-nav__link">
+    <span class="md-ellipsis">
+      helmet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      cors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#morgan" class="md-nav__link">
+    <span class="md-ellipsis">
+      morgan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#express-rate-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      express-rate-limit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multer" class="md-nav__link">
+    <span class="md-ellipsis">
+      multer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      compression
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#composicao-em-appjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Composição em app.js
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#235-criando-middlewares-customizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3.5 Criando middlewares customizados
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#236-propagacao-de-erros" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3.6 Propagação de erros
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#24-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4 Controllers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.4 Controllers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#241-a-separacao-de-responsabilidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4.1 A separação de responsabilidades
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#242-implementacao-de-um-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4.2 Implementação de um controller
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#243-integracao-com-o-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4.3 Integração com o router
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#25-estrutura-de-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5 Estrutura de Projeto
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.5 Estrutura de Projeto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#251-a-importancia-da-organizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5.1 A importância da organização
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#252-estrutura-recomendada" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5.2 Estrutura recomendada
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#253-separacao-entre-appjs-e-serverjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5.3 Separação entre app.js e server.js
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#254-o-agregador-de-rotas" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5.4 O agregador de rotas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#255-classe-de-erro-customizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5.5 Classe de erro customizado
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -603,7 +948,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../chapters/99-appendix/" class="md-nav__link">
+      <a href="../99-appendix/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -631,7 +976,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../back-cover/" class="md-nav__link">
+      <a href="../../back-cover/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -651,23 +996,7 @@
   
   
     <li class="md-nav__item">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Print / Save PDF
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+      <a href="../../print_page/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -676,120 +1005,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Índice">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Índice
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. Home
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cover" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. Cover
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#title-page" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Title Page
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#preface" class="md-nav__link">
-    <span class="md-ellipsis">
-      4. Preface
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#section-chapters" class="md-nav__link">
-    <span class="md-ellipsis">
-      I. Chapters
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="I. Chapters">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#chapters-00-how-to-use" class="md-nav__link">
-    <span class="md-ellipsis">
-      5. 0. Como Usar Este Material
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#chapters-01-introducao" class="md-nav__link">
-    <span class="md-ellipsis">
-      6. 1. Fundamentos do Node.js
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#chapters-02-express" class="md-nav__link">
-    <span class="md-ellipsis">
-      7. 2. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#chapters-99-appendix" class="md-nav__link">
-    <span class="md-ellipsis">
-      8. Appendix
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#back-cover" class="md-nav__link">
-    <span class="md-ellipsis">
-      9. Back Cover
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -808,617 +1023,26 @@
                 
                   
 
+  
+    <a href="https://github.com/leofernandesmo/pweb2-book/edit/master/docs/chapters/02-express.md" title="Editar esta página" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/leofernandesmo/pweb2-book/raw/master/docs/chapters/02-express.md" title="Ver fonte desta página" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
 
-<div id="print-site-page" class="print-site-enumerate-headings print-site-enumerate-figures">
-        <section class="print-page">
-            <div id="print-page-toc" data-toc-depth="3">
-                <nav role='navigation' class='print-page-toc-nav'>
-                <h1 class='print-page-toc-title'>Table of Contents</h1>
-                </nav>
-            </div>
-        </section>
-        <section class="print-page" id="index"><!-- File: docs/index.md -->
 
-<h1 id="index-programacao-web-2">Programação Web 2<a class="headerlink" href="#index-programacao-web-2" title="Permanent link">&para;</a></h1>
-<p><strong>Author:</strong> Leo Fernandes, PhD</p>
-<p><strong>Version:</strong> 1.0</p>
-<p><strong>License:</strong> CC BY-NC-ND 4.0</p>
+<h1 id="capitulo-2-express-rotas-middlewares-controllers-e-estrutura-de-projeto">Capítulo 2 – Express: Rotas, Middlewares, Controllers e Estrutura de Projeto<a class="headerlink" href="#capitulo-2-express-rotas-middlewares-controllers-e-estrutura-de-projeto" title="Permanent link">&para;</a></h1>
 <hr />
-<p>Bem-vindo à versão aberta de <strong>Programação Web 2</strong>.<br />
-Este site é gerado a partir de arquivos Markdown e é otimizado para leitura em:</p>
-<ul>
-<li>📱 Smartphones  </li>
-<li>💻 Navegadores de computador  </li>
-<li>🧾 Impressão / saída em PDF (via “Imprimir / Salvar PDF” no menu)</li>
-</ul>
-<hr />
-<h2 id="index-como-navegar">Como Navegar<a class="headerlink" href="#index-como-navegar" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Comece pela <strong><a href="#cover">Capa</a></strong> e <strong><a href="#title-page">Folha de Rosto</a></strong>.  </li>
-<li>Em seguida, leia o <strong><a href="#preface">Prefácio</a></strong>.  </li>
-<li>Depois, siga os capítulos na ordem pela <strong>barra de navegação</strong>.</li>
-</ol>
-<hr />
-<h2 id="index-lendo-como-pdf">Lendo como PDF<a class="headerlink" href="#index-lendo-como-pdf" title="Permanent link">&para;</a></h2>
-<p>Para gerar um PDF:</p>
-<ol>
-<li>Clique em <strong>“Imprimir / Salvar PDF”</strong> na navegação.  </li>
-<li>O navegador abrirá uma versão do livro em página única.  </li>
-<li>Use a função <strong>Imprimir</strong> do navegador:  </li>
-<li>Destino: <strong>Salvar como PDF</strong>  </li>
-<li>Layout: Retrato  </li>
-<li>Margens: Padrão (ou “Nenhuma” para página cheia)</li>
-</ol>
-<p>Isso funciona tanto em navegadores de <strong>desktop</strong> quanto de <strong>dispositivos móveis</strong>.</p>
-<hr />
-<h2 id="index-sobre-o-projeto">Sobre o Projeto<a class="headerlink" href="#index-sobre-o-projeto" title="Permanent link">&para;</a></h2>
-<p>Este é um <strong>recurso educacional aberto</strong>.<br />
-Você pode <strong>ler, fazer fork, adaptar e contribuir</strong> por meio de pull requests, mas não pode usar este conteúdo comercialmente (ver detalhes da licença).</p>
-<p>Se quiser contribuir:</p>
-<ol>
-<li>Faça fork deste repositório no GitHub.  </li>
-<li>Edite ou adicione arquivos Markdown na pasta <code>docs/</code>.  </li>
-<li>Envie um pull request descrevendo suas alterações.</li>
-</ol>
-<hr /></section><section class="print-page" id="cover"><h1 id="cover-programacao-web-2">Programação Web 2<a class="headerlink" href="#cover-programacao-web-2" title="Permanent link">&para;</a></h1>
-<p><strong>Subtitle:</strong> Uma Abordagem com Node/Express</p>
-<p><strong>Author:</strong> Leo Fernandes, PhD<br />
-<strong>Institution:</strong> Instituto Federal de Educação, Ciência e Tecnologia de Alagoas (IFAL)</p>
-<hr />
-<blockquote>
-<p><em>“Let us change our traditional attitude to the construction of programs: Instead of imag-
-ining that our main task is to instruct a computer what to do, let us concentrate rather on 
-explaining to human beings what we want a computer to do.”</em> <em><strong>Donald Knuth</strong></em></p>
-</blockquote>
-<hr />
-<p><a href="#title-page">:material-book-open-page-variant: Go to Title Page</a></p></section><section class="print-page" id="title-page"><h1 id="title-page-programacao-web-2">Programação Web 2<a class="headerlink" href="#title-page-programacao-web-2" title="Permanent link">&para;</a></h1>
-<p><em>Uma abordagem usando Node/Express</em></p>
-<p><strong>Author</strong><br />
-Your Leo Fernandes, PhD<br />
-IFAL<br />
-leonardo.fernandes@ifal.edu.br</p>
-<hr />
-<p><strong>Edition:</strong> 1st Edition<br />
-<strong>Year:</strong> 2026  </p>
-<p><strong>License:</strong> CC BY-NC-ND 4.0<br />
-Ela garante:
-- o autor mantém todos os direitos autorais,
-- ninguém pode vender este material,
-- ninguém pode modificar diretamente (apenas através de contribuição, ou PR),
-- e ainda assim o conteúdo é aberto para leitura e estudo.</p>
-<hr />
-<p><a href="#preface">:material-book-open-page-variant: Go to Preface</a><br />
-<a href="#cover">:material-arrow-left: Back to Cover</a></p></section><section class="print-page" id="preface"><h1 id="preface-prefacio">Prefácio<a class="headerlink" href="#preface-prefacio" title="Permanent link">&para;</a></h1>
-<p>Este conteúdo aberto foi criado para estudantes do curso <strong>[Bacharelado em Sistemas de Informação do IFAL-Maceió]</strong>.<br />
-Ele foi projetado para ser:</p>
-<ul>
-<li><strong>Aberto</strong>: hospedado no GitHub e livremente acessível.</li>
-<li><strong>Vivo</strong>: atualizado conforme o curso evolui.</li>
-<li><strong>Multimodal</strong>: combinando texto, código, imagens, vídeo e áudio.</li>
-</ul>
-<h3 id="preface-como-usar-este-livro">Como Usar Este Livro<a class="headerlink" href="#preface-como-usar-este-livro" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>- Leia os capítulos na ordem se você é iniciante no assunto.  
-- Use o apêndice como referência rápida.  
-- Explore os links para vídeos e podcasts para um entendimento mais profundo.
-</code></pre></div>
-
-<hr />
-<p><a href="#chapters-01-introducao">:material-book-open-page-variant: Start Chapter 1 – Introduction</a><br />
-<a href="#title-page">:material-arrow-left: Back to Title Page</a></p></section>
-                        <h1 class='nav-section-title' id='section-chapters'>
-                            Chapters <a class='headerlink' href='#section-chapters' title='Permanent link'>↵</a>
-                        </h1>
-                        <section class="print-page" id="chapters-00-how-to-use"><h1 id="chapters-00-how-to-use-0-como-usar-este-material">0. Como Usar Este Material<a class="headerlink" href="#chapters-00-how-to-use-0-como-usar-este-material" title="Permanent link">&para;</a></h1>
-<p>Este capítulo explica <strong>como você, estudante</strong>, deve consumir este material ao longo da disciplina.<br />
-Nosso objetivo é que você aprenda de forma eficiente, prática e moderna, combinando estudo individual, atividades guiadas e projetos reais.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-01-modelo-de-aprendizagem-da-disciplina">0.1 Modelo de Aprendizagem da Disciplina<a class="headerlink" href="#chapters-00-how-to-use-01-modelo-de-aprendizagem-da-disciplina" title="Permanent link">&para;</a></h2>
-<p>A disciplina utiliza três pilares pedagógicos:</p>
-<ul>
-<li><strong>Ensino Híbrido</strong>  </li>
-<li><strong>Sala de Aula Invertida (Flipped Classroom)</strong>  </li>
-<li><strong>Aprendizagem Baseada em Problemas (PBL)</strong>  </li>
-</ul>
-<p>Essas abordagens tornam o processo mais ativo, prático e conectado ao mundo real do desenvolvimento web.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-02-ensino-hibrido">0.2 Ensino Híbrido<a class="headerlink" href="#chapters-00-how-to-use-02-ensino-hibrido" title="Permanent link">&para;</a></h2>
-<p>O ensino híbrido combina:</p>
-<ul>
-<li><strong>Estudo online assíncrono</strong> (antes da aula)  </li>
-<li><strong>Atividades práticas presenciais</strong> (durante a aula)  </li>
-</ul>
-<p>Isso significa que:</p>
-<ul>
-<li>Você <strong>estuda o conteúdo teórico</strong> no seu ritmo, usando este livro, vídeos e exemplos.  </li>
-<li>Você <strong>vem para a aula presencial</strong> para praticar, tirar dúvidas, programar e trabalhar em projetos.  </li>
-</ul>
-<p>O foco da aula presencial é <strong>fazer</strong>, não assistir a explicações longas.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-03-sala-de-aula-invertida-flipped-classroom">0.3 Sala de Aula Invertida (Flipped Classroom)<a class="headerlink" href="#chapters-00-how-to-use-03-sala-de-aula-invertida-flipped-classroom" title="Permanent link">&para;</a></h2>
-<p>A lógica é simples:</p>
-<ol>
-<li><strong>Antes da aula:</strong></li>
-<li>Ler o capítulo indicado</li>
-<li>Assistir aos vídeos curtos</li>
-<li>
-<p>Fazer pequenos exercícios de aquecimento  </p>
-</li>
-<li>
-<p><strong>Durante a aula:</strong></p>
-</li>
-<li>Resolver problemas reais</li>
-<li>Programar em dupla ou em grupo</li>
-<li>Trabalhar no projeto da disciplina</li>
-<li>
-<p>Receber orientação do professor  </p>
-</li>
-<li>
-<p><strong>Depois da aula:</strong></p>
-</li>
-<li>Revisar o conteúdo</li>
-<li>Registrar dúvidas</li>
-<li>Avançar no projeto  </li>
-</ol>
-<p>Essa abordagem aumenta sua <strong>autonomia</strong> e melhora a qualidade do tempo em sala.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-04-aprendizagem-baseada-em-problemas-pbl">0.4 Aprendizagem Baseada em Problemas (PBL)<a class="headerlink" href="#chapters-00-how-to-use-04-aprendizagem-baseada-em-problemas-pbl" title="Permanent link">&para;</a></h2>
-<p>Ao longo da disciplina, você será exposto a <strong>problemas reais</strong>, como:</p>
-<ul>
-<li>Criar uma página responsiva  </li>
-<li>Consumir uma API  </li>
-<li>Construir uma aplicação completa (pelo menos a parte de frontend) </li>
-</ul>
-<p>Cada problema exige:</p>
-<ul>
-<li>Pesquisa  </li>
-<li>Testes  </li>
-<li>Discussão  </li>
-<li>Tomada de decisão  </li>
-<li>Implementação  </li>
-</ul>
-<p>Você aprende <strong>fazendo</strong>, não apenas lendo.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-05-materiais-multimodais">0.5 Materiais Multimodais<a class="headerlink" href="#chapters-00-how-to-use-05-materiais-multimodais" title="Permanent link">&para;</a></h2>
-<p>Este livro combina diferentes formatos:</p>
-<ul>
-<li>Texto**  </li>
-<li>Exemplos de código  </li>
-<li>Vídeos curtos  </li>
-<li>Exercícios interativos  </li>
-<li>Quizzes  </li>
-<li>Editores de código embutidos  </li>
-<li>Links para ferramentas externas  </li>
-</ul>
-<p>Cada formato tem um propósito:</p>
-<ul>
-<li>Texto → compreensão conceitual  </li>
-<li>Código → prática imediata  </li>
-<li>Vídeo → demonstração rápida  </li>
-<li>Quizzes → autoavaliação  </li>
-<li>Editores → experimentação  </li>
-<li>Ferramentas externas → simulação do ambiente profissional  </li>
-</ul>
-<hr />
-<h1 id="chapters-00-how-to-use-como-consumir-o-material-semana-a-semana">Como Consumir o Material Semana a Semana<a class="headerlink" href="#chapters-00-how-to-use-como-consumir-o-material-semana-a-semana" title="Permanent link">&para;</a></h1>
-<h2 id="chapters-00-how-to-use-1-leia-o-capitulo-indicado">1. Leia o capítulo indicado<a class="headerlink" href="#chapters-00-how-to-use-1-leia-o-capitulo-indicado" title="Permanent link">&para;</a></h2>
-<p>O capítulo apresenta:</p>
-<ul>
-<li>Conceitos essenciais  </li>
-<li>Exemplos  </li>
-<li>Boas práticas  </li>
-<li>Exercícios guiados  </li>
-</ul>
-<p>Leia com calma, marque dúvidas e teste os códigos.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-2-assista-aos-videos-curtos">2. Assista aos vídeos curtos<a class="headerlink" href="#chapters-00-how-to-use-2-assista-aos-videos-curtos" title="Permanent link">&para;</a></h2>
-<p>Os vídeos reforçam:</p>
-<ul>
-<li>Conceitos-chave  </li>
-<li>Demonstrações práticas  </li>
-<li>Passo a passo de ferramentas  </li>
-</ul>
-<p>Eles são curtos para facilitar revisão e consulta.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-3-faca-os-exercicios-interativos">3. Faça os exercícios interativos<a class="headerlink" href="#chapters-00-how-to-use-3-faca-os-exercicios-interativos" title="Permanent link">&para;</a></h2>
-<p>Você encontrará:</p>
-<ul>
-<li>Quizzes  </li>
-<li>Caixas de código editáveis  </li>
-<li>Mini-desafios  </li>
-</ul>
-<p>Esses exercícios ajudam a fixar o conteúdo antes da aula.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-4-venha-para-a-aula-preparado">4. Venha para a aula preparado<a class="headerlink" href="#chapters-00-how-to-use-4-venha-para-a-aula-preparado" title="Permanent link">&para;</a></h2>
-<p>A aula presencial é <strong>100% prática</strong>.</p>
-<p>Você vai:</p>
-<ul>
-<li>Programar  </li>
-<li>Resolver problemas  </li>
-<li>Trabalhar em projetos  </li>
-<li>Tirar dúvidas  </li>
-<li>Receber feedback  </li>
-</ul>
-<p>Se você não estudar antes, terá dificuldade em acompanhar.</p>
-<hr />
-<h1 id="chapters-00-how-to-use-ferramentas-utilizadas-na-disciplina">Ferramentas Utilizadas na Disciplina<a class="headerlink" href="#chapters-00-how-to-use-ferramentas-utilizadas-na-disciplina" title="Permanent link">&para;</a></h1>
-<p>Todos os alunos devem:</p>
-<ul>
-<li>Usar o <strong>e-mail institucional</strong>  </li>
-<li>Criar conta no <strong>GitHub</strong>  </li>
-<li>Criar conta nas demais ferramentas quando necessário  </li>
-</ul>
-<p>A seguir, um guia rápido de cada ferramenta.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-google-classroom">Google Classroom<a class="headerlink" href="#chapters-00-how-to-use-google-classroom" title="Permanent link">&para;</a></h2>
-<p>Usado para:</p>
-<ul>
-<li>Comunicados  </li>
-<li>Entregas formais  </li>
-<li>Links para capítulos e vídeos  </li>
-<li>Organização semanal  </li>
-</ul>
-<p>Você deve acessar o Classroom <strong>toda semana</strong>.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-github-classroom">GitHub Classroom<a class="headerlink" href="#chapters-00-how-to-use-github-classroom" title="Permanent link">&para;</a></h2>
-<p>Usado para:</p>
-<ul>
-<li>Entregar exercícios de programação  </li>
-<li>Receber feedback automático  </li>
-<li>Versionar código  </li>
-<li>Trabalhar em repositórios individuais ou em grupo  </li>
-</ul>
-<p>Você precisa ter:</p>
-<ul>
-<li>Conta no GitHub  </li>
-<li>SSH configurado (opcional, mas recomendado)</li>
-</ul>
-<hr />
-<h2 id="chapters-00-how-to-use-codepen-jsfiddle">CodePen / JSFiddle<a class="headerlink" href="#chapters-00-how-to-use-codepen-jsfiddle" title="Permanent link">&para;</a></h2>
-<p>Usados para:</p>
-<ul>
-<li>Testar HTML, CSS e JavaScript rapidamente  </li>
-<li>Criar protótipos  </li>
-<li>Compartilhar exemplos  </li>
-<li>Experimentar sem instalar nada  </li>
-</ul>
-<p>Essas ferramentas são perfeitas para iniciantes.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-github-projects">GitHub Projects<a class="headerlink" href="#chapters-00-how-to-use-github-projects" title="Permanent link">&para;</a></h2>
-<p>Usado para:</p>
-<ul>
-<li>Organizar tarefas  </li>
-<li>Acompanhar o progresso do projeto  </li>
-<li>Trabalhar com Kanban  </li>
-<li>Aprender fluxo de trabalho profissional  </li>
-</ul>
-<p>Você usará GitHub Projects em equipe.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-figma">Figma<a class="headerlink" href="#chapters-00-how-to-use-figma" title="Permanent link">&para;</a></h2>
-<p>Usado para:</p>
-<ul>
-<li>Prototipação de interfaces  </li>
-<li>Wireframes  </li>
-<li>Design de telas  </li>
-<li>Colaboração visual  </li>
-</ul>
-<p>Antes de programar, você vai <strong>desenhar</strong>.</p>
-<hr />
-<h2 id="chapters-00-how-to-use-postman-insomnia">Postman / Insomnia<a class="headerlink" href="#chapters-00-how-to-use-postman-insomnia" title="Permanent link">&para;</a></h2>
-<p>Usados para:</p>
-<ul>
-<li>Testar APIs  </li>
-<li>Enviar requisições  </li>
-<li>Depurar erros  </li>
-<li>Documentar endpoints  </li>
-</ul>
-<p>Essenciais para a disciplina de backend.</p>
-<hr />
-<h1 id="chapters-00-how-to-use-checklist-do-estudante">Checklist do Estudante<a class="headerlink" href="#chapters-00-how-to-use-checklist-do-estudante" title="Permanent link">&para;</a></h1>
-<p>Antes de começar o semestre, você deve:</p>
-<ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Criar conta no GitHub  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Criar conta no Google Classroom  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Criar conta no Figma  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Criar conta no CodePen ou JSFiddle  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Instalar Postman ou Insomnia  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Configurar seu ambiente de desenvolvimento  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Ler este capítulo completo  </li>
-</ul>
-<hr />
-<h1 id="chapters-00-how-to-use-conclusao">Conclusão<a class="headerlink" href="#chapters-00-how-to-use-conclusao" title="Permanent link">&para;</a></h1>
-<p>Este material foi pensado para que você aprenda de forma:</p>
-<ul>
-<li>Autônoma  </li>
-<li>Prática  </li>
-<li>Guiada  </li>
-<li>Profissional  </li>
-</ul>
-<p>Se você seguir o fluxo recomendado — <strong>estudar antes, praticar durante, revisar depois</strong> — terá um excelente aproveitamento e construirá projetos reais para o seu portfólio.</p>
-<hr />
-<p>Se quiser, posso criar uma <strong>versão com cards</strong>, uma <strong>versão com quizzes</strong>, ou uma <strong>versão com vídeos embutidos</strong> para deixar esse capítulo ainda mais interativo.</p></section><section class="print-page" id="chapters-01-introducao"><h1 id="chapters-01-introducao-capitulo-1-fundamentos-do-nodejs">Capítulo 1 — Fundamentos do Node.js<a class="headerlink" href="#chapters-01-introducao-capitulo-1-fundamentos-do-nodejs" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p><strong>Vídeo curto explicativo</strong><br />
-<em>(link será adicionado posteriormente)</em></p>
-</blockquote>
-<h2 id="chapters-01-introducao-1-o-nodejs-como-ambiente-de-execucao-para-apis">1. O Node.js como Ambiente de Execução para APIs<a class="headerlink" href="#chapters-01-introducao-1-o-nodejs-como-ambiente-de-execucao-para-apis" title="Permanent link">&para;</a></h2>
-<p>O Node.js deve ser compreendido como um ambiente de execução orientado a eventos, cujo modelo de concorrência é baseado em I/O não bloqueante. Essa característica o torna particularmente adequado para sistemas cuja principal carga está na comunicação com bancos de dados, serviços externos e sistemas distribuídos — cenário típico de APIs REST institucionais.</p>
-<p>Em um contexto como o de uma API acadêmica do IFAL — responsável por autenticar usuários, consultar dados em banco relacional e devolver respostas estruturadas em JSON — o tempo de espera por operações externas é significativamente maior que o tempo de processamento local. O Node.js explora exatamente esse padrão de carga.</p>
-<p>O entendimento técnico do runtime é pré-requisito para decisões arquiteturais corretas nos capítulos seguintes.</p>
-<hr />
-<blockquote>
-<h3 id="chapters-01-introducao-breve-historico-do-nodejs">📜 Breve Histórico do Node.js<a class="headerlink" href="#chapters-01-introducao-breve-historico-do-nodejs" title="Permanent link">&para;</a></h3>
-<p>O Node.js foi criado em 2009 por Ryan Dahl com o objetivo de resolver limitações observadas em servidores web baseados em múltiplas threads, especialmente no que diz respeito à escalabilidade sob alta concorrência. Sua proposta central consistiu em utilizar JavaScript no lado do servidor, executado sobre o motor V8, adotando um modelo orientado a eventos e I/O não bloqueante.
-A introdução do npm consolidou rapidamente um ecossistema robusto de bibliotecas, impulsionando sua adoção em aplicações de rede, sistemas em tempo real e APIs REST. Ao longo dos anos, o projeto amadureceu tecnicamente e institucionalmente, passando a ser mantido sob governança da OpenJS Foundation, com ciclos regulares de versões LTS e suporte a padrões modernos da linguagem, como <code>async/await</code> e ECMAScript Modules.
-Para aprofundamento histórico e técnico, recomenda-se a leitura da documentação oficial do projeto:
-Referência: <a href="https://nodejs.org/en/about">https://nodejs.org/en/about</a>
-Esse material apresenta detalhes sobre a evolução do runtime, sua governança e marcos arquiteturais relevantes.</p>
-</blockquote>
-<hr />
-<h2 id="chapters-01-introducao-2-gerenciamento-de-projetos-com-npm">2. Gerenciamento de Projetos com NPM<a class="headerlink" href="#chapters-01-introducao-2-gerenciamento-de-projetos-com-npm" title="Permanent link">&para;</a></h2>
-<p>O <strong>npm</strong> (Node Package Manager) é mais do que um repositório de bibliotecas. Ele é o mecanismo formal de declaração de dependências, scripts e metadados do projeto.</p>
-<h3 id="chapters-01-introducao-21-inicializacao-de-um-projeto">2.1 Inicialização de um Projeto<a class="headerlink" href="#chapters-01-introducao-21-inicializacao-de-um-projeto" title="Permanent link">&para;</a></h3>
-<p>A criação de um novo projeto Node inicia-se com:</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>init
-</code></pre></div>
-<p>Esse comando cria interativamente o arquivo <code>package.json</code>. Para uma inicialização rápida com valores padrão:</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>init<span class="w"> </span>-y
-</code></pre></div>
-<p>O arquivo gerado pode assumir a seguinte forma:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;api-academica&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;API REST para consulta de dados acadêmicos&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;src/server.js&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;module&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node src/server.js&quot;</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Curso BSI - IFAL&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;license&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ISC&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>O campo <code>"type": "module"</code> define que o projeto utilizará o padrão ECMAScript Modules (ESM).</p>
-<hr />
-<h3 id="chapters-01-introducao-22-instalacao-de-dependencias">2.2 Instalação de Dependências<a class="headerlink" href="#chapters-01-introducao-22-instalacao-de-dependencias" title="Permanent link">&para;</a></h3>
-<p>Para instalar uma dependência de produção:</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>express
-</code></pre></div>
-<p>Ou de forma abreviada:</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>i<span class="w"> </span>express
-</code></pre></div>
-<p>Isso gera duas modificações:</p>
-<ol>
-<li>Adiciona a dependência em <code>"dependencies"</code> no <code>package.json</code>.</li>
-<li>Cria o diretório <code>node_modules/</code>.</li>
-<li>Gera ou atualiza o <code>package-lock.json</code>.</li>
-</ol>
-<p>Para instalar dependências de desenvolvimento (exemplo: biblioteca de testes):</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>jest
-</code></pre></div>
-<p>ou</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>i<span class="w"> </span>-D<span class="w"> </span>jest
-</code></pre></div>
-<p>A distinção entre dependências de produção e desenvolvimento é relevante em ambientes de deploy, pois apenas as primeiras são necessárias em execução.</p>
-<hr />
-<h3 id="chapters-01-introducao-23-atualizacao-e-remocao">2.3 Atualização e Remoção<a class="headerlink" href="#chapters-01-introducao-23-atualizacao-e-remocao" title="Permanent link">&para;</a></h3>
-<p>Atualizar uma dependência:</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>update<span class="w"> </span>express
-</code></pre></div>
-<p>Remover uma dependência:</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>uninstall<span class="w"> </span>express
-</code></pre></div>
-<p>Auditoria de segurança:</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>audit
-npm<span class="w"> </span>audit<span class="w"> </span>fix
-</code></pre></div>
-<hr />
-<h3 id="chapters-01-introducao-24-scripts-de-execucao">2.4 Scripts de Execução<a class="headerlink" href="#chapters-01-introducao-24-scripts-de-execucao" title="Permanent link">&para;</a></h3>
-<p>O campo <code>"scripts"</code> permite definir comandos padronizados.</p>
-<p>Exemplo:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node src/server.js&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;dev&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node --watch src/server.js&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;test&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jest&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Execução:</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>dev
-</code></pre></div>
-<p>Ou, no caso do script <code>start</code>, simplesmente:</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>start
-</code></pre></div>
-<p>Essa funcionalidade é fundamental para padronização de execução em equipes.</p>
-<hr />
-<h2 id="chapters-01-introducao-3-organizacao-de-modulos-no-nodejs">3. Organização de Módulos no Node.js<a class="headerlink" href="#chapters-01-introducao-3-organizacao-de-modulos-no-nodejs" title="Permanent link">&para;</a></h2>
-<p>Uma aplicação real não deve concentrar toda a lógica em um único arquivo. A modularização permite separação de responsabilidades.</p>
-<p>Considere a seguinte estrutura de diretórios:</p>
-<div class="highlight"><pre><span></span><code>api-academica/
-│
-├── src/
-│   ├── server.js
-│   ├── routes/
-│   │   └── studentRoutes.js
-│   ├── controllers/
-│   │   └── studentController.js
-│   └── services/
-│       └── studentService.js
-│
-└── package.json
-</code></pre></div>
-<h3 id="chapters-01-introducao-31-exportando-um-modulo-esm">3.1 Exportando um Módulo (ESM)<a class="headerlink" href="#chapters-01-introducao-31-exportando-um-modulo-esm" title="Permanent link">&para;</a></h3>
-<p>Arquivo <code>studentService.js</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">findStudentById</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">id</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Maria Oliveira&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">course</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Sistemas de Informação&quot;</span>
-<span class="w">  </span><span class="p">};</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Arquivo <code>studentController.js</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">findStudentById</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../services/studentService.js&quot;</span><span class="p">;</span>
-
-<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">getStudent</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">student</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">findStudentById</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">student</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Arquivo <code>studentRoutes.js</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getStudent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../controllers/studentController.js&quot;</span><span class="p">;</span>
-
-<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">registerStudentRoutes</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/students/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">getStudent</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Arquivo <code>server.js</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;express&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">registerStudentRoutes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./routes/studentRoutes.js&quot;</span><span class="p">;</span>
-
-<span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">();</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
-
-<span class="nx">registerStudentRoutes</span><span class="p">(</span><span class="nx">app</span><span class="p">);</span>
-
-<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mf">3000</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Servidor executando em http://localhost:3000&quot;</span><span class="p">);</span>
-<span class="p">});</span>
-</code></pre></div>
-<p>Esse modelo já antecipa princípios da arquitetura MVC, mesmo antes de formalizá-la conceitualmente.</p>
-<hr />
-<h2 id="chapters-01-introducao-4-construcao-de-um-servidor-http-com-modulo-nativo">4. Construção de um Servidor HTTP com Módulo Nativo<a class="headerlink" href="#chapters-01-introducao-4-construcao-de-um-servidor-http-com-modulo-nativo" title="Permanent link">&para;</a></h2>
-<p>Antes de utilizar frameworks como Express, é fundamental compreender o funcionamento do módulo HTTP nativo do Node.js. 
-Um servidor HTTP básico pode ser construído da seguinte forma:</p>
-<p>Arquivo <code>server.js</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;http&#39;</span><span class="p">;</span>
-
-<span class="c1">// 2. Define o endereço e a porta</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">;</span><span class="w"> </span><span class="c1">// localhost</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3000</span><span class="p">;</span>
-
-<span class="c1">// 3. Cria o servidor web</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="c1">// Configura o status HTTP (200 = OK) e o tipo de conteúdo (texto simples)</span>
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">200</span><span class="p">;</span>
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;text/html&#39;</span><span class="p">);</span>
-
-<span class="w">  </span><span class="c1">// Envia a resposta &quot;Olá Mundo!&quot;</span>
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">&#39;&lt;h1&gt;Olá, Mundo! Servidor Node.js simples rodando.&lt;/h1&gt;&#39;</span><span class="p">);</span>
-<span class="p">});</span>
-
-<span class="c1">// 4. Inicia o servidor e escuta na porta definida</span>
-<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">port</span><span class="p">,</span><span class="w"> </span><span class="nx">hostname</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Servidor rodando em http://</span><span class="si">${</span><span class="nx">hostname</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">port</span><span class="si">}</span><span class="sb">/`</span><span class="p">);</span>
-<span class="p">});</span>
-</code></pre></div>
-<p>O método createServer instancia um servidor TCP capaz de processar requisições HTTP. 
-O objeto req representa a requisição recebida, enquanto res encapsula os mecanismos de resposta ao cliente. 
-A chamada a res.end() encerra o fluxo da resposta e envia os dados ao consumidor.</p>
-<p>Para executar o servidor, utilize o comando abaixo no terminal:</p>
-<div class="highlight"><pre><span></span><code>node server.js
-</code></pre></div>
-<p>Abra o seu navegador e acesse: http://localhost:3000 </p>
-<p>Vamos ver agora um segundo exemplo:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;http&#39;</span><span class="p">;</span><span class="w"> </span><span class="c1">// Importa o módulo HTTP nativo do Node.js</span>
-
-<span class="kd">const</span><span class="w"> </span><span class="nx">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Cria o servidor e define o callback para cada requisição</span>
-
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;/health&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Verifica se a rota solicitada é &quot;/health&quot;</span>
-
-<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mf">200</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span><span class="w"> </span><span class="p">});</span><span class="w"> </span><span class="c1">// Define status 200 e cabeçalho JSON</span>
-
-<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ok&#39;</span><span class="w"> </span><span class="p">}));</span><span class="w"> </span><span class="c1">// Envia resposta JSON e encerra a requisição</span>
-
-<span class="w">    </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// Interrompe a execução para evitar cair no 404</span>
-
-<span class="w">  </span><span class="p">}</span>
-
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mf">404</span><span class="p">);</span><span class="w"> </span><span class="c1">// Define status 404 para rota não encontrada</span>
-
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span><span class="w"> </span><span class="c1">// Finaliza a resposta sem corpo</span>
-
-<span class="p">});</span>
-
-<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mf">3000</span><span class="p">);</span><span class="w"> </span><span class="c1">// Inicia o servidor na porta 3000</span>
-</code></pre></div>
-<p>Aqui, vemos alguns elementos centrais:</p>
-<p>O servidor é orientado a eventos.</p>
-<p>Cada requisição gera um objeto req e res.</p>
-<p>O roteamento é manual.</p>
-<p>O protocolo HTTP é manipulado explicitamente.</p>
-<p>Em aplicações reais, esse modelo rapidamente se torna complexo. A ausência de abstrações para roteamento estruturado, middlewares e tratamento centralizado de erros motiva o uso de frameworks como Express, que serão abordados posteriormente.</p>
-<p>Veja um terceiro exemplo abaixo.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;http&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// Importa o módulo HTTP nativo</span>
-
-<span class="kd">const</span><span class="w"> </span><span class="nx">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Cria o servidor e define a função para cada requisição</span>
-
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;/health&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Verifica rota GET /health</span>
-<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mf">200</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="w"> </span><span class="p">});</span><span class="w"> </span><span class="c1">// Define status 200 e tipo JSON</span>
-<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="w"> </span><span class="p">}));</span><span class="w"> </span><span class="c1">// Envia JSON e encerra</span>
-<span class="w">    </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// Interrompe execução</span>
-<span class="w">  </span><span class="p">}</span>
-
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s2">&quot;/student&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Verifica rota GET /student</span>
-<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mf">200</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="w"> </span><span class="p">});</span><span class="w"> </span><span class="c1">// Define status 200 e tipo JSON</span>
-<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;João Silva&quot;</span><span class="w"> </span><span class="p">}));</span><span class="w"> </span><span class="c1">// Retorna estudante fictício</span>
-<span class="w">    </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// Interrompe execução</span>
-<span class="w">  </span><span class="p">}</span>
-
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;/student&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Verifica rota POST /student</span>
-<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mf">201</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;text/html&quot;</span><span class="w"> </span><span class="p">});</span><span class="w"> </span><span class="c1">// Define status 201 e tipo HTML</span>
-<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s2">&quot;&lt;h1&gt;Estudante cadastrado com sucesso&lt;/h1&gt;&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// Retorna mensagem HTML</span>
-<span class="w">    </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// Interrompe execução</span>
-<span class="w">  </span><span class="p">}</span>
-
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mf">404</span><span class="p">);</span><span class="w"> </span><span class="c1">// Define status 404 para rota inexistente</span>
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span><span class="w"> </span><span class="c1">// Finaliza resposta</span>
-<span class="p">});</span>
-
-<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mf">3000</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Inicia o servidor na porta 3000</span>
-<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Servidor HTTP executando na porta 3000&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// Log informativo</span>
-<span class="p">});</span>
-</code></pre></div>
-<p>Observa-se que, à medida que novas rotas e métodos HTTP são adicionados, o código tende a se tornar progressivamente menos coeso e mais difícil de manter. Esse fenômeno evidencia a necessidade de abstrações arquiteturais adequadas, como roteadores e middlewares, que serão explorados no capítulo seguinte.</p>
-<hr />
-<h2 id="chapters-01-introducao-5-testando-a-api-com-curl">5. Testando a API com cURL<a class="headerlink" href="#chapters-01-introducao-5-testando-a-api-com-curl" title="Permanent link">&para;</a></h2>
-<p>Após iniciar o servidor:</p>
-<div class="highlight"><pre><span></span><code>node<span class="w"> </span>server.js
-</code></pre></div>
-<p>ou</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>start
-</code></pre></div>
-<p>Pode-se realizar requisições HTTP diretamente pelo terminal usando <code>cURL</code>.</p>
-<h3 id="chapters-01-introducao-51-teste-da-rota-health">5.1 Teste da Rota /health<a class="headerlink" href="#chapters-01-introducao-51-teste-da-rota-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:3000/health
-</code></pre></div>
-<p>Resposta esperada:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;ok&quot;</span><span class="p">}</span>
-</code></pre></div>
-<h3 id="chapters-01-introducao-52-requisicao-com-metodo-explicito">5.2 Requisição com Método Explícito<a class="headerlink" href="#chapters-01-introducao-52-requisicao-com-metodo-explicito" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>http://localhost:3000/student
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:3000/student<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;:&quot;Maria&quot;}&#39;</span>
-</code></pre></div>
-<h3 id="chapters-01-introducao-53-visualizando-cabecalhos">5.3 Visualizando Cabeçalhos<a class="headerlink" href="#chapters-01-introducao-53-visualizando-cabecalhos" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-i<span class="w"> </span>http://localhost:3000/health
-</code></pre></div>
-<p>O parâmetro <code>-i</code> exibe cabeçalhos HTTP, permitindo observar código de status e tipo de conteúdo.</p>
-<hr />
-<h2 id="chapters-01-introducao-6-contextualizacao-em-problema-real">6. Contextualização em Problema Real<a class="headerlink" href="#chapters-01-introducao-6-contextualizacao-em-problema-real" title="Permanent link">&para;</a></h2>
-<p>Considere um cenário institucional: um sistema que fornece dados de matrícula para integração com outro serviço governamental. Esse sistema precisa:</p>
-<ol>
-<li>Receber requisição HTTP.</li>
-<li>Validar dados de entrada e regras de negócio.</li>
-<li>Consultar base de dados.</li>
-<li>Serializar resultado.</li>
-<li>Retornar código HTTP apropriado.</li>
-</ol>
-<p>O servidor HTTP nativo demonstra como cada etapa é manualmente controlada. Já o Express abstrairá roteamento e middlewares, mas os fundamentos permanecem os mesmos.</p>
-<p>Compreender essa base evita que o desenvolvedor trate frameworks como “caixas-pretas”.</p>
-<hr />
-<p><a href="#preface">:material-arrow-left: Back to Preface</a>
-<a href="#chapters-02-express">:material-arrow-right: Go to Chapter 2 – Express</a></p></section><section class="print-page" id="chapters-02-express"><h1 id="chapters-02-express-capitulo-2-express-rotas-middlewares-controllers-e-estrutura-de-projeto">Capítulo 2 – Express: Rotas, Middlewares, Controllers e Estrutura de Projeto<a class="headerlink" href="#chapters-02-express-capitulo-2-express-rotas-middlewares-controllers-e-estrutura-de-projeto" title="Permanent link">&para;</a></h1>
-<hr />
-<h2 id="chapters-02-express-21-introducao">2.1 Introdução<a class="headerlink" href="#chapters-02-express-21-introducao" title="Permanent link">&para;</a></h2>
+<h2 id="21-introducao">2.1 Introdução<a class="headerlink" href="#21-introducao" title="Permanent link">&para;</a></h2>
 <p>O Express é, até o momento presente, o framework web mais amplamente adotado no ecossistema Node.js. Sua popularidade decorre não de uma coleção exaustiva de funcionalidades embutidas, mas justamente do oposto: trata-se de um framework minimalista, que delega ao desenvolvedor a responsabilidade de compor a aplicação a partir de peças independentes e bem definidas. Essa filosofia de design, comumente denominada <em>unopinionated</em> (sem opinião), oferece liberdade arquitetural considerável, ao mesmo tempo em que exige um entendimento sólido dos conceitos fundamentais sobre os quais o framework se apoia.</p>
 <p>Este capítulo explora quatro desses conceitos de forma aprofundada: o sistema de <strong>rotas</strong>, o mecanismo de <strong>middlewares</strong>, o padrão de <strong>controllers</strong> e a <strong>estrutura de projeto</strong> que emerge da composição desses elementos. Compreendê-los de maneira integrada é condição necessária para o desenvolvimento de APIs REST robustas, legíveis e de fácil manutenção.</p>
 <blockquote>
@@ -1433,8 +1057,8 @@ A chamada a res.end() encerra o fluxo da resposta e envia os dados ao consumidor
    A partir desse ponto, é possível importar o Express com <code>import express from 'express'</code> em qualquer arquivo do projeto.</p>
 </blockquote>
 <hr />
-<h2 id="chapters-02-express-22-o-sistema-de-rotas">2.2 O Sistema de Rotas<a class="headerlink" href="#chapters-02-express-22-o-sistema-de-rotas" title="Permanent link">&para;</a></h2>
-<h3 id="chapters-02-express-221-o-que-e-uma-rota">2.2.1 O que é uma rota?<a class="headerlink" href="#chapters-02-express-221-o-que-e-uma-rota" title="Permanent link">&para;</a></h3>
+<h2 id="22-o-sistema-de-rotas">2.2 O Sistema de Rotas<a class="headerlink" href="#22-o-sistema-de-rotas" title="Permanent link">&para;</a></h2>
+<h3 id="221-o-que-e-uma-rota">2.2.1 O que é uma rota?<a class="headerlink" href="#221-o-que-e-uma-rota" title="Permanent link">&para;</a></h3>
 <p>No contexto de aplicações web, uma <strong>rota</strong> é a associação entre um método HTTP, um padrão de URL e uma função responsável por processar a requisição correspondente. Quando um cliente envia uma requisição HTTP para o servidor, o Express percorre suas rotas registradas em ordem de declaração e, ao encontrar aquela cujo método e padrão coincidem com a requisição recebida, executa a função associada. Esse processo é denominado <em>roteamento</em>.</p>
 <p>A forma mais elementar de definir uma rota em Express é a seguinte:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span><span class="w">       </span><span class="c1">// (1) Importa o framework Express</span>
@@ -1454,7 +1078,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <p>Altere o package.json, atributo "type" de "commonjs" para "module".
 </p>
 </blockquote>
-<h3 id="chapters-02-express-222-metodos-http-e-semantica-rest">2.2.2 Métodos HTTP e semântica REST<a class="headerlink" href="#chapters-02-express-222-metodos-http-e-semantica-rest" title="Permanent link">&para;</a></h3>
+<h3 id="222-metodos-http-e-semantica-rest">2.2.2 Métodos HTTP e semântica REST<a class="headerlink" href="#222-metodos-http-e-semantica-rest" title="Permanent link">&para;</a></h3>
 <p>O Express expõe métodos correspondentes aos verbos HTTP mais utilizados: <code>app.get()</code>, <code>app.post()</code>, <code>app.put()</code>, <code>app.patch()</code> e <code>app.delete()</code>. Em uma API REST bem projetada, cada verbo carrega uma semântica específica que deve ser respeitada, conforme descrito a seguir.</p>
 <p>O método <code>GET</code> é utilizado para a recuperação de <strong>recursos</strong>, sem produzir efeitos colaterais no servidor. O <code>POST</code> destina-se à criação de <strong>novos recursos</strong>. O <code>PUT</code> realiza a substituição completa de um <strong>recurso existente</strong>, ao passo que o <code>PATCH</code> aplica modificações parciais. Por fim, o <code>DELETE</code> remove um <strong>recurso</strong> identificado.</p>
 <p>O exemplo abaixo demonstra a definição de rotas para um recurso <code>produtos</code>, seguindo a semântica REST:</p>
@@ -1503,7 +1127,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <div class="highlight"><pre><span></span><code><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">});</span><span class="w"> </span><span class="c1">// id de req.params nunca será sobrescrito</span>
 </code></pre></div>
 <p>O código anterior pode dar erro, porque ainda não foi feito o registro do midleware <em>express.json</em> não foi registrado. Veja na próxima seção para entender melhor.</p>
-<h3 id="chapters-02-express-223-parametros-de-rota-de-consulta-e-corpo-da-requisicao">2.2.3 Parâmetros de rota, de consulta e corpo da requisição<a class="headerlink" href="#chapters-02-express-223-parametros-de-rota-de-consulta-e-corpo-da-requisicao" title="Permanent link">&para;</a></h3>
+<h3 id="223-parametros-de-rota-de-consulta-e-corpo-da-requisicao">2.2.3 Parâmetros de rota, de consulta e corpo da requisição<a class="headerlink" href="#223-parametros-de-rota-de-consulta-e-corpo-da-requisicao" title="Permanent link">&para;</a></h3>
 <p>O Express oferece três mecanismos distintos para o recebimento de dados provenientes do cliente, cada um adequado a uma situação específica.</p>
 <p>Os <strong>parâmetros de rota</strong> (<em>route params</em>) são segmentos dinâmicos da URL, delimitados por dois-pontos na definição da rota. São acessados através de <code>req.params</code> e tipicamente utilizados para identificar recursos específicos.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// URL: GET /usuarios/42</span>
@@ -1545,7 +1169,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <blockquote>
 <p><strong>Em síntese:</strong> uma rota no Express é sempre a combinação de três elementos — um verbo HTTP, um caminho e uma função handler. Os dados de uma requisição chegam por três canais distintos: <code>req.params</code> para identificadores na URL, <code>req.query</code> para filtros e parâmetros opcionais, e <code>req.body</code> para dados estruturados no corpo. O objeto <code>Router</code> permite modularizar essas rotas por recurso, mantendo o código organizado e de fácil navegação. Por fim, cada verbo HTTP carrega uma semântica precisa que deve ser respeitada: GET para leitura, POST para criação (201), PUT para substituição (200), PATCH para atualização parcial e DELETE para remoção (204) — seguir essa convenção torna a API previsível para qualquer cliente que a consuma.</p>
 </blockquote>
-<h3 id="chapters-02-express-224-o-objeto-router">2.2.4 O objeto Router<a class="headerlink" href="#chapters-02-express-224-o-objeto-router" title="Permanent link">&para;</a></h3>
+<h3 id="224-o-objeto-router">2.2.4 O objeto Router<a class="headerlink" href="#224-o-objeto-router" title="Permanent link">&para;</a></h3>
 <p>À medida que a aplicação cresce, concentrar todas as rotas no arquivo principal torna-se inviável. O Express oferece o objeto <code>Router</code>, que permite organizar rotas relacionadas em módulos independentes.</p>
 <p>Um <code>Router</code> se comporta como uma mini-aplicação Express: aceita rotas e middlewares, podendo ser montado em qualquer prefixo de URL da aplicação principal.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/routes/usuarios.routes.js</span>
@@ -1581,8 +1205,8 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 </code></pre></div>
 <p><strong>IMPORTANTE</strong>: Ao montar o router em <code>/usuarios</code>, todas as rotas definidas nele herdam esse prefixo. Assim, <code>router.get('/')</code> responde a <code>GET /usuarios</code>, e <code>router.get('/:id')</code> responde a <code>GET /usuarios/:id</code>. Logo, ao dividir a responsabilidade, você gerencia melhor as rotas. </p>
 <hr />
-<h2 id="chapters-02-express-23-middlewares">2.3 Middlewares<a class="headerlink" href="#chapters-02-express-23-middlewares" title="Permanent link">&para;</a></h2>
-<h3 id="chapters-02-express-231-a-natureza-do-middleware">2.3.1 A natureza do middleware<a class="headerlink" href="#chapters-02-express-231-a-natureza-do-middleware" title="Permanent link">&para;</a></h3>
+<h2 id="23-middlewares">2.3 Middlewares<a class="headerlink" href="#23-middlewares" title="Permanent link">&para;</a></h2>
+<h3 id="231-a-natureza-do-middleware">2.3.1 A natureza do middleware<a class="headerlink" href="#231-a-natureza-do-middleware" title="Permanent link">&para;</a></h3>
 <p>O conceito de <strong>middleware</strong> é o mais fundamental de toda a arquitetura Express. Um middleware é uma função que possui acesso ao objeto de requisição (<code>req</code>), ao objeto de resposta (<code>res</code>) e a uma função especial denominada <code>next</code>. Quando chamada, <code>next()</code> transfere o controle para o próximo middleware na cadeia de execução.</p>
 <p>A assinatura de um middleware é a seguinte:</p>
 <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -1591,7 +1215,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="p">}</span>
 </code></pre></div>
 <p>Toda aplicação Express é, em sua essência, uma sequência de chamadas de middleware. Quando uma requisição chega ao servidor, ela percorre essa sequência de cima para baixo até que uma função envie uma resposta ao cliente — ou até que ocorra um erro. É crucial compreender que <strong>se um middleware não chamar <code>next()</code> e também não enviar uma resposta</strong>, a requisição ficará suspensa indefinidamente, resultando em timeout do lado do cliente.</p>
-<h3 id="chapters-02-express-232-o-pipeline-de-execucao">2.3.2 O pipeline de execução<a class="headerlink" href="#chapters-02-express-232-o-pipeline-de-execucao" title="Permanent link">&para;</a></h3>
+<h3 id="232-o-pipeline-de-execucao">2.3.2 O pipeline de execução<a class="headerlink" href="#232-o-pipeline-de-execucao" title="Permanent link">&para;</a></h3>
 <p>Considere a seguinte sequência de middlewares:</p>
 <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">();</span>
 
@@ -1610,7 +1234,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="p">});</span>
 </code></pre></div>
 <p>Para cada requisição <code>GET /saude</code>, a execução ocorre na seguinte ordem: o primeiro middleware registra a requisição no console e chama <code>next()</code>; o segundo realiza o parsing do corpo JSON e chama <code>next()</code>; o terceiro, sendo a rota correspondente, envia a resposta e encerra o ciclo.</p>
-<h3 id="chapters-02-express-233-tipos-de-middleware">2.3.3 Tipos de middleware<a class="headerlink" href="#chapters-02-express-233-tipos-de-middleware" title="Permanent link">&para;</a></h3>
+<h3 id="233-tipos-de-middleware">2.3.3 Tipos de middleware<a class="headerlink" href="#233-tipos-de-middleware" title="Permanent link">&para;</a></h3>
 <p>O Express reconhece quatro categorias principais de middleware, diferenciadas pelo escopo e pela forma de registro.</p>
 <p><strong>Middlewares de aplicação</strong> são registrados com <code>app.use()</code> e executados para todas as requisições, ou para as que correspondem a um prefixo de URL específico.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Executado para todas as requisições</span>
@@ -1643,9 +1267,9 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="p">});</span>
 </code></pre></div>
 <p><strong>Middlewares de terceiros</strong> são pacotes npm que encapsulam funcionalidades transversais reutilizáveis. Constituem uma parte essencial do ecossistema Express e serão detalhados na seção seguinte.</p>
-<h3 id="chapters-02-express-234-middlewares-de-terceiros-amplamente-utilizados">2.3.4 Middlewares de terceiros amplamente utilizados<a class="headerlink" href="#chapters-02-express-234-middlewares-de-terceiros-amplamente-utilizados" title="Permanent link">&para;</a></h3>
+<h3 id="234-middlewares-de-terceiros-amplamente-utilizados">2.3.4 Middlewares de terceiros amplamente utilizados<a class="headerlink" href="#234-middlewares-de-terceiros-amplamente-utilizados" title="Permanent link">&para;</a></h3>
 <p>Uma das grandes vantagens do Express é a disponibilidade de middlewares de terceiros bem mantidos e amplamente adotados pela comunidade. A seguir, os mais relevantes para o desenvolvimento de APIs em ambiente de produção.</p>
-<h4 id="chapters-02-express-helmet">helmet<a class="headerlink" href="#chapters-02-express-helmet" title="Permanent link">&para;</a></h4>
+<h4 id="helmet">helmet<a class="headerlink" href="#helmet" title="Permanent link">&para;</a></h4>
 <p>O <code>helmet</code> é um conjunto de middlewares de segurança que configura automaticamente diversos cabeçalhos HTTP com o objetivo de proteger a aplicação contra vulnerabilidades conhecidas. Entre os cabeçalhos que ele gerencia estão <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>, <code>Strict-Transport-Security</code> e <code>Content-Security-Policy</code>, cada um mitigando um vetor de ataque distinto. Sua adoção é considerada uma prática mínima de segurança em qualquer API exposta publicamente.</p>
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>helmet
 </code></pre></div>
@@ -1661,7 +1285,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="w">  </span><span class="p">})</span>
 <span class="p">);</span>
 </code></pre></div>
-<h4 id="chapters-02-express-cors">cors<a class="headerlink" href="#chapters-02-express-cors" title="Permanent link">&para;</a></h4>
+<h4 id="cors">cors<a class="headerlink" href="#cors" title="Permanent link">&para;</a></h4>
 <p>O <code>cors</code> gerencia a política de mesma origem (<em>Same-Origin Policy</em>), controlando quais domínios externos têm permissão para consumir a API. Sem ele, navegadores bloqueiam requisições de front-ends hospedados em domínios diferentes do servidor. Em desenvolvimento, é comum liberar todas as origens; em produção, a configuração deve ser restritiva, listando explicitamente os domínios autorizados.</p>
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>cors
 </code></pre></div>
@@ -1679,7 +1303,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="w">  </span><span class="p">})</span>
 <span class="p">);</span>
 </code></pre></div>
-<h4 id="chapters-02-express-morgan">morgan<a class="headerlink" href="#chapters-02-express-morgan" title="Permanent link">&para;</a></h4>
+<h4 id="morgan">morgan<a class="headerlink" href="#morgan" title="Permanent link">&para;</a></h4>
 <p>O <code>morgan</code> é um middleware de logging de requisições HTTP. Ele intercepta cada requisição e registra informações como método, URL, status da resposta, tempo de processamento e tamanho do corpo. Possui formatos predefinidos — <code>dev</code>, <code>combined</code>, <code>short</code>, <code>tiny</code> — cada um com nível de detalhe distinto. O formato <code>dev</code> é o mais utilizado durante o desenvolvimento por ser colorido e conciso; o <code>combined</code> (no padrão Apache) é preferido em produção por ser compatível com ferramentas de análise de logs.</p>
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>morgan
 </code></pre></div>
@@ -1693,7 +1317,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">morgan</span><span class="p">(</span><span class="s1">&#39;combined&#39;</span><span class="p">));</span>
 <span class="c1">// Exemplo de saída: ::1 - - [10/Jan/2025:14:22:01 +0000] &quot;GET /usuarios HTTP/1.1&quot; 200 148</span>
 </code></pre></div>
-<h4 id="chapters-02-express-express-rate-limit">express-rate-limit<a class="headerlink" href="#chapters-02-express-express-rate-limit" title="Permanent link">&para;</a></h4>
+<h4 id="express-rate-limit">express-rate-limit<a class="headerlink" href="#express-rate-limit" title="Permanent link">&para;</a></h4>
 <p>O <code>express-rate-limit</code> implementa limitação de taxa de requisições (<em>rate limiting</em>), uma medida essencial para proteger a API contra ataques de força bruta, enumeração de recursos e abuso de endpoints públicos. Ele rastreia o número de requisições por IP em uma janela de tempo configurável e rejeita as que excedem o limite com status <code>429 Too Many Requests</code>.</p>
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>express-rate-limit
 </code></pre></div>
@@ -1718,7 +1342,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">limiteGeral</span><span class="p">);</span>
 <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/api/auth/login&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">limiteLogin</span><span class="p">);</span>
 </code></pre></div>
-<h4 id="chapters-02-express-multer">multer<a class="headerlink" href="#chapters-02-express-multer" title="Permanent link">&para;</a></h4>
+<h4 id="multer">multer<a class="headerlink" href="#multer" title="Permanent link">&para;</a></h4>
 <p>O <code>multer</code> é o middleware padrão para o tratamento de uploads de arquivos em Express. Ele processa requisições do tipo <code>multipart/form-data</code> — o formato utilizado por formulários HTML que incluem arquivos — e disponibiliza os arquivos recebidos em <code>req.file</code> (upload único) ou <code>req.files</code> (múltiplos uploads). Suporta armazenamento em disco ou em memória, e pode ser configurado com validações de tipo MIME e tamanho máximo.</p>
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>multer
 </code></pre></div>
@@ -1758,7 +1382,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">arquivos</span><span class="o">:</span><span class="w"> </span><span class="nx">caminhos</span><span class="w"> </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
-<h4 id="chapters-02-express-compression">compression<a class="headerlink" href="#chapters-02-express-compression" title="Permanent link">&para;</a></h4>
+<h4 id="compression">compression<a class="headerlink" href="#compression" title="Permanent link">&para;</a></h4>
 <p>O <code>compression</code> aplica compressão gzip ou deflate nas respostas HTTP, reduzindo significativamente o tamanho dos dados transmitidos — especialmente em respostas JSON extensas. A compressão ocorre de forma transparente: o middleware verifica o cabeçalho <code>Accept-Encoding</code> da requisição e, se o cliente suportar, comprime a resposta automaticamente antes de enviá-la. Em APIs que retornam listas grandes de dados, a redução no tamanho da resposta pode chegar a 70–80%.</p>
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>compression
 </code></pre></div>
@@ -1780,7 +1404,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="w">  </span><span class="p">})</span>
 <span class="p">);</span>
 </code></pre></div>
-<h4 id="chapters-02-express-composicao-em-appjs">Composição em app.js<a class="headerlink" href="#chapters-02-express-composicao-em-appjs" title="Permanent link">&para;</a></h4>
+<h4 id="composicao-em-appjs">Composição em app.js<a class="headerlink" href="#composicao-em-appjs" title="Permanent link">&para;</a></h4>
 <p>Na prática, todos esses middlewares são registrados em sequência no <code>app.js</code>, antes das definições de rota. A ordem importa: <code>helmet</code> e <code>cors</code> devem vir primeiro, pois atuam nos cabeçalhos da resposta; <code>compression</code> deve preceder o envio de qualquer corpo; <code>morgan</code> pode vir em qualquer posição antes das rotas, mas convencionalmente é registrado logo no início para capturar todas as requisições.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/app.js</span>
 <span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
@@ -1819,7 +1443,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 
 <span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">app</span><span class="p">;</span>
 </code></pre></div>
-<h3 id="chapters-02-express-235-criando-middlewares-customizados">2.3.5 Criando middlewares customizados<a class="headerlink" href="#chapters-02-express-235-criando-middlewares-customizados" title="Permanent link">&para;</a></h3>
+<h3 id="235-criando-middlewares-customizados">2.3.5 Criando middlewares customizados<a class="headerlink" href="#235-criando-middlewares-customizados" title="Permanent link">&para;</a></h3>
 <p>A criação de middlewares próprios é uma prática recorrente no desenvolvimento com Express. A seguir, dois exemplos representativos de casos de uso reais.</p>
 <p><strong>Middleware de autenticação por token:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/middlewares/autenticacao.middleware.js</span>
@@ -1871,10 +1495,10 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">validarCriacaoUsuario</span><span class="p">,</span><span class="w"> </span><span class="nx">criarUsuario</span><span class="p">);</span>
 </code></pre></div>
 <p>Veja o exemplo com a diagrama abaixo:</p>
-<p><img alt="Diagrama do Pipeline com Midlewares" src="../figures/diagrama-midleware-rotas.svg" /></p>
+<p><img alt="Diagrama do Pipeline com Midlewares" src="../../figures/diagrama-midleware-rotas.svg" /></p>
 <p>Para cada requisição recebida, o Express executa um pipeline sequencial e bem definido. No diagrama, a requisição <code>GET /usuarios/42</code> parte do cliente e atravessa primeiramente os <strong>middlewares globais</strong> registrados no <code>app.js</code> — <code>helmet</code>, <code>cors</code>, <code>express.json()</code> e <code>morgan</code> — que são executados independentemente da rota solicitada. Após essa camada, a requisição chega ao <strong>agregador de rotas</strong> (<code>routes/index.js</code>), que a direciona ao router correspondente com base no prefixo da URL: como a URL começa com <code>/usuarios</code>, o <code>usuarios.routes.js</code> é acionado; o <code>produtos.routes.js</code> é completamente ignorado.</p>
 <p>Dentro do router de usuários, o Express compara o método HTTP e o padrão da URL com cada rota registrada. A requisição <code>GET /usuarios/42</code> corresponde à rota <code>GET /:id</code> — destacada em azul no diagrama — e o controle é transferido ao handler <code>obterUsuario</code> no controller. As demais rotas (<code>GET /</code>, <code>POST /</code>, <code>DELETE /:id</code>) não são avaliadas. O controller processa a requisição e devolve a resposta <code>res.json()</code> diretamente ao cliente, representada pela seta em arco na parte inferior do diagrama.</p>
-<h3 id="chapters-02-express-236-propagacao-de-erros">2.3.6 Propagação de erros<a class="headerlink" href="#chapters-02-express-236-propagacao-de-erros" title="Permanent link">&para;</a></h3>
+<h3 id="236-propagacao-de-erros">2.3.6 Propagação de erros<a class="headerlink" href="#236-propagacao-de-erros" title="Permanent link">&para;</a></h3>
 <p>Uma prática essencial no desenvolvimento com Express é a propagação correta de erros assíncronos. Em rotas assíncronas, exceções não capturadas não são automaticamente interceptadas pelo middleware de erro — é necessário capturá-las e passá-las para <code>next</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// ❌ Forma incorreta: erro assíncrono não tratado</span>
 <span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/usuarios&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -1905,8 +1529,8 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="p">}));</span>
 </code></pre></div>
 <hr />
-<h2 id="chapters-02-express-24-controllers">2.4 Controllers<a class="headerlink" href="#chapters-02-express-24-controllers" title="Permanent link">&para;</a></h2>
-<h3 id="chapters-02-express-241-a-separacao-de-responsabilidades">2.4.1 A separação de responsabilidades<a class="headerlink" href="#chapters-02-express-241-a-separacao-de-responsabilidades" title="Permanent link">&para;</a></h3>
+<h2 id="24-controllers">2.4 Controllers<a class="headerlink" href="#24-controllers" title="Permanent link">&para;</a></h2>
+<h3 id="241-a-separacao-de-responsabilidades">2.4.1 A separação de responsabilidades<a class="headerlink" href="#241-a-separacao-de-responsabilidades" title="Permanent link">&para;</a></h3>
 <p>À medida que a lógica de cada rota se torna mais complexa, inserir todo o código diretamente nas definições de rota resulta em arquivos extensos, difíceis de testar e de manter. O padrão de <strong>controllers</strong> surge como solução para esse problema, aplicando o princípio da separação de responsabilidades (<em>Separation of Concerns</em>).</p>
 <blockquote>
 <p>O princípio da <strong>separação de responsabilidades</strong> (<em>Separation of Concerns</em>, ou SoC) é um dos fundamentos mais antigos da engenharia de software. A ideia central é que um sistema deve ser dividido em partes distintas, cada qual responsável por um único aspecto bem delimitado do problema — e que essas partes não devem se sobrepor nem conhecer os detalhes internas umas das outras.
@@ -1915,7 +1539,7 @@ No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</
 📖 Leitura de referência: <a href="https://en.wikipedia.org/wiki/Separation_of_concerns">Separation of concerns — Wikipedia</a></p>
 </blockquote>
 <p>Um controller é um módulo que agrupa as funções responsáveis por processar requisições de um determinado recurso. Sua responsabilidade é exclusivamente coordenar o fluxo: receber os dados da requisição (<code>req</code>), delegar o processamento à camada de serviço e enviar a resposta apropriada ao cliente (<code>res</code>). O controller <strong>não deve</strong> conter lógica de negócio nem acesso direto ao banco de dados — essas responsabilidades pertencem a camadas distintas.</p>
-<h3 id="chapters-02-express-242-implementacao-de-um-controller">2.4.2 Implementação de um controller<a class="headerlink" href="#chapters-02-express-242-implementacao-de-um-controller" title="Permanent link">&para;</a></h3>
+<h3 id="242-implementacao-de-um-controller">2.4.2 Implementação de um controller<a class="headerlink" href="#242-implementacao-de-um-controller" title="Permanent link">&para;</a></h3>
 <p>Considere um controller para o recurso <code>usuarios</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/controllers/usuarios.controller.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../services/usuarios.service.js&#39;</span><span class="p">;</span>
@@ -1977,7 +1601,7 @@ No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</
 <span class="w">  </span><span class="p">}</span>
 <span class="p">};</span>
 </code></pre></div>
-<h3 id="chapters-02-express-243-integracao-com-o-router">2.4.3 Integração com o router<a class="headerlink" href="#chapters-02-express-243-integracao-com-o-router" title="Permanent link">&para;</a></h3>
+<h3 id="243-integracao-com-o-router">2.4.3 Integração com o router<a class="headerlink" href="#243-integracao-com-o-router" title="Permanent link">&para;</a></h3>
 <p>Com o controller definido, o arquivo de rotas torna-se declarativo e extremamente enxuto:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/routes/usuarios.routes.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
@@ -2002,11 +1626,11 @@ No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</
 </code></pre></div>
 <p>Essa separação revela uma divisão clara de papéis: o arquivo de rotas declara <em>quais</em> caminhos existem e <em>quais</em> middlewares os protegem; o controller define <em>como</em> cada requisição é processada; e a camada de serviço (tratada no Capítulo 3) encapsula <em>o que</em> a aplicação faz do ponto de vista do negócio.</p>
 <hr />
-<h2 id="chapters-02-express-25-estrutura-de-projeto">2.5 Estrutura de Projeto<a class="headerlink" href="#chapters-02-express-25-estrutura-de-projeto" title="Permanent link">&para;</a></h2>
-<h3 id="chapters-02-express-251-a-importancia-da-organizacao">2.5.1 A importância da organização<a class="headerlink" href="#chapters-02-express-251-a-importancia-da-organizacao" title="Permanent link">&para;</a></h3>
+<h2 id="25-estrutura-de-projeto">2.5 Estrutura de Projeto<a class="headerlink" href="#25-estrutura-de-projeto" title="Permanent link">&para;</a></h2>
+<h3 id="251-a-importancia-da-organizacao">2.5.1 A importância da organização<a class="headerlink" href="#251-a-importancia-da-organizacao" title="Permanent link">&para;</a></h3>
 <p>A estrutura de diretórios de um projeto é uma decisão arquitetural com impactos duradouros sobre a produtividade da equipe, a facilidade de <em>onboarding</em> de novos membros e a manutenibilidade do código ao longo do tempo. Uma organização bem pensada torna implícita a separação de responsabilidades: ao abrir qualquer arquivo, o desenvolvedor sabe imediatamente qual é o seu papel na aplicação.</p>
 <p>Existem duas filosofias predominantes de organização de projetos Express: a <strong>organização por tipo de arquivo</strong> e a <strong>organização por funcionalidade</strong> (feature-based). A primeira agrupa todos os controllers juntos, todos os services juntos e assim por diante. A segunda agrupa por domínio — tudo relacionado a <code>usuarios</code> fica em um mesmo módulo. Para aplicações de pequeno e médio porte, a organização por tipo é mais comum e será adotada neste material.</p>
-<h3 id="chapters-02-express-252-estrutura-recomendada">2.5.2 Estrutura recomendada<a class="headerlink" href="#chapters-02-express-252-estrutura-recomendada" title="Permanent link">&para;</a></h3>
+<h3 id="252-estrutura-recomendada">2.5.2 Estrutura recomendada<a class="headerlink" href="#252-estrutura-recomendada" title="Permanent link">&para;</a></h3>
 <p>A estrutura a seguir representa um exemplos de organização para APIs Express de médio porte:</p>
 <div class="highlight"><pre><span></span><code>minha-api/
 ├── src/
@@ -2056,7 +1680,7 @@ No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</
 ├── package.json
 └── server.js                  # Ponto de entrada — inicializa o servidor
 </code></pre></div>
-<h3 id="chapters-02-express-253-separacao-entre-appjs-e-serverjs">2.5.3 Separação entre <code>app.js</code> e <code>server.js</code><a class="headerlink" href="#chapters-02-express-253-separacao-entre-appjs-e-serverjs" title="Permanent link">&para;</a></h3>
+<h3 id="253-separacao-entre-appjs-e-serverjs">2.5.3 Separação entre <code>app.js</code> e <code>server.js</code><a class="headerlink" href="#253-separacao-entre-appjs-e-serverjs" title="Permanent link">&para;</a></h3>
 <p>Um detalhe frequentemente negligenciado é a separação entre o arquivo de configuração da aplicação (<code>app.js</code>) e o ponto de entrada do servidor (<code>server.js</code>). Essa separação tem uma razão técnica relevante: durante os testes automatizados, importa-se <code>app.js</code> diretamente, sem iniciar o servidor HTTP. Isso permite testar as rotas com supertest sem conflitos de porta.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/app.js</span>
 <span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
@@ -2091,7 +1715,7 @@ No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</
 <span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Servidor iniciado na porta </span><span class="si">${</span><span class="nx">PORTA</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></div>
-<h3 id="chapters-02-express-254-o-agregador-de-rotas">2.5.4 O agregador de rotas<a class="headerlink" href="#chapters-02-express-254-o-agregador-de-rotas" title="Permanent link">&para;</a></h3>
+<h3 id="254-o-agregador-de-rotas">2.5.4 O agregador de rotas<a class="headerlink" href="#254-o-agregador-de-rotas" title="Permanent link">&para;</a></h3>
 <p>O arquivo <code>src/routes/index.js</code> funciona como ponto central de registro de todos os routers. Sua responsabilidade é exclusivamente importar e montar cada router no prefixo correspondente, mantendo o <code>app.js</code> desacoplado dos detalhes de cada recurso.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/routes/index.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
@@ -2103,7 +1727,7 @@ No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</
 <span class="nx">router</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/usuarios&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">usuariosRouter</span><span class="p">);</span>
 <span class="nx">router</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/produtos&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">produtosRouter</span><span class="p">);</span>
 </code></pre></div>
-<h3 id="chapters-02-express-255-classe-de-erro-customizado">2.5.5 Classe de erro customizado<a class="headerlink" href="#chapters-02-express-255-classe-de-erro-customizado" title="Permanent link">&para;</a></h3>
+<h3 id="255-classe-de-erro-customizado">2.5.5 Classe de erro customizado<a class="headerlink" href="#255-classe-de-erro-customizado" title="Permanent link">&para;</a></h3>
 <p>Uma prática recomendada é criar uma classe de erro que carrega, além da mensagem, o código de status HTTP associado. Isso permite que o middleware de erros construa respostas padronizadas sem lógica condicional dispersa.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/utils/AppError.js</span>
 <span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">AppError</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="ne">Error</span><span class="w"> </span><span class="p">{</span>
@@ -2138,28 +1762,7 @@ No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</
 <p class="admonition-title">Próximo Capítulo</p>
 <p>No <strong>Capítulo 3 – Arquitetura MVC</strong>, aprofundaremos a camada de serviços e o padrão Repository, completando a separação de responsabilidades iniciada aqui. A estrutura de projeto apresentada neste capítulo será expandida para acomodar essas novas camadas.</p>
 </div>
-<p><a href="#chapters-01-introducao">⬅ Back to Chapter 1</a></p></section><section class="print-page" id="chapters-99-appendix"><h1 id="chapters-99-appendix-appendix-reference-material">Appendix – Reference Material<a class="headerlink" href="#chapters-99-appendix-appendix-reference-material" title="Permanent link">&para;</a></h1>
-<p>Use this section for:</p>
-<ul>
-<li>Cheatsheets</li>
-<li>Command summaries</li>
-<li>Reference tables</li>
-<li>Links to external resources</li>
-</ul>
-<p>(Write your actual reference material here.)</p>
-<hr /></section><h1 class='nav-section-title-end'>Ended: Chapters</h1><section class="print-page" id="back-cover"><h1 id="back-cover-contracapa">Contracapa<a class="headerlink" href="#back-cover-contracapa" title="Permanent link">&para;</a></h1>
-<p><strong>Programação Web 2</strong>
-<em>Uma abordagem com Node/Express</em></p>
-<p>Este livro faz parte de uma iniciativa de educação aberta.<br />
-Você pode:</p>
-<ul>
-<li>Lê-lo online no GitHub Pages ou impresso (PDF).</li>
-<li>Baixar ou clonar o repositório.</li>
-<li>Sugerir melhorias por meio de issues e pull requests.</li>
-</ul>
-<hr />
-<p>Obrigado pela leitura!</p>
-<p><a href="#.">:material-home: Back to Home</a></p></section></div>
+<p><a href="../01-introducao/">⬅ Back to Chapter 1</a></p>
 
 
 
@@ -2227,16 +1830,16 @@ Você pode:</p>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "/pweb2-book/", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "navigation.indexes", "content.code.copy", "content.action.edit", "content.action.view", "toc.integrate"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "navigation.indexes", "content.code.copy", "content.action.edit", "content.action.view", "toc.integrate"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.3220b9d7.min.js"></script>
+      <script src="../../assets/javascripts/bundle.3220b9d7.min.js"></script>
       
-        <script src="../js/print-site.js"></script>
+        <script src="../../js/print-site.js"></script>
       
-        <script src="../assets/js/quiz.js"></script>
+        <script src="../../assets/js/quiz.js"></script>
       
-        <script src="../assets/js/code-runner.js"></script>
+        <script src="../../assets/js/code-runner.js"></script>
       
     
   </body>
