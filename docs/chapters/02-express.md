@@ -12,28 +12,14 @@ Este capítulo explora quatro desses conceitos de forma aprofundada: o sistema d
 
 ---
 
-!!! success "Instalando o Express"
-    Antes de escrever qualquer código, é necessário inicializar um projeto Node.js e instalar o Express como dependência. Com um terminal aberto na raiz do projeto, execute:
-
-    ```bash
-    npm init -y
-    npm install express
-    ```
-
-    O primeiro comando cria o arquivo `package.json` com valores padrão. O segundo baixa o Express do registro do npm e o registra em `dependencies`. Para utilizar a sintaxe de módulos ES (recomendada neste material), adicione a propriedade `"type": "module"` ao `package.json`:
-
-    ```json
-    {
-      "name": "minha-api",
-      "version": "1.0.0",
-      "type": "module",
-      "dependencies": {
-        "express": "^4.18.2"
-      }
-    }
-    ```
-
-    A partir desse ponto, é possível importar o Express com `import express from 'express'` em qualquer arquivo do projeto.
+> "Instalando o Express"
+> 
+>    Antes de escrever qualquer código, é necessário instalar o Express como dependência. Com um terminal aberto na raiz do projeto, execute:
+>
+>    ```bash
+>    npm install express
+>    ```
+>    A partir desse ponto, é possível importar o Express com `import express from 'express'` em qualquer arquivo do projeto.
 
 ---
 
