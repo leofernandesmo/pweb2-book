@@ -212,10 +212,12 @@ router.post('/', (req, res) => {
 export default router;
 ```
 
+Atenção para a última linha do código anterior que exporta o objeto router e para import no próximo código que usa este objeto para gerenciar a rota. 
+
 ```javascript
 // src/app.js
-import express from 'express';
 import usuariosRouter from './routes/usuarios.routes.js';
+import express from 'express';
 
 const app = express();
 app.use(express.json());
@@ -225,9 +227,8 @@ app.use('/usuarios', usuariosRouter);
 export default app;
 ```
 
-Ao montar o router em `/usuarios`, todas as rotas definidas nele herdam esse prefixo. Assim, `router.get('/')` responde a `GET /usuarios`, e `router.get('/:id')` responde a `GET /usuarios/:id`.
+**IMPORTANTE**: Ao montar o router em `/usuarios`, todas as rotas definidas nele herdam esse prefixo. Assim, `router.get('/')` responde a `GET /usuarios`, e `router.get('/:id')` responde a `GET /usuarios/:id`. Logo, ao dividir a responsabilidade, você gerencia melhor as rotas. 
 
-> 📷 **Sugestão de imagem:** Diagrama ilustrando o fluxo de uma requisição HTTP desde o cliente até o router, passando pelo `app.use()`, e o roteamento para o handler correto com base no método e URL.
 
 ---
 
@@ -246,9 +247,8 @@ A assinatura de um middleware é a seguinte:
 }
 ```
 
-Toda aplicação Express é, em sua essência, uma sequência de chamadas de middleware. Quando uma requisição chega ao servidor, ela percorre essa sequência de cima para baixo até que uma função envie uma resposta ao cliente — ou até que ocorra um erro.
+Toda aplicação Express é, em sua essência, uma sequência de chamadas de middleware. Quando uma requisição chega ao servidor, ela percorre essa sequência de cima para baixo até que uma função envie uma resposta ao cliente — ou até que ocorra um erro. É crucial compreender que **se um middleware não chamar `next()` e também não enviar uma resposta**, a requisição ficará suspensa indefinidamente, resultando em timeout do lado do cliente.
 
-> 🎥 **Sugestão de vídeo:** [Fireship – Express.js in 100 Seconds](https://www.youtube.com/watch?v=SccSCuHhOw0) — apresenta de forma visual e concisa o modelo de pipeline de middlewares do Express.
 
 ### 2.3.2 O pipeline de execução
 
@@ -274,13 +274,11 @@ app.get('/saude', (req, res) => {
 
 Para cada requisição `GET /saude`, a execução ocorre na seguinte ordem: o primeiro middleware registra a requisição no console e chama `next()`; o segundo realiza o parsing do corpo JSON e chama `next()`; o terceiro, sendo a rota correspondente, envia a resposta e encerra o ciclo.
 
-É crucial compreender que **se um middleware não chamar `next()` e também não enviar uma resposta**, a requisição ficará suspensa indefinidamente. Esse é um erro comum em aplicações iniciantes e resulta em timeouts do lado do cliente.
-
 ### 2.3.3 Tipos de middleware
 
 O Express reconhece quatro categorias principais de middleware, diferenciadas pelo escopo e pela forma de registro.
 
-**Middlewares de aplicação** são registrados com `app.use()` ou com um método HTTP específico sem especificação de rota, sendo executados para todas as requisições (ou para as que correspondem a um prefixo de URL).
+**Middlewares de aplicação** são registrados com `app.use()` e executados para todas as requisições, ou para as que correspondem a um prefixo de URL específico.
 
 ```javascript
 // Executado para todas as requisições
@@ -296,7 +294,7 @@ app.use('/api', (req, res, next) => {
 });
 ```
 
-**Middlewares de rota** são associados a um router específico, limitando seu escopo às rotas daquele módulo.
+**Middlewares de rota** são associados a um `Router` específico, limitando seu escopo às rotas daquele módulo.
 
 ```javascript
 const router = Router();
@@ -319,19 +317,227 @@ app.use((err, req, res, next) => {
 });
 ```
 
-**Middlewares de terceiros** são pacotes npm que encapsulam funcionalidades transversais reutilizáveis. Os mais comuns incluem `morgan` (logging), `cors` (controle de origem cruzada) e `helmet` (cabeçalhos de segurança HTTP).
+**Middlewares de terceiros** são pacotes npm que encapsulam funcionalidades transversais reutilizáveis. Constituem uma parte essencial do ecossistema Express e serão detalhados na seção seguinte.
+
+### 2.3.4 Middlewares de terceiros amplamente utilizados
+
+Uma das grandes vantagens do Express é a disponibilidade de middlewares de terceiros bem mantidos e amplamente adotados pela comunidade. A seguir, os mais relevantes para o desenvolvimento de APIs em ambiente de produção.
+
+#### helmet
+
+O `helmet` é um conjunto de middlewares de segurança que configura automaticamente diversos cabeçalhos HTTP com o objetivo de proteger a aplicação contra vulnerabilidades conhecidas. Entre os cabeçalhos que ele gerencia estão `X-Content-Type-Options`, `X-Frame-Options`, `Strict-Transport-Security` e `Content-Security-Policy`, cada um mitigando um vetor de ataque distinto. Sua adoção é considerada uma prática mínima de segurança em qualquer API exposta publicamente.
+
+```bash
+npm install helmet
+```
+
+```javascript
+import helmet from 'helmet';
+
+app.use(helmet()); // Aplica todos os cabeçalhos de segurança com configurações padrão
+
+// Ou com configuração personalizada
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // Desativa Content Security Policy (CSP) se a API servir HTML
+    crossOriginEmbedderPolicy: false,
+  })
+);
+```
+
+#### cors
+
+O `cors` gerencia a política de mesma origem (*Same-Origin Policy*), controlando quais domínios externos têm permissão para consumir a API. Sem ele, navegadores bloqueiam requisições de front-ends hospedados em domínios diferentes do servidor. Em desenvolvimento, é comum liberar todas as origens; em produção, a configuração deve ser restritiva, listando explicitamente os domínios autorizados.
+
+```bash
+npm install cors
+```
+
+```javascript
+import cors from 'cors';
+
+// Desenvolvimento: libera todas as origens
+app.use(cors());
+
+// Produção: restringe a origens específicas
+app.use(
+  cors({
+    origin: ['https://meuapp.com', 'https://admin.meuapp.com'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
+```
+
+#### morgan
+
+O `morgan` é um middleware de logging de requisições HTTP. Ele intercepta cada requisição e registra informações como método, URL, status da resposta, tempo de processamento e tamanho do corpo. Possui formatos predefinidos — `dev`, `combined`, `short`, `tiny` — cada um com nível de detalhe distinto. O formato `dev` é o mais utilizado durante o desenvolvimento por ser colorido e conciso; o `combined` (no padrão Apache) é preferido em produção por ser compatível com ferramentas de análise de logs.
+
+```bash
+npm install morgan
+```
 
 ```javascript
 import morgan from 'morgan';
-import cors from 'cors';
-import helmet from 'helmet';
 
-app.use(helmet());
-app.use(cors());
+// Desenvolvimento: saída colorida e resumida
 app.use(morgan('dev'));
+// Exemplo de saída: GET /usuarios 200 4.321 ms - 148
+
+// Produção: formato Apache, compatível com ferramentas de log
+app.use(morgan('combined'));
+// Exemplo de saída: ::1 - - [10/Jan/2025:14:22:01 +0000] "GET /usuarios HTTP/1.1" 200 148
 ```
 
-### 2.3.4 Criando middlewares customizados
+#### express-rate-limit
+
+O `express-rate-limit` implementa limitação de taxa de requisições (*rate limiting*), uma medida essencial para proteger a API contra ataques de força bruta, enumeração de recursos e abuso de endpoints públicos. Ele rastreia o número de requisições por IP em uma janela de tempo configurável e rejeita as que excedem o limite com status `429 Too Many Requests`.
+
+```bash
+npm install express-rate-limit
+```
+
+```javascript
+import rateLimit from 'express-rate-limit';
+
+// Limite geral: 100 requisições por IP a cada 15 minutos
+const limiteGeral = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos em milissegundos
+  max: 100,
+  message: { erro: 'Muitas requisições. Tente novamente em 15 minutos.' },
+  standardHeaders: true,  // Inclui headers RateLimit-* na resposta
+  legacyHeaders: false,
+});
+
+// Limite mais restritivo para rotas de autenticação
+const limiteLogin = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10, // Apenas 10 tentativas de login por janela
+  message: { erro: 'Muitas tentativas de login. Tente novamente mais tarde.' },
+});
+
+app.use('/api', limiteGeral);
+app.use('/api/auth/login', limiteLogin);
+```
+
+#### multer
+
+O `multer` é o middleware padrão para o tratamento de uploads de arquivos em Express. Ele processa requisições do tipo `multipart/form-data` — o formato utilizado por formulários HTML que incluem arquivos — e disponibiliza os arquivos recebidos em `req.file` (upload único) ou `req.files` (múltiplos uploads). Suporta armazenamento em disco ou em memória, e pode ser configurado com validações de tipo MIME e tamanho máximo.
+
+```bash
+npm install multer
+```
+
+```javascript
+import multer from 'multer';
+import path from 'path';
+
+// Configuração de armazenamento em disco
+const armazenamento = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Diretório de destino
+  },
+  filename: (req, file, cb) => {
+    const extensao = path.extname(file.originalname);
+    const nomeUnico = `${Date.now()}-${Math.round(Math.random() * 1e9)}${extensao}`;
+    cb(null, nomeUnico);
+  },
+});
+
+const upload = multer({
+  storage: armazenamento,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Limite de 5 MB
+  fileFilter: (req, file, cb) => {
+    const tiposPermitidos = /jpeg|jpg|png|webp/;
+    const valido = tiposPermitidos.test(file.mimetype);
+    cb(null, valido); // true = aceita, false = rejeita
+  },
+});
+
+// Upload de arquivo único no campo "foto"
+app.post('/usuarios/:id/foto', upload.single('foto'), (req, res) => {
+  res.json({ caminho: req.file.path });
+});
+
+// Upload de múltiplos arquivos
+app.post('/galeria', upload.array('imagens', 5), (req, res) => {
+  const caminhos = req.files.map((f) => f.path);
+  res.json({ arquivos: caminhos });
+});
+```
+
+#### compression
+
+O `compression` aplica compressão gzip ou deflate nas respostas HTTP, reduzindo significativamente o tamanho dos dados transmitidos — especialmente em respostas JSON extensas. A compressão ocorre de forma transparente: o middleware verifica o cabeçalho `Accept-Encoding` da requisição e, se o cliente suportar, comprime a resposta automaticamente antes de enviá-la. Em APIs que retornam listas grandes de dados, a redução no tamanho da resposta pode chegar a 70–80%.
+
+```bash
+npm install compression
+```
+
+```javascript
+import compression from 'compression';
+
+// Aplica compressão em todas as respostas acima de 1 KB (padrão)
+app.use(compression());
+
+// Com configuração personalizada
+app.use(
+  compression({
+    level: 6,        // Nível de compressão: 0 (nenhum) a 9 (máximo). 6 é o padrão.
+    threshold: 1024, // Só comprime respostas maiores que 1 KB
+    filter: (req, res) => {
+      // Não comprime se o cliente enviar o cabeçalho x-no-compression
+      if (req.headers['x-no-compression']) return false;
+      return compression.filter(req, res); // Comportamento padrão para os demais casos
+    },
+  })
+);
+```
+
+#### Composição em app.js
+
+Na prática, todos esses middlewares são registrados em sequência no `app.js`, antes das definições de rota. A ordem importa: `helmet` e `cors` devem vir primeiro, pois atuam nos cabeçalhos da resposta; `compression` deve preceder o envio de qualquer corpo; `morgan` pode vir em qualquer posição antes das rotas, mas convencionalmente é registrado logo no início para capturar todas as requisições.
+
+```javascript
+// src/app.js
+import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import morgan from 'morgan';
+import compression from 'compression';
+import rateLimit from 'express-rate-limit';
+import { router } from './routes/index.js';
+import { middlewareDeErros } from './middlewares/erros.middleware.js';
+
+const app = express();
+
+// Segurança e cabeçalhos
+app.use(helmet());
+app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+
+// Performance
+app.use(compression());
+
+// Logging
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+
+// Parsing
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Rate limiting
+app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+
+// Rotas
+app.use('/api', router);
+
+// Tratamento de erros (sempre por último)
+app.use(middlewareDeErros);
+
+export default app;
+```
+
+### 2.3.5 Criando middlewares customizados
 
 A criação de middlewares próprios é uma prática recorrente no desenvolvimento com Express. A seguir, dois exemplos representativos de casos de uso reais.
 
@@ -394,9 +600,9 @@ export const validarCriacaoUsuario = (req, res, next) => {
 router.post('/', validarCriacaoUsuario, criarUsuario);
 ```
 
-> 📷 **Sugestão de imagem:** Diagrama de pipeline mostrando a cadeia de middlewares — `helmet → cors → morgan → autenticação → validação → controller` — com setas indicando o fluxo de `next()` e os pontos onde a requisição pode ser interrompida com uma resposta de erro.
+> 📷 **Sugestão de imagem:** Diagrama de pipeline mostrando a cadeia de middlewares — `helmet → cors → compression → morgan → rate-limit → autenticação → validação → controller` — com setas indicando o fluxo de `next()` e os pontos onde a requisição pode ser interrompida com uma resposta de erro.
 
-### 2.3.5 Propagação de erros
+### 2.3.6 Propagação de erros
 
 Uma prática essencial no desenvolvimento com Express é a propagação correta de erros assíncronos. Em rotas assíncronas, exceções não capturadas não são automaticamente interceptadas pelo middleware de erro — é necessário capturá-las e passá-las para `next`.
 
@@ -434,6 +640,10 @@ app.get('/usuarios', asyncHandler(async (req, res) => {
 ```
 
 ---
+
+
+
+
 
 ## 2.4 Controllers
 
