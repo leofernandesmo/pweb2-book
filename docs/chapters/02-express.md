@@ -600,7 +600,15 @@ export const validarCriacaoUsuario = (req, res, next) => {
 router.post('/', validarCriacaoUsuario, criarUsuario);
 ```
 
-> 📷 **Sugestão de imagem:** Diagrama de pipeline mostrando a cadeia de middlewares — `helmet → cors → compression → morgan → rate-limit → autenticação → validação → controller` — com setas indicando o fluxo de `next()` e os pontos onde a requisição pode ser interrompida com uma resposta de erro.
+Veja o exemplo com a diagrama abaixo:
+
+
+![Diagrama do Pipeline com Midlewares](../figures/diagrama-midleware-rotas.svg)
+
+Para cada requisição recebida, o Express executa um pipeline sequencial e bem definido. No diagrama, a requisição `GET /usuarios/42` parte do cliente e atravessa primeiramente os **middlewares globais** registrados no `app.js` — `helmet`, `cors`, `express.json()` e `morgan` — que são executados independentemente da rota solicitada. Após essa camada, a requisição chega ao **agregador de rotas** (`routes/index.js`), que a direciona ao router correspondente com base no prefixo da URL: como a URL começa com `/usuarios`, o `usuarios.routes.js` é acionado; o `produtos.routes.js` é completamente ignorado.
+
+Dentro do router de usuários, o Express compara o método HTTP e o padrão da URL com cada rota registrada. A requisição `GET /usuarios/42` corresponde à rota `GET /:id` — destacada em azul no diagrama — e o controle é transferido ao handler `obterUsuario` no controller. As demais rotas (`GET /`, `POST /`, `DELETE /:id`) não são avaliadas. O controller processa a requisição e devolve a resposta `res.json()` diretamente ao cliente, representada pela seta em arco na parte inferior do diagrama.
+
 
 ### 2.3.6 Propagação de erros
 
