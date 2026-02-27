@@ -45,6 +45,13 @@ app.listen(3000);
 
 Neste exemplo, a aplicação responde às requisições `GET /usuarios` com um objeto JSON. Os objetos `req` e `res` são, respectivamente, representações da requisição recebida e da resposta que será enviada ao cliente — ambos enriquecidos pelo Express com métodos e propriedades adicionais em relação ao Node.js puro.
 
+
+> Possíveis Erros:
+> Caso apareça o erro:  _Failed to load the ES module: /server.js. Make sure to set "type": "module" in the nearest package.json file or use the .mjs extension._
+>
+> Altere o package.json, atributo "type" de "commonjs" para "module".
+> 
+
 ### 2.2.2 Métodos HTTP e semântica REST
 
 O Express expõe métodos correspondentes aos verbos HTTP mais utilizados: `app.get()`, `app.post()`, `app.put()`, `app.patch()` e `app.delete()`. Em uma API REST bem projetada, cada verbo carrega uma semântica específica que deve ser respeitada, conforme descrito a seguir.
