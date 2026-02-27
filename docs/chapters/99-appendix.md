@@ -11,4 +11,3 @@ Use this section for:
 
 ---
 
-[:material-arrow-left: Back to Chapter 2](02-first-steps.md)
