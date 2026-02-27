@@ -32,15 +32,15 @@ No contexto de aplicações web, uma **rota** é a associação entre um método
 A forma mais elementar de definir uma rota em Express é a seguinte:
 
 ```javascript
-import express from 'express';
+import express from 'express';       // (1) Importa o framework Express
 
-const app = express();
+const app = express();                // (2) Cria a instância da aplicação
 
-app.get('/usuarios', (req, res) => {
-  res.json({ mensagem: 'Lista de usuários' });
+app.get('/usuarios', (req, res) => { // (3) Define uma rota GET
+  res.json({ mensagem: '...' });      // (4) Envia a resposta em JSON
 });
 
-app.listen(3000);
+app.listen(3000);                     // (5) Inicia o servidor na porta 3000
 ```
 
 Neste exemplo, a aplicação responde às requisições `GET /usuarios` com um objeto JSON. Os objetos `req` e `res` são, respectivamente, representações da requisição recebida e da resposta que será enviada ao cliente — ambos enriquecidos pelo Express com métodos e propriedades adicionais em relação ao Node.js puro.
