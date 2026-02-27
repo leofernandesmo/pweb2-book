@@ -651,13 +651,16 @@ app.get('/usuarios', asyncHandler(async (req, res) => {
 
 
 
-
-
 ## 2.4 Controllers
 
 ### 2.4.1 A separação de responsabilidades
 
 À medida que a lógica de cada rota se torna mais complexa, inserir todo o código diretamente nas definições de rota resulta em arquivos extensos, difíceis de testar e de manter. O padrão de **controllers** surge como solução para esse problema, aplicando o princípio da separação de responsabilidades (*Separation of Concerns*).
+
+> O princípio da **separação de responsabilidades** (*Separation of Concerns*, ou SoC) é um dos fundamentos mais antigos da engenharia de software. A ideia central é que um sistema deve ser dividido em partes distintas, cada qual responsável por um único aspecto bem delimitado do problema — e que essas partes não devem se sobrepor nem conhecer os detalhes internas umas das outras.
+> O conceito foi formalizado pelo cientista da computação holandês Edsger W. Dijkstra em 1974, no ensaio *On the role of scientific thought*, onde cunhou a expressão e argumentou que a capacidade de separar mentalmente um problema em camadas independentes é o que torna possível raciocinar sobre sistemas complexos. Décadas depois, o princípio tornou-se a base de praticamente todos os padrões arquiteturais modernos — MVC, Clean Architecture, microsserviços — e permeia diretrizes como o SOLID, especialmente o Princípio da Responsabilidade Única.
+> No contexto do Express, o SoC se manifesta na divisão entre rotas (o *quê* pode ser acessado), middlewares (as regras transversais que se aplicam antes de chegar ao destino), controllers (a coordenação do fluxo da requisição) e services (a lógica de negócio em si). Cada camada pode ser lida, testada e modificada sem que as demais precisem ser alteradas.
+> 📖 Leitura de referência: [Separation of concerns — Wikipedia](https://en.wikipedia.org/wiki/Separation_of_concerns)
 
 Um controller é um módulo que agrupa as funções responsáveis por processar requisições de um determinado recurso. Sua responsabilidade é exclusivamente coordenar o fluxo: receber os dados da requisição (`req`), delegar o processamento à camada de serviço e enviar a resposta apropriada ao cliente (`res`). O controller **não deve** conter lógica de negócio nem acesso direto ao banco de dados — essas responsabilidades pertencem a camadas distintas.
 
@@ -762,13 +765,13 @@ Essa separação revela uma divisão clara de papéis: o arquivo de rotas declar
 
 ### 2.5.1 A importância da organização
 
-A estrutura de diretórios de um projeto é uma decisão arquitetural com impactos duradouros sobre a produtividade da equipe, a facilidade de onboarding de novos membros e a manutenibilidade do código ao longo do tempo. Uma organização bem pensada torna implícita a separação de responsabilidades: ao abrir qualquer arquivo, o desenvolvedor sabe imediatamente qual é o seu papel na aplicação.
+A estrutura de diretórios de um projeto é uma decisão arquitetural com impactos duradouros sobre a produtividade da equipe, a facilidade de _onboarding_ de novos membros e a manutenibilidade do código ao longo do tempo. Uma organização bem pensada torna implícita a separação de responsabilidades: ao abrir qualquer arquivo, o desenvolvedor sabe imediatamente qual é o seu papel na aplicação.
 
 Existem duas filosofias predominantes de organização de projetos Express: a **organização por tipo de arquivo** e a **organização por funcionalidade** (feature-based). A primeira agrupa todos os controllers juntos, todos os services juntos e assim por diante. A segunda agrupa por domínio — tudo relacionado a `usuarios` fica em um mesmo módulo. Para aplicações de pequeno e médio porte, a organização por tipo é mais comum e será adotada neste material.
 
 ### 2.5.2 Estrutura recomendada
 
-A estrutura a seguir representa uma organização matura e amplamente adotada para APIs Express de médio porte:
+A estrutura a seguir representa um exemplos de organização para APIs Express de médio porte:
 
 ```
 minha-api/
@@ -914,36 +917,6 @@ export const middlewareDeErros = (err, req, res, next) => {
   res.status(500).json({ erro: 'Erro interno do servidor' });
 };
 ```
-
----
-
-## 2.6 Exercícios Práticos
-
-### Exercício 2.1 — Router independente
-
-Crie um router para o recurso `tarefas` com as seguintes rotas: listagem de todas as tarefas, obtenção de uma tarefa por ID, criação, atualização parcial (PATCH) e remoção. As funções handler podem retornar dados fictícios (hardcoded) por enquanto. Monte o router em `/api/tarefas` na aplicação principal.
-
-### Exercício 2.2 — Middleware de log com tempo de resposta
-
-Implemente um middleware de aplicação que registre no console, ao final de cada requisição, o método HTTP, a URL, o código de status da resposta e o tempo total de processamento em milissegundos. **Dica:** o Express possui o evento `res.on('finish', ...)` que é emitido quando a resposta é enviada ao cliente.
-
-### Exercício 2.3 — Tratamento centralizado de erros
-
-Partindo da estrutura apresentada na seção 2.5, implemente a classe `AppError`, o middleware `middlewareDeErros` e refatore as rotas do Exercício 2.1 para que todos os erros sejam propagados via `next(err)`. Verifique que uma rota inexistente resulta em uma resposta JSON com status 404 e mensagem padronizada.
-
-### Exercício 2.4 — Estrutura completa de projeto
-
-Organize os arquivos dos exercícios anteriores seguindo a estrutura de diretórios apresentada na seção 2.5.2. Ao final, o projeto deve conter: `server.js`, `src/app.js`, `src/routes/index.js`, `src/routes/tarefas.routes.js`, `src/controllers/tarefas.controller.js` e `src/middlewares/erros.middleware.js`.
-
----
-
-## 2.7 Referências e Leituras Complementares
-
-- [Documentação oficial do Express — Routing](https://expressjs.com/en/guide/routing.html)
-- [Documentação oficial do Express — Writing middleware](https://expressjs.com/en/guide/writing-middleware.html)
-- [MDN Web Docs — HTTP request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
-- [Node.js Best Practices — Error Handling](https://github.com/goldbergyoni/nodebestpractices#2-error-handling-practices)
-- 📖 Brown, E. *Web Development with Node and Express*. 2ª ed. O'Reilly Media, 2019. — Capítulos 10 e 14.
 
 ---
 
