@@ -17,10 +17,15 @@ O entendimento técnico do runtime é pré-requisito para decisões arquiteturai
 > 
 > O Node.js foi criado em 2009 por Ryan Dahl com o objetivo de resolver limitações observadas em servidores web baseados em múltiplas threads, especialmente no que diz respeito à escalabilidade sob alta concorrência. Sua proposta central consistiu em utilizar JavaScript no lado do servidor, executado sobre o motor V8, adotando um modelo orientado a eventos e I/O não bloqueante.
 > A introdução do npm consolidou rapidamente um ecossistema robusto de bibliotecas, impulsionando sua adoção em aplicações de rede, sistemas em tempo real e APIs REST. Ao longo dos anos, o projeto amadureceu tecnicamente e institucionalmente, passando a ser mantido sob governança da OpenJS Foundation, com ciclos regulares de versões LTS e suporte a padrões modernos da linguagem, como `async/await` e ECMAScript Modules.
-> Para aprofundamento histórico e técnico, recomenda-se a leitura da documentação oficial do projeto:
-> Referência: [https://nodejs.org/en/about](https://nodejs.org/en/about)
-> Esse material apresenta detalhes sobre a evolução do runtime, sua governança e marcos arquiteturais relevantes.
-
+> O vídeo abaixo explica o NodeJS de uma perspectiva histórica. Use o suporte a tradução automática das legendas para assistir em Português:
+> **Vídeo: Node.js: The Documentary | An origin story**  
+> <iframe width="100%" height="400"
+    src="https://youtu.be/LB8KwiiUGy0?si=m21ll1J43aRYFKnt"
+    title="Node.js: The Documentary | An origin story"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+    loading="lazy">
+</iframe>
 
 ---
 
