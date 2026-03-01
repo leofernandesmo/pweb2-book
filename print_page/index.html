@@ -500,6 +500,8 @@
       
         
       
+        
+      
     
     
       
@@ -603,11 +605,32 @@
   
   
     <li class="md-nav__item">
-      <a href="../chapters/99-appendix/" class="md-nav__link">
+      <a href="../chapters/apendice-cheatsheet/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Appendix
+    Apêndice A
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapters/apendice-command-summaries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Apêndice B
   </span>
   
 
@@ -764,9 +787,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#chapters-99-appendix" class="md-nav__link">
+  <a href="#chapters-apendice-cheatsheet" class="md-nav__link">
     <span class="md-ellipsis">
-      8. Appendix
+      8. Apêndice A
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chapters-apendice-command-summaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Apêndice B
     </span>
   </a>
   
@@ -780,7 +812,7 @@
         <li class="md-nav__item">
   <a href="#back-cover" class="md-nav__link">
     <span class="md-ellipsis">
-      9. Back Cover
+      10. Back Cover
     </span>
   </a>
   
@@ -1149,9 +1181,15 @@ Nosso objetivo é que você aprenda de forma eficiente, prática e moderna, comb
 <h3 id="chapters-01-introducao-breve-historico-do-nodejs">📜 Breve Histórico do Node.js<a class="headerlink" href="#chapters-01-introducao-breve-historico-do-nodejs" title="Permanent link">&para;</a></h3>
 <p>O Node.js foi criado em 2009 por Ryan Dahl com o objetivo de resolver limitações observadas em servidores web baseados em múltiplas threads, especialmente no que diz respeito à escalabilidade sob alta concorrência. Sua proposta central consistiu em utilizar JavaScript no lado do servidor, executado sobre o motor V8, adotando um modelo orientado a eventos e I/O não bloqueante.
 A introdução do npm consolidou rapidamente um ecossistema robusto de bibliotecas, impulsionando sua adoção em aplicações de rede, sistemas em tempo real e APIs REST. Ao longo dos anos, o projeto amadureceu tecnicamente e institucionalmente, passando a ser mantido sob governança da OpenJS Foundation, com ciclos regulares de versões LTS e suporte a padrões modernos da linguagem, como <code>async/await</code> e ECMAScript Modules.
-Para aprofundamento histórico e técnico, recomenda-se a leitura da documentação oficial do projeto:
-Referência: <a href="https://nodejs.org/en/about">https://nodejs.org/en/about</a>
-Esse material apresenta detalhes sobre a evolução do runtime, sua governança e marcos arquiteturais relevantes.</p>
+O vídeo abaixo explica o NodeJS de uma perspectiva histórica. Use o suporte a tradução automática das legendas para assistir em Português:
+<strong>Vídeo: Node.js: The Documentary | An origin story</strong><br />
+<iframe width="100%" height="400"
+    src="https://youtu.be/LB8KwiiUGy0?si=m21ll1J43aRYFKnt"
+    title="Node.js: The Documentary | An origin story"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+    loading="lazy">
+</iframe></p>
 </blockquote>
 <hr />
 <h2 id="chapters-01-introducao-2-gerenciamento-de-projetos-com-npm">2. Gerenciamento de Projetos com NPM<a class="headerlink" href="#chapters-01-introducao-2-gerenciamento-de-projetos-com-npm" title="Permanent link">&para;</a></h2>
@@ -2138,16 +2176,870 @@ No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</
 <p class="admonition-title">Próximo Capítulo</p>
 <p>No <strong>Capítulo 3 – Arquitetura MVC</strong>, aprofundaremos a camada de serviços e o padrão Repository, completando a separação de responsabilidades iniciada aqui. A estrutura de projeto apresentada neste capítulo será expandida para acomodar essas novas camadas.</p>
 </div>
-<p><a href="#chapters-01-introducao">⬅ Back to Chapter 1</a></p></section><section class="print-page" id="chapters-99-appendix"><h1 id="chapters-99-appendix-appendix-reference-material">Appendix – Reference Material<a class="headerlink" href="#chapters-99-appendix-appendix-reference-material" title="Permanent link">&para;</a></h1>
-<p>Use this section for:</p>
-<ul>
-<li>Cheatsheets</li>
-<li>Command summaries</li>
-<li>Reference tables</li>
-<li>Links to external resources</li>
-</ul>
-<p>(Write your actual reference material here.)</p>
-<hr /></section><h1 class='nav-section-title-end'>Ended: Chapters</h1><section class="print-page" id="back-cover"><h1 id="back-cover-contracapa">Contracapa<a class="headerlink" href="#back-cover-contracapa" title="Permanent link">&para;</a></h1>
+<p><a href="#chapters-01-introducao">⬅ Back to Chapter 1</a></p></section><section class="print-page" id="chapters-apendice-cheatsheet"><h1 id="chapters-apendice-cheatsheet-apendice-a-cheatsheet">Apêndice A — Cheatsheet<a class="headerlink" href="#chapters-apendice-cheatsheet-apendice-a-cheatsheet" title="Permanent link">&para;</a></h1>
+<p>Referência rápida dos principais padrões, sintaxes e configurações abordados ao longo do semestre. Organizado por tema para consulta pontual durante o desenvolvimento.</p>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a1-nodejs-npm">A.1 Node.js &amp; NPM<a class="headerlink" href="#chapters-apendice-cheatsheet-a1-nodejs-npm" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Inicializar projeto</span>
+npm<span class="w"> </span>init<span class="w"> </span>-y
+
+<span class="c1"># Instalar dependência de produção</span>
+npm<span class="w"> </span>install<span class="w"> </span>express
+
+<span class="c1"># Instalar dependência de desenvolvimento</span>
+npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>jest
+
+<span class="c1"># Executar script definido no package.json</span>
+npm<span class="w"> </span>run<span class="w"> </span>dev
+
+<span class="c1"># Listar dependências instaladas</span>
+npm<span class="w"> </span>list<span class="w"> </span>--depth<span class="o">=</span><span class="m">0</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// package.json — configurações essenciais</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;module&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node server.js&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;dev&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node --watch server.js&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;test&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node --experimental-vm-modules node_modules/.bin/jest&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Importação de módulos (ESM)</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">readFile</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fs/promises&#39;</span><span class="p">;</span>
+
+<span class="c1">// Importação de arquivo local</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./services/usuarios.service.js&#39;</span><span class="p">;</span>
+
+<span class="c1">// __dirname equivalente em ESM</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">fileURLToPath</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;url&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;path&#39;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">__dirname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">dirname</span><span class="p">(</span><span class="nx">fileURLToPath</span><span class="p">(</span><span class="k">import</span><span class="p">.</span><span class="nx">meta</span><span class="p">.</span><span class="nx">url</span><span class="p">));</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a2-express-fundamentos">A.2 Express — Fundamentos<a class="headerlink" href="#chapters-apendice-cheatsheet-a2-express-fundamentos" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">();</span>
+
+<span class="c1">// Middlewares globais essenciais</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span><span class="w">                         </span><span class="c1">// Parsing de JSON no body</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">urlencoded</span><span class="p">({</span><span class="w"> </span><span class="nx">extended</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}));</span><span class="w"> </span><span class="c1">// Parsing de form data</span>
+
+<span class="c1">// Iniciar servidor</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mf">3000</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Rodando na porta 3000&#39;</span><span class="p">));</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a3-rotas">A.3 Rotas<a class="headerlink" href="#chapters-apendice-cheatsheet-a3-rotas" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Verbos HTTP</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/recursos&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">);</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/recursos&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">);</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="s1">&#39;/recursos/:id&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">);</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="s1">&#39;/recursos/:id&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">);</span>
+<span class="nx">app</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s1">&#39;/recursos/:id&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">);</span>
+
+<span class="c1">// Parâmetros de rota</span>
+<span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="w">           </span><span class="c1">// GET /usuarios/42  →  &quot;42&quot;</span>
+
+<span class="c1">// Query params</span>
+<span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">.</span><span class="nx">pagina</span><span class="w">        </span><span class="c1">// GET /usuarios?pagina=2  →  &quot;2&quot;</span>
+<span class="nb">Number</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">.</span><span class="nx">pagina</span><span class="p">)</span><span class="w"> </span><span class="c1">// Conversão para número</span>
+
+<span class="c1">// Corpo da requisição</span>
+<span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">nome</span><span class="w">           </span><span class="c1">// POST com { &quot;nome&quot;: &quot;Ana&quot; }</span>
+
+<span class="c1">// Cabeçalhos</span>
+<span class="nx">req</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s1">&#39;authorization&#39;</span><span class="p">]</span>
+
+<span class="c1">// Router modular</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">router</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Router</span><span class="p">();</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/:id&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">);</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">router</span><span class="p">;</span>
+
+<span class="c1">// Montar router</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/usuarios&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">usuariosRouter</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a4-middlewares">A.4 Middlewares<a class="headerlink" href="#chapters-apendice-cheatsheet-a4-middlewares" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Estrutura básica</span>
+<span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// lógica</span>
+<span class="w">  </span><span class="nx">next</span><span class="p">();</span><span class="w"> </span><span class="c1">// OBRIGATÓRIO se não enviar resposta</span>
+<span class="p">}</span>
+
+<span class="c1">// Middleware de erro (4 parâmetros)</span>
+<span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">statusCode</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="w"> </span><span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// Aplicação global</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">meuMiddleware</span><span class="p">);</span>
+
+<span class="c1">// Aplicação em rota específica</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/rota&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">middleware1</span><span class="p">,</span><span class="w"> </span><span class="nx">middleware2</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">);</span>
+
+<span class="c1">// Middlewares de terceiros</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">helmet</span><span class="p">());</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">cors</span><span class="p">({</span><span class="w"> </span><span class="nx">origin</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://meuapp.com&#39;</span><span class="w"> </span><span class="p">}));</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">morgan</span><span class="p">(</span><span class="s1">&#39;dev&#39;</span><span class="p">));</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">compression</span><span class="p">());</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">rateLimit</span><span class="p">({</span><span class="w"> </span><span class="nx">windowMs</span><span class="o">:</span><span class="w"> </span><span class="mf">15</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">60</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1000</span><span class="p">,</span><span class="w"> </span><span class="nx">max</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="w"> </span><span class="p">}));</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// asyncHandler — evita try/catch repetitivo</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">asyncHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">fn</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">  </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">fn</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)).</span><span class="k">catch</span><span class="p">(</span><span class="nx">next</span><span class="p">);</span>
+
+<span class="c1">// Uso</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">asyncHandler</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">dados</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">servico</span><span class="p">.</span><span class="nx">listar</span><span class="p">();</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">dados</span><span class="p">);</span>
+<span class="p">}));</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a5-respostas-http">A.5 Respostas HTTP<a class="headerlink" href="#chapters-apendice-cheatsheet-a5-respostas-http" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">chave</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;valor&#39;</span><span class="w"> </span><span class="p">})</span><span class="w">       </span><span class="c1">// 200 + JSON</span>
+<span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">201</span><span class="p">).</span><span class="nx">json</span><span class="p">(</span><span class="nx">novoRecurso</span><span class="p">)</span><span class="w">  </span><span class="c1">// 201 Created</span>
+<span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">204</span><span class="p">).</span><span class="nx">send</span><span class="p">()</span><span class="w">             </span><span class="c1">// 204 No Content</span>
+<span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="c1">// 400 Bad Request</span>
+<span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="c1">// 401 Unauthorized</span>
+<span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">403</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="c1">// 403 Forbidden</span>
+<span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="c1">// 404 Not Found</span>
+<span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="c1">// 500 Internal Server Error</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a6-apperror-erro-customizado">A.6 AppError — Erro customizado<a class="headerlink" href="#chapters-apendice-cheatsheet-a6-apperror-erro-customizado" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/utils/AppError.js</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">AppError</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="ne">Error</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">mensagem</span><span class="p">,</span><span class="w"> </span><span class="nx">statusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">500</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">mensagem</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">statusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">statusCode</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Lançar erro em qualquer camada</span>
+<span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s1">&#39;Recurso não encontrado&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">404</span><span class="p">);</span>
+
+<span class="c1">// Middleware de erros captura automaticamente</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">((</span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="ow">instanceof</span><span class="w"> </span><span class="nx">AppError</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Erro interno do servidor&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a7-autenticacao-jwt">A.7 Autenticação JWT<a class="headerlink" href="#chapters-apendice-cheatsheet-a7-autenticacao-jwt" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>jsonwebtoken<span class="w"> </span>bcrypt
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">jwt</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;jsonwebtoken&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">bcrypt</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;bcrypt&#39;</span><span class="p">;</span>
+
+<span class="c1">// Hash de senha</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="nx">senha</span><span class="p">,</span><span class="w"> </span><span class="mf">10</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">valido</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">compare</span><span class="p">(</span><span class="nx">senhaDigitada</span><span class="p">,</span><span class="w"> </span><span class="nx">hash</span><span class="p">);</span>
+
+<span class="c1">// Gerar token</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">(</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="nx">usuario</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">papel</span><span class="o">:</span><span class="w"> </span><span class="nx">usuario</span><span class="p">.</span><span class="nx">papel</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// payload</span>
+<span class="w">  </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">JWT_SECRET</span><span class="p">,</span><span class="w">                   </span><span class="c1">// chave secreta</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">expiresIn</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;1d&#39;</span><span class="w"> </span><span class="p">}</span><span class="w">                       </span><span class="c1">// expiração</span>
+<span class="p">);</span>
+
+<span class="c1">// Verificar token</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">jwt</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">JWT_SECRET</span><span class="p">);</span>
+
+<span class="c1">// Middleware de autenticação</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">autenticar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">auth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s1">&#39;authorization&#39;</span><span class="p">];</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">auth</span><span class="o">?</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;Bearer &#39;</span><span class="p">))</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Token não fornecido&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">req</span><span class="p">.</span><span class="nx">usuario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">jwt</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">auth</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">JWT_SECRET</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">next</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Token inválido&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a8-orm-prisma">A.8 ORM — Prisma<a class="headerlink" href="#chapters-apendice-cheatsheet-a8-orm-prisma" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>prisma<span class="w"> </span>@prisma/client
+npx<span class="w"> </span>prisma<span class="w"> </span>init
+npx<span class="w"> </span>prisma<span class="w"> </span>migrate<span class="w"> </span>dev<span class="w"> </span>--name<span class="w"> </span>nome_da_migration
+npx<span class="w"> </span>prisma<span class="w"> </span>generate
+npx<span class="w"> </span>prisma<span class="w"> </span>studio<span class="w">                </span><span class="c1"># Interface visual</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>// prisma/schema.prisma
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+  senha     String
+  criadoEm DateTime @default(now())
+  posts     Post[]
+}
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@prisma/client&#39;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">prisma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="p">();</span>
+
+<span class="c1">// CRUD</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">todos</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">findMany</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">um</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">criado</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">senha</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">atualiz</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">removido</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="ow">delete</span><span class="p">({</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// Filtros e relações</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">contains</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Ana&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">posts</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">orderBy</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">criadoEm</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;desc&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">skip</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">take</span><span class="o">:</span><span class="w"> </span><span class="mf">10</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a9-orm-sequelize">A.9 ORM — Sequelize<a class="headerlink" href="#chapters-apendice-cheatsheet-a9-orm-sequelize" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>sequelize<span class="w"> </span>sequelize-cli<span class="w"> </span>pg<span class="w"> </span>pg-hstore
+npx<span class="w"> </span>sequelize-cli<span class="w"> </span>init
+npx<span class="w"> </span>sequelize-cli<span class="w"> </span>model:generate<span class="w"> </span>--name<span class="w"> </span>Usuario<span class="w"> </span>--attributes<span class="w"> </span>nome:string,email:string
+npx<span class="w"> </span>sequelize-cli<span class="w"> </span>db:migrate
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">DataTypes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sequelize&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">Usuario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sequelize</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;Usuario&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">nome</span><span class="o">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nx">DataTypes</span><span class="p">.</span><span class="nx">STRING</span><span class="p">,</span><span class="w"> </span><span class="nx">allowNull</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nx">DataTypes</span><span class="p">.</span><span class="nx">STRING</span><span class="p">,</span><span class="w"> </span><span class="nx">allowNull</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">unique</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">senha</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nx">DataTypes</span><span class="p">.</span><span class="nx">STRING</span><span class="p">,</span><span class="w"> </span><span class="nx">allowNull</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// CRUD</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findAll</span><span class="p">();</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findByPk</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span><span class="w"> </span><span class="nx">nome</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">senha</span><span class="w"> </span><span class="p">});</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span><span class="w"> </span><span class="nx">nome</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">destroy</span><span class="p">({</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a10-testes-jest-supertest">A.10 Testes — Jest &amp; Supertest<a class="headerlink" href="#chapters-apendice-cheatsheet-a10-testes-jest-supertest" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>jest<span class="w"> </span>supertest<span class="w"> </span>@types/jest
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Teste unitário de service</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../src/services/usuarios.service.js&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;UsuariosService&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;deve lançar erro se email já existir&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="p">();</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">expect</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">criar</span><span class="p">({</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;existente@teste.com&#39;</span><span class="w"> </span><span class="p">}))</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">rejects</span><span class="p">.</span><span class="nx">toThrow</span><span class="p">(</span><span class="s1">&#39;E-mail já cadastrado&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Teste de integração com Supertest</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">request</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;supertest&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../src/app.js&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;GET /api/usuarios&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;deve retornar 200 e lista de usuários&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/api/usuarios&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mf">200</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">body</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;deve retornar 404 para usuário inexistente&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/api/usuarios/99999&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mf">404</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">body</span><span class="p">).</span><span class="nx">toHaveProperty</span><span class="p">(</span><span class="s1">&#39;erro&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Matchers mais usados</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">valor</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mf">42</span><span class="p">)</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">objeto</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">})</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">array</span><span class="p">).</span><span class="nx">toHaveLength</span><span class="p">(</span><span class="mf">3</span><span class="p">)</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">objeto</span><span class="p">).</span><span class="nx">toHaveProperty</span><span class="p">(</span><span class="s1">&#39;nome&#39;</span><span class="p">)</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">fn</span><span class="p">).</span><span class="nx">toThrow</span><span class="p">(</span><span class="s1">&#39;mensagem&#39;</span><span class="p">)</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">fn</span><span class="p">).</span><span class="nx">rejects</span><span class="p">.</span><span class="nx">toThrow</span><span class="p">()</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">fn</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span>
+
+<span class="c1">// Mock de função</span>
+<span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">()</span>
+<span class="nx">jest</span><span class="p">.</span><span class="nx">spyOn</span><span class="p">(</span><span class="nx">objeto</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;metodo&#39;</span><span class="p">).</span><span class="nx">mockResolvedValue</span><span class="p">(</span><span class="nx">retorno</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a11-variaveis-de-ambiente-deploy">A.11 Variáveis de Ambiente &amp; Deploy<a class="headerlink" href="#chapters-apendice-cheatsheet-a11-variaveis-de-ambiente-deploy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># .env (nunca versionar)</span>
+<span class="nv">PORT</span><span class="o">=</span><span class="m">3000</span>
+<span class="nv">NODE_ENV</span><span class="o">=</span>development
+<span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://user:pass@localhost:5432/meubanco
+<span class="nv">JWT_SECRET</span><span class="o">=</span>minha_chave_secreta_longa
+<span class="nv">CORS_ORIGIN</span><span class="o">=</span>https://meuapp.com
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/config/env.js — carregamento e validação</span>
+<span class="k">import</span><span class="w"> </span><span class="s1">&#39;dotenv/config&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">obrigatorias</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;DATABASE_URL&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;JWT_SECRET&#39;</span><span class="p">];</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">variavel</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">obrigatorias</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">variavel</span><span class="p">])</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Variável de ambiente ausente: </span><span class="si">${</span><span class="nx">variavel</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">porta</span><span class="o">:</span><span class="w">       </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">3000</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">nodeEnv</span><span class="o">:</span><span class="w">     </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;development&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">databaseUrl</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DATABASE_URL</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">jwtSecret</span><span class="o">:</span><span class="w">   </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">JWT_SECRET</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">corsOrigin</span><span class="o">:</span><span class="w">  </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CORS_ORIGIN</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="p">,</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Railway / Render — deploy via CLI</span>
+railway<span class="w"> </span>login
+railway<span class="w"> </span>init
+railway<span class="w"> </span>up
+
+<span class="c1"># Variáveis no serviço de deploy</span>
+railway<span class="w"> </span>variables<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">JWT_SECRET</span><span class="o">=</span>valor
+
+<span class="c1"># Verificar logs em produção</span>
+railway<span class="w"> </span>logs
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-cheatsheet-a12-status-http-referencia-rapida">A.12 Status HTTP — Referência Rápida<a class="headerlink" href="#chapters-apendice-cheatsheet-a12-status-http-referencia-rapida" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Nome</th>
+<th>Uso típico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>OK</td>
+<td>GET, PUT, PATCH bem-sucedidos</td>
+</tr>
+<tr>
+<td>201</td>
+<td>Created</td>
+<td>POST que criou um recurso</td>
+</tr>
+<tr>
+<td>204</td>
+<td>No Content</td>
+<td>DELETE bem-sucedido</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+<td>Dados de entrada inválidos</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>Token ausente ou inválido</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>Token válido, mas sem permissão</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found</td>
+<td>Recurso não encontrado</td>
+</tr>
+<tr>
+<td>409</td>
+<td>Conflict</td>
+<td>Recurso já existe (e-mail duplicado)</td>
+</tr>
+<tr>
+<td>422</td>
+<td>Unprocessable Entity</td>
+<td>Validação de negócio falhou</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Too Many Requests</td>
+<td>Rate limit atingido</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error</td>
+<td>Erro inesperado no servidor</td>
+</tr>
+</tbody>
+</table></section><section class="print-page" id="chapters-apendice-command-summaries"><h1 id="chapters-apendice-command-summaries-apendice-b-command-summaries">Apêndice B — Command Summaries<a class="headerlink" href="#chapters-apendice-command-summaries-apendice-b-command-summaries" title="Permanent link">&para;</a></h1>
+<p>Referência consolidada de todos os comandos de terminal utilizados ao longo do semestre, organizados por ferramenta. Os comandos marcados com <code>*</code> são os mais frequentemente utilizados no dia a dia de desenvolvimento.</p>
+<hr />
+<h2 id="chapters-apendice-command-summaries-b1-npm">B.1 NPM<a class="headerlink" href="#chapters-apendice-command-summaries-b1-npm" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm init -y</code> *</td>
+<td>Inicializa um projeto com <code>package.json</code> padrão</td>
+</tr>
+<tr>
+<td><code>npm install &lt;pacote&gt;</code> *</td>
+<td>Instala pacote como dependência de produção</td>
+</tr>
+<tr>
+<td><code>npm install --save-dev &lt;pacote&gt;</code> *</td>
+<td>Instala pacote como dependência de desenvolvimento</td>
+</tr>
+<tr>
+<td><code>npm install</code></td>
+<td>Instala todas as dependências listadas no <code>package.json</code></td>
+</tr>
+<tr>
+<td><code>npm uninstall &lt;pacote&gt;</code></td>
+<td>Remove um pacote do projeto</td>
+</tr>
+<tr>
+<td><code>npm run &lt;script&gt;</code> *</td>
+<td>Executa um script definido em <code>package.json</code></td>
+</tr>
+<tr>
+<td><code>npm list --depth=0</code></td>
+<td>Lista dependências instaladas no nível raiz</td>
+</tr>
+<tr>
+<td><code>npm outdated</code></td>
+<td>Lista pacotes com versões desatualizadas</td>
+</tr>
+<tr>
+<td><code>npm update</code></td>
+<td>Atualiza pacotes respeitando o range do <code>package.json</code></td>
+</tr>
+<tr>
+<td><code>npm audit</code></td>
+<td>Verifica vulnerabilidades de segurança nas dependências</td>
+</tr>
+<tr>
+<td><code>npm audit fix</code></td>
+<td>Corrige automaticamente vulnerabilidades corrigíveis</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="chapters-apendice-command-summaries-b2-nodejs">B.2 Node.js<a class="headerlink" href="#chapters-apendice-command-summaries-b2-nodejs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>node server.js</code> *</td>
+<td>Executa um arquivo JavaScript</td>
+</tr>
+<tr>
+<td><code>node --watch server.js</code> *</td>
+<td>Executa com reinício automático ao salvar (Node 18+)</td>
+</tr>
+<tr>
+<td><code>node -e "console.log('ok')"</code></td>
+<td>Executa uma expressão JavaScript inline</td>
+</tr>
+<tr>
+<td><code>node --version</code></td>
+<td>Exibe a versão do Node.js instalada</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="chapters-apendice-command-summaries-b3-pacotes-de-producao-instalacao">B.3 Pacotes de Produção — Instalação<a class="headerlink" href="#chapters-apendice-command-summaries-b3-pacotes-de-producao-instalacao" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Pacote(s) instalado(s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm install express</code> *</td>
+<td>Framework web</td>
+</tr>
+<tr>
+<td><code>npm install helmet cors morgan</code> *</td>
+<td>Segurança, CORS e logging</td>
+</tr>
+<tr>
+<td><code>npm install compression</code></td>
+<td>Compressão gzip de respostas</td>
+</tr>
+<tr>
+<td><code>npm install express-rate-limit</code></td>
+<td>Limitação de taxa de requisições</td>
+</tr>
+<tr>
+<td><code>npm install multer</code></td>
+<td>Upload de arquivos</td>
+</tr>
+<tr>
+<td><code>npm install dotenv</code></td>
+<td>Carregamento de variáveis de ambiente</td>
+</tr>
+<tr>
+<td><code>npm install jsonwebtoken bcrypt</code></td>
+<td>JWT e hash de senha</td>
+</tr>
+<tr>
+<td><code>npm install @prisma/client</code></td>
+<td>Cliente Prisma ORM</td>
+</tr>
+<tr>
+<td><code>npm install sequelize pg pg-hstore</code></td>
+<td>Sequelize ORM + driver PostgreSQL</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="chapters-apendice-command-summaries-b4-pacotes-de-desenvolvimento-instalacao">B.4 Pacotes de Desenvolvimento — Instalação<a class="headerlink" href="#chapters-apendice-command-summaries-b4-pacotes-de-desenvolvimento-instalacao" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Pacote(s) instalado(s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm install --save-dev jest</code> *</td>
+<td>Framework de testes</td>
+</tr>
+<tr>
+<td><code>npm install --save-dev supertest</code> *</td>
+<td>Testes de integração HTTP</td>
+</tr>
+<tr>
+<td><code>npm install --save-dev prisma</code></td>
+<td>CLI do Prisma (migrations, codegen)</td>
+</tr>
+<tr>
+<td><code>npm install --save-dev sequelize-cli</code></td>
+<td>CLI do Sequelize (migrations, seeders)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="chapters-apendice-command-summaries-b5-prisma">B.5 Prisma<a class="headerlink" href="#chapters-apendice-command-summaries-b5-prisma" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npx prisma init</code> *</td>
+<td>Inicializa o Prisma no projeto (cria <code>schema.prisma</code> e <code>.env</code>)</td>
+</tr>
+<tr>
+<td><code>npx prisma migrate dev --name &lt;nome&gt;</code> *</td>
+<td>Cria e aplica uma nova migration em desenvolvimento</td>
+</tr>
+<tr>
+<td><code>npx prisma migrate deploy</code></td>
+<td>Aplica migrations pendentes em produção</td>
+</tr>
+<tr>
+<td><code>npx prisma generate</code> *</td>
+<td>Gera o cliente TypeScript/JavaScript a partir do schema</td>
+</tr>
+<tr>
+<td><code>npx prisma studio</code></td>
+<td>Abre interface visual para navegar no banco de dados</td>
+</tr>
+<tr>
+<td><code>npx prisma db push</code></td>
+<td>Sincroniza o schema sem criar migration (prototipagem)</td>
+</tr>
+<tr>
+<td><code>npx prisma db seed</code></td>
+<td>Executa o script de seed definido no <code>package.json</code></td>
+</tr>
+<tr>
+<td><code>npx prisma migrate reset</code></td>
+<td>Apaga o banco e reaplica todas as migrations (⚠️ destrutivo)</td>
+</tr>
+<tr>
+<td><code>npx prisma format</code></td>
+<td>Formata o arquivo <code>schema.prisma</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="chapters-apendice-command-summaries-b6-sequelize-cli">B.6 Sequelize CLI<a class="headerlink" href="#chapters-apendice-command-summaries-b6-sequelize-cli" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npx sequelize-cli init</code> *</td>
+<td>Cria estrutura inicial (config, models, migrations, seeders)</td>
+</tr>
+<tr>
+<td><code>npx sequelize-cli model:generate --name &lt;Nome&gt; --attributes &lt;campos&gt;</code> *</td>
+<td>Gera model e migration</td>
+</tr>
+<tr>
+<td><code>npx sequelize-cli db:migrate</code> *</td>
+<td>Executa migrations pendentes</td>
+</tr>
+<tr>
+<td><code>npx sequelize-cli db:migrate:undo</code></td>
+<td>Desfaz a última migration</td>
+</tr>
+<tr>
+<td><code>npx sequelize-cli db:migrate:undo:all</code></td>
+<td>Desfaz todas as migrations (⚠️ destrutivo)</td>
+</tr>
+<tr>
+<td><code>npx sequelize-cli db:seed:all</code></td>
+<td>Executa todos os seeders</td>
+</tr>
+<tr>
+<td><code>npx sequelize-cli db:seed:undo:all</code></td>
+<td>Desfaz todos os seeders</td>
+</tr>
+<tr>
+<td><code>npx sequelize-cli seed:generate --name &lt;nome&gt;</code></td>
+<td>Gera um arquivo de seeder</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="chapters-apendice-command-summaries-b7-jest">B.7 Jest<a class="headerlink" href="#chapters-apendice-command-summaries-b7-jest" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npx jest</code> *</td>
+<td>Executa todos os testes</td>
+</tr>
+<tr>
+<td><code>npx jest --watch</code> *</td>
+<td>Executa em modo watch (re-executa ao salvar)</td>
+</tr>
+<tr>
+<td><code>npx jest --coverage</code></td>
+<td>Executa e gera relatório de cobertura de código</td>
+</tr>
+<tr>
+<td><code>npx jest &lt;arquivo&gt;</code></td>
+<td>Executa apenas os testes de um arquivo específico</td>
+</tr>
+<tr>
+<td><code>npx jest -t "&lt;nome do teste&gt;"</code></td>
+<td>Executa apenas testes cujo nome corresponde ao padrão</td>
+</tr>
+<tr>
+<td><code>npx jest --verbose</code></td>
+<td>Exibe o nome de cada teste individualmente</td>
+</tr>
+<tr>
+<td><code>npx jest --bail</code></td>
+<td>Para a execução no primeiro teste que falhar</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="chapters-apendice-command-summaries-b8-git-fluxo-basico-de-desenvolvimento">B.8 Git — Fluxo Básico de Desenvolvimento<a class="headerlink" href="#chapters-apendice-command-summaries-b8-git-fluxo-basico-de-desenvolvimento" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git init</code></td>
+<td>Inicializa repositório Git</td>
+</tr>
+<tr>
+<td><code>git clone &lt;url&gt;</code> *</td>
+<td>Clona repositório remoto</td>
+</tr>
+<tr>
+<td><code>git status</code> *</td>
+<td>Exibe arquivos modificados e staged</td>
+</tr>
+<tr>
+<td><code>git add .</code> *</td>
+<td>Adiciona todas as alterações ao stage</td>
+</tr>
+<tr>
+<td><code>git commit -m "&lt;mensagem&gt;"</code> *</td>
+<td>Cria um commit com mensagem descritiva</td>
+</tr>
+<tr>
+<td><code>git push origin &lt;branch&gt;</code> *</td>
+<td>Envia commits para o repositório remoto</td>
+</tr>
+<tr>
+<td><code>git pull</code> *</td>
+<td>Baixa e integra alterações remotas</td>
+</tr>
+<tr>
+<td><code>git checkout -b &lt;branch&gt;</code></td>
+<td>Cria e muda para uma nova branch</td>
+</tr>
+<tr>
+<td><code>git log --oneline</code></td>
+<td>Exibe histórico de commits resumido</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="chapters-apendice-command-summaries-b9-deploy-railway">B.9 Deploy — Railway<a class="headerlink" href="#chapters-apendice-command-summaries-b9-deploy-railway" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm install -g @railway/cli</code></td>
+<td>Instala a CLI do Railway globalmente</td>
+</tr>
+<tr>
+<td><code>railway login</code> *</td>
+<td>Autentica na conta Railway</td>
+</tr>
+<tr>
+<td><code>railway init</code> *</td>
+<td>Vincula o diretório local a um projeto Railway</td>
+</tr>
+<tr>
+<td><code>railway up</code> *</td>
+<td>Realiza o deploy da aplicação</td>
+</tr>
+<tr>
+<td><code>railway logs</code> *</td>
+<td>Exibe logs da aplicação em produção</td>
+</tr>
+<tr>
+<td><code>railway variables set &lt;CHAVE&gt;=&lt;valor&gt;</code></td>
+<td>Define variável de ambiente no serviço</td>
+</tr>
+<tr>
+<td><code>railway variables</code></td>
+<td>Lista todas as variáveis de ambiente configuradas</td>
+</tr>
+<tr>
+<td><code>railway open</code></td>
+<td>Abre o painel do projeto no navegador</td>
+</tr>
+<tr>
+<td><code>railway run &lt;comando&gt;</code></td>
+<td>Executa um comando no contexto do serviço remoto</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="chapters-apendice-command-summaries-b10-deploy-render">B.10 Deploy — Render<a class="headerlink" href="#chapters-apendice-command-summaries-b10-deploy-render" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Comando / Ação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deploy via GitHub</td>
+<td>Conectar repositório no painel — deploy automático a cada push</td>
+</tr>
+<tr>
+<td><code>Build Command</code></td>
+<td><code>npm install</code></td>
+</tr>
+<tr>
+<td><code>Start Command</code></td>
+<td><code>node server.js</code></td>
+</tr>
+<tr>
+<td>Environment Variables</td>
+<td>Configuradas no painel em <em>Environment &gt; Environment Variables</em></td>
+</tr>
+<tr>
+<td><code>render.yaml</code></td>
+<td>Arquivo de configuração declarativa do serviço (Infrastructure as Code)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1"># render.yaml — exemplo de configuração</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minha-api</span>
+<span class="w">    </span><span class="nt">env</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node</span>
+<span class="w">    </span><span class="nt">buildCommand</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm install</span>
+<span class="w">    </span><span class="nt">startCommand</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node server.js</span>
+<span class="w">    </span><span class="nt">envVars</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NODE_ENV</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">JWT_SECRET</span>
+<span class="w">        </span><span class="nt">sync</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Valor definido manualmente no painel</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-apendice-command-summaries-b11-variaveis-de-ambiente">B.11 Variáveis de Ambiente<a class="headerlink" href="#chapters-apendice-command-summaries-b11-variaveis-de-ambiente" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm install dotenv</code></td>
+<td>Instala o pacote dotenv</td>
+</tr>
+<tr>
+<td><code>cp .env.example .env</code> *</td>
+<td>Cria arquivo <code>.env</code> local a partir do modelo</td>
+</tr>
+<tr>
+<td><code>echo ".env" &gt;&gt; .gitignore</code></td>
+<td>Garante que <code>.env</code> não seja versionado</td>
+</tr>
+<tr>
+<td><code>node -e "require('dotenv').config(); console.log(process.env.PORT)"</code></td>
+<td>Testa carregamento de variável</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1"># Conteúdo mínimo do .gitignore</span>
+node_modules/
+.env
+dist/
+coverage/
+</code></pre></div></section><h1 class='nav-section-title-end'>Ended: Chapters</h1><section class="print-page" id="back-cover"><h1 id="back-cover-contracapa">Contracapa<a class="headerlink" href="#back-cover-contracapa" title="Permanent link">&para;</a></h1>
 <p><strong>Programação Web 2</strong>
 <em>Uma abordagem com Node/Express</em></p>
 <p>Este livro faz parte de uma iniciativa de educação aberta.<br />

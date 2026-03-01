@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://leofernandesmo.github.io/pweb2-book/chapters/apendice-cheatsheet/">
       
       
+        <link rel="prev" href="../02-express/">
+      
+      
+        <link rel="next" href="../apendice-command-summaries/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +24,7 @@
     
     
       
-        <title>Apêndice A — Cheatsheet - Programação Web 2 - Uma abordagem usando Node/Express</title>
+        <title>Apêndice A - Programação Web 2 - Uma abordagem usando Node/Express</title>
       
     
     
@@ -126,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Apêndice A — Cheatsheet
+              Apêndice A
             
           </span>
         </div>
@@ -299,10 +303,12 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../00-how-to-use/" class="md-tabs__link">
           
   
@@ -481,8 +487,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -494,22 +502,27 @@
       
         
       
+        
+      
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -520,7 +533,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Chapters
@@ -594,14 +607,183 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../99-appendix/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Apêndice A
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    Appendix
+    Apêndice A
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a1-nodejs-npm" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.1 Node.js &amp; NPM
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a2-express-fundamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.2 Express — Fundamentos
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a3-rotas" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.3 Rotas
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a4-middlewares" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.4 Middlewares
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a5-respostas-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.5 Respostas HTTP
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a6-apperror-erro-customizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.6 AppError — Erro customizado
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a7-autenticacao-jwt" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.7 Autenticação JWT
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a8-orm-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.8 ORM — Prisma
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a9-orm-sequelize" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.9 ORM — Sequelize
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a10-testes-jest-supertest" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.10 Testes — Jest &amp; Supertest
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a11-variaveis-de-ambiente-deploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.11 Variáveis de Ambiente &amp; Deploy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a12-status-http-referencia-rapida" class="md-nav__link">
+    <span class="md-ellipsis">
+      A.12 Status HTTP — Referência Rápida
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apendice-command-summaries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Apêndice B
   </span>
   
 
