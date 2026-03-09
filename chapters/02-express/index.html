@@ -852,18 +852,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#242-implementacao-de-um-controller" class="md-nav__link">
+  <a href="#242-implementacao-do-service" class="md-nav__link">
     <span class="md-ellipsis">
-      2.4.2 Implementação de um controller
+      2.4.2 Implementação do Service
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#243-integracao-com-o-router" class="md-nav__link">
+  <a href="#243-implementacao-de-um-controller" class="md-nav__link">
     <span class="md-ellipsis">
-      2.4.3 Integração com o router
+      2.4.3 Implementação de um controller
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#244-integracao-com-o-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4.4 Integração com o router
     </span>
   </a>
   
@@ -931,6 +940,66 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#26-exercicios-praticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.6 Exercícios Práticos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.6 Exercícios Práticos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-21-router-independente" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 2.1 — Router independente
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-22-middleware-de-log-com-tempo-de-resposta" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 2.2 — Middleware de log com tempo de resposta
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-23-tratamento-centralizado-de-erros" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 2.3 — Tratamento centralizado de erros
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-24-estrutura-completa-de-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 2.4 — Estrutura completa de projeto
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#27-referencias-e-leituras-complementares" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.7 Referências e Leituras Complementares
+    </span>
+  </a>
   
 </li>
       
@@ -1555,14 +1624,63 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <h2 id="24-controllers">2.4 Controllers<a class="headerlink" href="#24-controllers" title="Permanent link">&para;</a></h2>
 <h3 id="241-a-separacao-de-responsabilidades">2.4.1 A separação de responsabilidades<a class="headerlink" href="#241-a-separacao-de-responsabilidades" title="Permanent link">&para;</a></h3>
 <p>À medida que a lógica de cada rota se torna mais complexa, inserir todo o código diretamente nas definições de rota resulta em arquivos extensos, difíceis de testar e de manter. O padrão de <strong>controllers</strong> surge como solução para esse problema, aplicando o princípio da separação de responsabilidades (<em>Separation of Concerns</em>).</p>
-<blockquote>
-<p>O princípio da <strong>separação de responsabilidades</strong> (<em>Separation of Concerns</em>, ou SoC) é um dos fundamentos mais antigos da engenharia de software. A ideia central é que um sistema deve ser dividido em partes distintas, cada qual responsável por um único aspecto bem delimitado do problema — e que essas partes não devem se sobrepor nem conhecer os detalhes internas umas das outras.
-O conceito foi formalizado pelo cientista da computação holandês Edsger W. Dijkstra em 1974, no ensaio <em>On the role of scientific thought</em>, onde cunhou a expressão e argumentou que a capacidade de separar mentalmente um problema em camadas independentes é o que torna possível raciocinar sobre sistemas complexos. Décadas depois, o princípio tornou-se a base de praticamente todos os padrões arquiteturais modernos — MVC, Clean Architecture, microsserviços — e permeia diretrizes como o SOLID, especialmente o Princípio da Responsabilidade Única.
-No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</em> pode ser acessado), middlewares (as regras transversais que se aplicam antes de chegar ao destino), controllers (a coordenação do fluxo da requisição) e services (a lógica de negócio em si). Cada camada pode ser lida, testada e modificada sem que as demais precisem ser alteradas.
-📖 Leitura de referência: <a href="https://en.wikipedia.org/wiki/Separation_of_concerns">Separation of concerns — Wikipedia</a></p>
-</blockquote>
 <p>Um controller é um módulo que agrupa as funções responsáveis por processar requisições de um determinado recurso. Sua responsabilidade é exclusivamente coordenar o fluxo: receber os dados da requisição (<code>req</code>), delegar o processamento à camada de serviço e enviar a resposta apropriada ao cliente (<code>res</code>). O controller <strong>não deve</strong> conter lógica de negócio nem acesso direto ao banco de dados — essas responsabilidades pertencem a camadas distintas.</p>
-<h3 id="242-implementacao-de-um-controller">2.4.2 Implementação de um controller<a class="headerlink" href="#242-implementacao-de-um-controller" title="Permanent link">&para;</a></h3>
+<h3 id="242-implementacao-do-service">2.4.2 Implementação do Service<a class="headerlink" href="#242-implementacao-do-service" title="Permanent link">&para;</a></h3>
+<p>Antes de apresentar o controller, é necessário definir a camada de serviço que ele consome. Neste capítulo, como o ORM ainda não foi introduzido (Capítulo 4), o <code>UsuariosService</code> utilizará um array em memória para simular a persistência de dados. Essa abordagem é intencional: ela permite focar no contrato entre controller e service sem depender de um banco de dados real.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/services/usuarios.service.js</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AppError</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../utils/AppError.js&#39;</span><span class="p">;</span>
+
+<span class="c1">// Simulação de banco de dados em memória</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">usuarios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Ana Silva&#39;</span><span class="p">,</span><span class="w">   </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ana@exemplo.com&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Bruno Costa&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;bruno@exemplo.com&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="p">];</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">proximoId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">listarTodos</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">usuarios</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">buscarPorId</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">usuario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">usuarios</span><span class="p">.</span><span class="nx">find</span><span class="p">((</span><span class="nx">u</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">u</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">usuario</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="c1">// Retorna null se não encontrado</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">criar</span><span class="p">(</span><span class="nx">dados</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">dados</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Verifica duplicidade de e-mail</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">jaExiste</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">usuarios</span><span class="p">.</span><span class="nx">some</span><span class="p">((</span><span class="nx">u</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">u</span><span class="p">.</span><span class="nx">email</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">email</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">jaExiste</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s1">&#39;E-mail já cadastrado&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">409</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">novoUsuario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="nx">proximoId</span><span class="o">++</span><span class="p">,</span><span class="w"> </span><span class="nx">nome</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="nx">usuarios</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">novoUsuario</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">novoUsuario</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">atualizar</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">dados</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">indice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">usuarios</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">((</span><span class="nx">u</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">u</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">indice</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s1">&#39;Usuário não encontrado&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">404</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Mescla os dados existentes com os novos (equivalente ao PATCH/PUT)</span>
+<span class="w">    </span><span class="nx">usuarios</span><span class="p">[</span><span class="nx">indice</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">usuarios</span><span class="p">[</span><span class="nx">indice</span><span class="p">],</span><span class="w"> </span><span class="p">...</span><span class="nx">dados</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">usuarios</span><span class="p">[</span><span class="nx">indice</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">remover</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">indice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">usuarios</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">((</span><span class="nx">u</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">u</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">indice</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s1">&#39;Usuário não encontrado&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">404</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">usuarios</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">indice</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>💡 Quando o Prisma ou Sequelize for introduzido no Capítulo 4, o <code>UsuariosService</code> será refatorado para substituir as operações sobre o array pelas chamadas equivalentes ao ORM — sem que o controller precise ser alterado. Essa estabilidade é exatamente o benefício da separação entre camadas.</p>
+</blockquote>
+<h3 id="243-implementacao-de-um-controller">2.4.3 Implementação de um controller<a class="headerlink" href="#243-implementacao-de-um-controller" title="Permanent link">&para;</a></h3>
 <p>Considere um controller para o recurso <code>usuarios</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/controllers/usuarios.controller.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../services/usuarios.service.js&#39;</span><span class="p">;</span>
@@ -1624,7 +1742,7 @@ No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</
 <span class="w">  </span><span class="p">}</span>
 <span class="p">};</span>
 </code></pre></div>
-<h3 id="243-integracao-com-o-router">2.4.3 Integração com o router<a class="headerlink" href="#243-integracao-com-o-router" title="Permanent link">&para;</a></h3>
+<h3 id="244-integracao-com-o-router">2.4.4 Integração com o router<a class="headerlink" href="#244-integracao-com-o-router" title="Permanent link">&para;</a></h3>
 <p>Com o controller definido, o arquivo de rotas torna-se declarativo e extremamente enxuto:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/routes/usuarios.routes.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
@@ -1651,10 +1769,10 @@ No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</
 <hr />
 <h2 id="25-estrutura-de-projeto">2.5 Estrutura de Projeto<a class="headerlink" href="#25-estrutura-de-projeto" title="Permanent link">&para;</a></h2>
 <h3 id="251-a-importancia-da-organizacao">2.5.1 A importância da organização<a class="headerlink" href="#251-a-importancia-da-organizacao" title="Permanent link">&para;</a></h3>
-<p>A estrutura de diretórios de um projeto é uma decisão arquitetural com impactos duradouros sobre a produtividade da equipe, a facilidade de <em>onboarding</em> de novos membros e a manutenibilidade do código ao longo do tempo. Uma organização bem pensada torna implícita a separação de responsabilidades: ao abrir qualquer arquivo, o desenvolvedor sabe imediatamente qual é o seu papel na aplicação.</p>
+<p>A estrutura de diretórios de um projeto é uma decisão arquitetural com impactos duradouros sobre a produtividade da equipe, a facilidade de onboarding de novos membros e a manutenibilidade do código ao longo do tempo. Uma organização bem pensada torna implícita a separação de responsabilidades: ao abrir qualquer arquivo, o desenvolvedor sabe imediatamente qual é o seu papel na aplicação.</p>
 <p>Existem duas filosofias predominantes de organização de projetos Express: a <strong>organização por tipo de arquivo</strong> e a <strong>organização por funcionalidade</strong> (feature-based). A primeira agrupa todos os controllers juntos, todos os services juntos e assim por diante. A segunda agrupa por domínio — tudo relacionado a <code>usuarios</code> fica em um mesmo módulo. Para aplicações de pequeno e médio porte, a organização por tipo é mais comum e será adotada neste material.</p>
 <h3 id="252-estrutura-recomendada">2.5.2 Estrutura recomendada<a class="headerlink" href="#252-estrutura-recomendada" title="Permanent link">&para;</a></h3>
-<p>A estrutura a seguir representa um exemplos de organização para APIs Express de médio porte:</p>
+<p>A estrutura a seguir representa uma organização matura e amplamente adotada para APIs Express de médio porte:</p>
 <div class="highlight"><pre><span></span><code>minha-api/
 ├── src/
 │   ├── config/
@@ -1781,10 +1899,24 @@ No contexto do Express, o SoC se manifesta na divisão entre rotas (o <em>quê</
 <span class="p">};</span>
 </code></pre></div>
 <hr />
-<div class="admonition note">
-<p class="admonition-title">Próximo Capítulo</p>
-<p>No <strong>Capítulo 3 – Arquitetura MVC</strong>, aprofundaremos a camada de serviços e o padrão Repository, completando a separação de responsabilidades iniciada aqui. A estrutura de projeto apresentada neste capítulo será expandida para acomodar essas novas camadas.</p>
-</div>
+<h2 id="26-exercicios-praticos">2.6 Exercícios Práticos<a class="headerlink" href="#26-exercicios-praticos" title="Permanent link">&para;</a></h2>
+<h3 id="exercicio-21-router-independente">Exercício 2.1 — Router independente<a class="headerlink" href="#exercicio-21-router-independente" title="Permanent link">&para;</a></h3>
+<p>Crie um router para o recurso <code>tarefas</code> com as seguintes rotas: listagem de todas as tarefas, obtenção de uma tarefa por ID, criação, atualização parcial (PATCH) e remoção. As funções handler podem retornar dados fictícios (hardcoded) por enquanto. Monte o router em <code>/api/tarefas</code> na aplicação principal.</p>
+<h3 id="exercicio-22-middleware-de-log-com-tempo-de-resposta">Exercício 2.2 — Middleware de log com tempo de resposta<a class="headerlink" href="#exercicio-22-middleware-de-log-com-tempo-de-resposta" title="Permanent link">&para;</a></h3>
+<p>Implemente um middleware de aplicação que registre no console, ao final de cada requisição, o método HTTP, a URL, o código de status da resposta e o tempo total de processamento em milissegundos. <strong>Dica:</strong> o Express possui o evento <code>res.on('finish', ...)</code> que é emitido quando a resposta é enviada ao cliente.</p>
+<h3 id="exercicio-23-tratamento-centralizado-de-erros">Exercício 2.3 — Tratamento centralizado de erros<a class="headerlink" href="#exercicio-23-tratamento-centralizado-de-erros" title="Permanent link">&para;</a></h3>
+<p>Partindo da estrutura apresentada na seção 2.5, implemente a classe <code>AppError</code>, o middleware <code>middlewareDeErros</code> e refatore as rotas do Exercício 2.1 para que todos os erros sejam propagados via <code>next(err)</code>. Verifique que uma rota inexistente resulta em uma resposta JSON com status 404 e mensagem padronizada.</p>
+<h3 id="exercicio-24-estrutura-completa-de-projeto">Exercício 2.4 — Estrutura completa de projeto<a class="headerlink" href="#exercicio-24-estrutura-completa-de-projeto" title="Permanent link">&para;</a></h3>
+<p>Organize os arquivos dos exercícios anteriores seguindo a estrutura de diretórios apresentada na seção 2.5.2. Ao final, o projeto deve conter: <code>server.js</code>, <code>src/app.js</code>, <code>src/routes/index.js</code>, <code>src/routes/tarefas.routes.js</code>, <code>src/controllers/tarefas.controller.js</code> e <code>src/middlewares/erros.middleware.js</code>.</p>
+<hr />
+<h2 id="27-referencias-e-leituras-complementares">2.7 Referências e Leituras Complementares<a class="headerlink" href="#27-referencias-e-leituras-complementares" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://expressjs.com/en/guide/routing.html">Documentação oficial do Express — Routing</a></li>
+<li><a href="https://expressjs.com/en/guide/writing-middleware.html">Documentação oficial do Express — Writing middleware</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods">MDN Web Docs — HTTP request methods</a></li>
+<li><a href="https://github.com/goldbergyoni/nodebestpractices#2-error-handling-practices">Node.js Best Practices — Error Handling</a></li>
+<li>📖 Brown, E. <em>Web Development with Node and Express</em>. 2ª ed. O'Reilly Media, 2019. — Capítulos 10 e 14.</li>
+</ul>
 <p><a href="../01-introducao/">⬅ Back to Chapter 1</a></p>
 
 
