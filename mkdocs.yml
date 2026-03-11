@@ -74,6 +74,7 @@ nav:
       - "0. Como Usar Este Material": chapters/00-how-to-use.md
       - "1. Fundamentos do Node.js": chapters/01-introducao.md
       - "2. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto": chapters/02-express.md
+      - "3. Arquitetura de Software: MVC, Services e Repository Pattern": chapters/03-arquitetura.md      
       - "Apêndice A": chapters/apendice-cheatsheet.md
       - "Apêndice B": chapters/apendice-command-summaries.md
   - Back Cover: back-cover.md
