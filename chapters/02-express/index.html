@@ -1241,7 +1241,12 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <p>Vale observar um detalhe importante de ordem: se <code>req.body</code> contiver uma propriedade chamada <code>id</code>, ela <strong>sobrescreveria</strong> o <code>id</code> vindo de <code>req.params</code>, pois propriedades declaradas depois prevalecem sobre as anteriores. Por isso, em situações reais, é recomendável colocar o <code>id</code> do params <strong>após</strong> o spread, garantindo que ele sempre prevaleça:</p>
 <div class="highlight"><pre><span></span><code><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">});</span><span class="w"> </span><span class="c1">// id de req.params nunca será sobrescrito</span>
 </code></pre></div>
-<p>O código anterior pode dar erro, porque ainda não foi feito o registro do midleware <em>express.json</em> não foi registrado. Veja na próxima seção para entender melhor.</p>
+<p>O código anterior pode dar erro, porque ainda não foi feito o registro do midleware <em>express.json</em>. 
+Para que <code>req.body</code> esteja disponível nas rotas, é necessário registrar o middleware de parsing de JSON <strong>antes</strong> das definições de rota, por meio de <code>app.use(express.json())</code>:
+Veja na próxima seção para entender melhor.</p>
+<blockquote>
+<p>O conceito de middleware — o que é, como funciona internamente e como criar os seus próprios — será explicado em profundidade na seção 2.3 deste capítulo.</p>
+</blockquote>
 <h3 id="223-parametros-de-rota-de-consulta-e-corpo-da-requisicao">2.2.3 Parâmetros de rota, de consulta e corpo da requisição<a class="headerlink" href="#223-parametros-de-rota-de-consulta-e-corpo-da-requisicao" title="Permanent link">&para;</a></h3>
 <p>O Express oferece três mecanismos distintos para o recebimento de dados provenientes do cliente, cada um adequado a uma situação específica.</p>
 <p>Os <strong>parâmetros de rota</strong> (<em>route params</em>) são segmentos dinâmicos da URL, delimitados por dois-pontos na definição da rota. São acessados através de <code>req.params</code> e tipicamente utilizados para identificar recursos específicos.</p>
@@ -1251,7 +1256,6 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">usuarioId</span><span class="o">:</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
-<p>Para que <code>req.body</code> esteja disponível nas rotas, é necessário registrar o middleware de parsing de JSON <strong>antes</strong> das definições de rota, por meio de <code>app.use(express.json())</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">();</span>
 
 <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span><span class="w"> </span><span class="c1">// Habilita a leitura do corpo da requisição em formato JSON</span>
@@ -1261,9 +1265,6 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">201</span><span class="p">).</span><span class="nx">json</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></div>
-<blockquote>
-<p>O conceito de middleware — o que é, como funciona internamente e como criar os seus próprios — será explicado em profundidade na seção 2.3 deste capítulo.</p>
-</blockquote>
 <p>Os <strong>parâmetros de consulta</strong> (<em>query params</em>) são pares chave-valor transmitidos na URL após o caractere <code>?</code>. São acessados via <code>req.query</code> e frequentemente empregados em operações de filtragem, ordenação ou paginação.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// URL: GET /produtos?categoria=eletronicos&amp;pagina=2</span>
 <span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/produtos&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
