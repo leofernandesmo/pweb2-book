@@ -123,7 +123,11 @@ Vale observar um detalhe importante de ordem: se `req.body` contiver uma proprie
 res.json({ ...req.body, id }); // id de req.params nunca será sobrescrito
 ```
 
-O código anterior pode dar erro, porque ainda não foi feito o registro do midleware _express.json_ não foi registrado. Veja na próxima seção para entender melhor.
+O código anterior pode dar erro, porque ainda não foi feito o registro do midleware _express.json_. 
+Para que `req.body` esteja disponível nas rotas, é necessário registrar o middleware de parsing de JSON **antes** das definições de rota, por meio de `app.use(express.json())`:
+Veja na próxima seção para entender melhor.
+
+> O conceito de middleware — o que é, como funciona internamente e como criar os seus próprios — será explicado em profundidade na seção 2.3 deste capítulo.
 
 
 ### 2.2.3 Parâmetros de rota, de consulta e corpo da requisição
@@ -140,7 +144,6 @@ app.get('/usuarios/:id', (req, res) => {
 });
 ```
 
-Para que `req.body` esteja disponível nas rotas, é necessário registrar o middleware de parsing de JSON **antes** das definições de rota, por meio de `app.use(express.json())`:
 
 ```javascript
 const app = express();
@@ -153,7 +156,6 @@ app.post('/produtos', (req, res) => {
 });
 ```
 
-> O conceito de middleware — o que é, como funciona internamente e como criar os seus próprios — será explicado em profundidade na seção 2.3 deste capítulo.
 
 Os **parâmetros de consulta** (*query params*) são pares chave-valor transmitidos na URL após o caractere `?`. São acessados via `req.query` e frequentemente empregados em operações de filtragem, ordenação ou paginação.
 
