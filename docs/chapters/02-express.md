@@ -371,6 +371,8 @@ app.use(
 );
 ```
 
+> Para mais informações sobre CORS acesse: [https://aws.amazon.com/pt/what-is/cross-origin-resource-sharing/](url)
+
 #### morgan
 
 O `morgan` é um middleware de logging de requisições HTTP. Ele intercepta cada requisição e registra informações como método, URL, status da resposta, tempo de processamento e tamanho do corpo. Possui formatos predefinidos — `dev`, `combined`, `short`, `tiny` — cada um com nível de detalhe distinto. O formato `dev` é o mais utilizado durante o desenvolvimento por ser colorido e conciso; o `combined` (no padrão Apache) é preferido em produção por ser compatível com ferramentas de análise de logs.
