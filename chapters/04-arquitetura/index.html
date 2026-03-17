@@ -1123,6 +1123,19 @@
 <p>Em aplicações web tradicionais, a <em>View</em> é responsável por renderizar HTML que será exibido no navegador. Em APIs REST, não existe renderização de interface — o servidor produz dados estruturados (tipicamente JSON) que serão consumidos por um cliente independente: um front-end em React, um aplicativo móvel ou outro serviço. Essa diferença fundamental implica uma adaptação do padrão original.</p>
 <p>No contexto de APIs Express, as três camadas do MVC assumem os seguintes papéis:</p>
 <p>A camada <strong>Model</strong> representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 5). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso — um <code>Usuario</code>, um <code>Produto</code> — e o mecanismo responsável por persistir e recuperar esses dados.</p>
+<p>A camada <strong>View</strong> é substituída, na prática, pela resposta JSON produzida pelo servidor. Não existe um arquivo de template ou componente visual — <code>res.json()</code> cumpre o papel de serializar o modelo para o formato que o cliente espera.</p>
+<div class="admonition note">
+<p class="admonition-title">Serialização em APIs reais</p>
+<p>Embora <code>res.json()</code> cumpra o papel de <em>View</em> neste contexto, aplicações reais frequentemente introduzem uma camada adicional de <strong>serialização ou apresentação</strong>, responsável por:</p>
+<ul>
+<li>Ocultar campos sensíveis (ex: senhas, tokens)</li>
+<li>Adaptar o formato da resposta (ex: nomes de propriedades)</li>
+<li>Versionar a API</li>
+<li>Agregar ou transformar dados</li>
+</ul>
+<p>Essa camada pode ser implementada com DTOs, serializers ou presenters, e será discutida mais adiante no curso.</p>
+</div>
+<p>A camada <strong>Controller</strong> permanece com seu papel original: receber a requisição, coordenar o fluxo entre as camadas e devolver a resposta. Sua responsabilidade é exclusivamente orquestrar — nunca processar lógica de negócio diretamente.</p>
 <div class="admonition note">
 <p class="admonition-title">O que é o Model neste estágio do curso?</p>
 <p>Neste capítulo, o termo <strong>Model</strong> é utilizado em um sentido mais amplo e ainda simplificado. Em aplicações completas, especialmente com ORM e Domain-Driven Design, o Model pode assumir diferentes formas:</p>
@@ -1133,8 +1146,6 @@
 </ul>
 <p>Neste momento do curso, como ainda não utilizamos um ORM nem modelagem rica de domínio, o Model pode ser entendido como <strong>uma estrutura de dados que representa os recursos da aplicação</strong> (ex: <code>Usuario</code>, <code>Produto</code>) e que será evoluída nos próximos capítulos.</p>
 </div>
-<p>A camada <strong>View</strong> é substituída, na prática, pela resposta JSON produzida pelo servidor. Não existe um arquivo de template ou componente visual — <code>res.json()</code> cumpre o papel de serializar o modelo para o formato que o cliente espera.</p>
-<p>A camada <strong>Controller</strong> permanece com seu papel original: receber a requisição, coordenar o fluxo entre as camadas e devolver a resposta. Sua responsabilidade é exclusivamente orquestrar — nunca processar lógica de negócio diretamente.</p>
 <h3 id="423-o-problema-do-controller-gordo">4.2.3 O problema do controller gordo<a class="headerlink" href="#423-o-problema-do-controller-gordo" title="Permanent link">&para;</a></h3>
 <p>Um antipadrão recorrente em projetos Express iniciantes é o chamado <em>fat controller</em> (controller gordo): um controller que acumula validação de entrada, regras de negócio, acesso direto ao banco de dados e montagem da resposta — tudo em uma única função. O exemplo abaixo ilustra esse problema:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// ❌ Antipadrão: controller gordo</span>
@@ -1219,6 +1230,17 @@
 <div class="admonition note">
 <p class="admonition-title">Contrato vs. Implementação</p>
 <p>A interface de repositório é como um <strong>contrato</strong> que define quais operações devem ser realizadas. Ela especifica um conjunto de métodos públicos (com seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação concreta é onde a lógica específica para interagir com a fonte de dados reside.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Responsabilidade do Repository</p>
+<p>O repositório <strong>não deve conter lógica de negócio</strong>. Sua responsabilidade é exclusivamente:</p>
+<ul>
+<li>Persistir dados</li>
+<li>Recuperar dados</li>
+<li>Executar consultas (queries)</li>
+</ul>
+<p>Regras como validações, cálculos ou decisões de negócio devem sempre residir na camada de <strong>Service</strong>.</p>
+<p>O repositório pode conter lógica técnica (ex: construção de queries, mapeamento de dados), mas nunca regras do domínio da aplicação.</p>
 </div>
 <h3 id="443-implementacao-de-um-repositorio-em-memoria">4.4.3 Implementação de um repositório em memória<a class="headerlink" href="#443-implementacao-de-um-repositorio-em-memoria" title="Permanent link">&para;</a></h3>
 <p>O repositório a seguir é funcionalmente equivalente ao array em memória utilizado no Capítulo 2, mas agora encapsulado em uma classe com interface bem definida:</p>
