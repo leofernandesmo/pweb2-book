@@ -28,6 +28,22 @@ No contexto de APIs Express, as três camadas do MVC assumem os seguintes papéi
 
 A camada **Model** representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 5). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso — um `Usuario`, um `Produto` — e o mecanismo responsável por persistir e recuperar esses dados.
 
+A camada **View** é substituída, na prática, pela resposta JSON produzida pelo servidor. Não existe um arquivo de template ou componente visual — `res.json()` cumpre o papel de serializar o modelo para o formato que o cliente espera.
+
+!!! note "Serialização em APIs reais"
+    Embora `res.json()` cumpra o papel de *View* neste contexto, aplicações reais frequentemente introduzem uma camada adicional de **serialização ou apresentação**, responsável por:
+
+    - Ocultar campos sensíveis (ex: senhas, tokens)
+    - Adaptar o formato da resposta (ex: nomes de propriedades)
+    - Versionar a API
+    - Agregar ou transformar dados
+
+    Essa camada pode ser implementada com DTOs, serializers ou presenters, e será discutida mais adiante no curso.
+
+
+A camada **Controller** permanece com seu papel original: receber a requisição, coordenar o fluxo entre as camadas e devolver a resposta. Sua responsabilidade é exclusivamente orquestrar — nunca processar lógica de negócio diretamente.
+
+
 !!! note "O que é o Model neste estágio do curso?"
     Neste capítulo, o termo **Model** é utilizado em um sentido mais amplo e ainda simplificado. Em aplicações completas, especialmente com ORM e Domain-Driven Design, o Model pode assumir diferentes formas:
     
@@ -37,9 +53,7 @@ A camada **Model** representa as entidades do domínio e as regras de acesso aos
 
     Neste momento do curso, como ainda não utilizamos um ORM nem modelagem rica de domínio, o Model pode ser entendido como **uma estrutura de dados que representa os recursos da aplicação** (ex: `Usuario`, `Produto`) e que será evoluída nos próximos capítulos.
 
-A camada **View** é substituída, na prática, pela resposta JSON produzida pelo servidor. Não existe um arquivo de template ou componente visual — `res.json()` cumpre o papel de serializar o modelo para o formato que o cliente espera.
 
-A camada **Controller** permanece com seu papel original: receber a requisição, coordenar o fluxo entre as camadas e devolver a resposta. Sua responsabilidade é exclusivamente orquestrar — nunca processar lógica de negócio diretamente.
 
 ### 4.2.3 O problema do controller gordo
 
@@ -153,6 +167,18 @@ Do ponto de vista do service, um repositório é simplesmente um colaborador que
 
 !!! note "Contrato vs. Implementação"
     A interface de repositório é como um **contrato** que define quais operações devem ser realizadas. Ela especifica um conjunto de métodos públicos (com seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação concreta é onde a lógica específica para interagir com a fonte de dados reside.
+
+!!! warning "Responsabilidade do Repository"
+    O repositório **não deve conter lógica de negócio**. Sua responsabilidade é exclusivamente:
+
+    - Persistir dados
+    - Recuperar dados
+    - Executar consultas (queries)
+
+    Regras como validações, cálculos ou decisões de negócio devem sempre residir na camada de **Service**.
+
+    O repositório pode conter lógica técnica (ex: construção de queries, mapeamento de dados), mas nunca regras do domínio da aplicação.
+
 
 ### 4.4.3 Implementação de um repositório em memória
 
