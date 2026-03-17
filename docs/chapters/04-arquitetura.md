@@ -333,6 +333,17 @@ const controller  = new UsuariosController(service);
 
 Essa composição é realizada uma única vez, no ponto de entrada da aplicação. Controllers, services e repositórios permanecem completamente desacoplados uns dos outros — cada um conhece apenas a interface do colaborador que precisa, não sua implementação concreta.
 
+
+!!! note "Dependency Injection vs Dependency Inversion"
+    É comum confundir dois conceitos relacionados, mas distintos:
+
+    - **Dependency Injection (DI)**: é uma técnica de implementação — consiste em fornecer dependências a um objeto (ex: via construtor), em vez de criá-las internamente.
+    - **Dependency Inversion Principle (DIP)**: é um princípio de design — afirma que módulos de alto nível não devem depender de implementações concretas, mas de abstrações.
+
+    A injeção de dependência é uma forma prática de implementar o princípio da inversão de dependência, mas os dois conceitos não são equivalentes.
+
+
+
 ### 4.5.3 Benefício direto: testabilidade
 
 O benefício mais imediato da injeção de dependência é a facilidade de teste. Em vez de um banco de dados real, é possível injetar um repositório falso (*mock* ou *stub*) que simula o comportamento esperado:
@@ -470,6 +481,16 @@ export class UsuariosService {
 }
 ```
 
+!!! note "Exposição de dados e DTOs"
+    Neste exemplo, o service retorna diretamente os objetos provenientes do repositório. Em aplicações reais, isso pode não ser adequado, pois:
+
+    - Dados sensíveis podem ser expostos (ex: senha hash)
+    - A estrutura interna pode vazar para a API pública
+    - Mudanças internas podem quebrar clientes
+
+    Uma abordagem mais robusta é utilizar **DTOs (Data Transfer Objects)** ou uma camada de serialização para controlar exatamente quais dados são retornados ao cliente. Esse refinamento será abordado em capítulos futuros.
+
+
 ### 4.6.4 O controller refatorado
 
 ```javascript
@@ -525,6 +546,21 @@ export class UsuariosController {
 
 > 💡 **Por que o `.bind(this)`?** Quando o Express invoca um método de classe como handler de rota (`router.get('/', controller.listarTodos)`), ele o chama sem o contexto do objeto original — o `this` dentro do método seria `undefined`. O `.bind(this)` no construtor garante que cada método sempre execute no contexto correto da instância.
 
+
+!!! tip "Alternativa ao bind com class fields"
+    Em JavaScript moderno, é possível evitar o uso de `.bind(this)` utilizando *class fields* com funções arrow:
+
+    ```javascript
+    listarTodos = async (req, res, next) => {
+      try {
+        const usuarios = await this.service.listarTodos();
+        res.json(usuarios);
+      } catch (err) { next(err); }
+    };
+    ```
+
+    Nesse formato, o `this` é automaticamente preservado, pois funções arrow não redefinem o contexto. Essa abordagem é comum em projetos mais recentes.
+
 ### 4.6.5 A composição no arquivo de rotas
 
 O arquivo de rotas é o único lugar onde as dependências são instanciadas e compostas. Essa concentração da composição em um único ponto é denominada *composition root* — um princípio que facilita a localização e a troca de implementações.
@@ -570,6 +606,22 @@ Implemente um `ProdutosController` que receba o service via construtor e exponha
 Escreva dois testes unitários para o `ProdutosService` utilizando repositórios falsos injetados:
 
 O primeiro deve verificar que a criação de um produto com preço negativo lança `AppError` com status 400. O segundo deve verificar que a criação de um produto com nome duplicado lança `AppError` com status 409. Nenhum dos testes deve instanciar o `ProdutosRepository` real.
+
+
+### Exercício 4.4 — Substituição de implementação do Repository
+
+Crie uma segunda implementação de `ProdutosRepository`, por exemplo:
+
+- Um repositório em memória alternativo, ou
+- Um repositório falso (mock) com comportamento controlado
+
+Em seguida:
+
+1. Injete essa nova implementação no `ProdutosService`
+2. Execute a aplicação ou testes utilizando essa nova versão
+3. Verifique que **nenhuma alteração foi necessária no service**
+
+O objetivo é demonstrar, na prática, o princípio da **Inversão de Dependência**: o service depende do contrato, não da implementação concreta.
 
 ---
 
