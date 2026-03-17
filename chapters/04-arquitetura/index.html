@@ -1223,9 +1223,8 @@
 <h3 id="442-o-repositorio-como-contrato">4.4.2 O repositório como contrato<a class="headerlink" href="#442-o-repositorio-como-contrato" title="Permanent link">&para;</a></h3>
 <p>O <strong>Repository Pattern</strong> resolve esse problema introduzindo uma camada de abstração entre o service e o mecanismo de persistência. Um repositório é um objeto que expõe uma interface orientada ao domínio — <code>buscarPorId</code>, <code>criar</code>, <code>listarTodos</code> — ocultando completamente os detalhes de como esses dados são recuperados ou armazenados.</p>
 <p>Do ponto de vista do service, um repositório é simplesmente um colaborador que sabe <em>onde</em> os dados vivem. O service não precisa saber se os dados estão em um banco relacional, em memória ou em uma API externa — ele apenas chama os métodos do repositório.</p>
-<blockquote>
-<p>📷 <strong>Sugestão de imagem:</strong> Diagrama em camadas mostrando: Controller → Service → Repository → Banco de Dados, com setas indicando o sentido das dependências e destacando que o service conhece apenas a interface do repositório, não sua implementação.</p>
-</blockquote>
+<p><img alt="Repository" src="../../figures/04_02-repository.png" /></p>
+<p>Obs.: A interface de repositório é como um <strong>contrato</strong> ou um plano que define quais operações um repositório deve ser capaz de realizar. Ela especifica um conjunto de métodos públicos (e seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação do repositório é a classe <strong>concreta</strong> que realiza as operações definidas na interface. É onde a lógica específica para interagir com uma fonte de dados real (como um banco de dados, sistema de arquivos ou API) reside. Veremos isso em mais detalhes a frente no material.</p>
 <h3 id="443-implementacao-de-um-repositorio-em-memoria">4.4.3 Implementação de um repositório em memória<a class="headerlink" href="#443-implementacao-de-um-repositorio-em-memoria" title="Permanent link">&para;</a></h3>
 <p>O repositório a seguir é funcionalmente equivalente ao array em memória utilizado no Capítulo 2, mas agora encapsulado em uma classe com interface bem definida:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/repositories/usuarios.repository.js</span>
