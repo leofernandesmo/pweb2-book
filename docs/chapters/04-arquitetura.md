@@ -143,7 +143,9 @@ O **Repository Pattern** resolve esse problema introduzindo uma camada de abstra
 
 Do ponto de vista do service, um repositório é simplesmente um colaborador que sabe *onde* os dados vivem. O service não precisa saber se os dados estão em um banco relacional, em memória ou em uma API externa — ele apenas chama os métodos do repositório.
 
-> 📷 **Sugestão de imagem:** Diagrama em camadas mostrando: Controller → Service → Repository → Banco de Dados, com setas indicando o sentido das dependências e destacando que o service conhece apenas a interface do repositório, não sua implementação.
+![Repository](../figures/04_02-repository.png)
+
+Obs.: A interface de repositório é como um **contrato** ou um plano que define quais operações um repositório deve ser capaz de realizar. Ela especifica um conjunto de métodos públicos (e seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação do repositório é a classe **concreta** que realiza as operações definidas na interface. É onde a lógica específica para interagir com uma fonte de dados real (como um banco de dados, sistema de arquivos ou API) reside. Veremos isso em mais detalhes a frente no material.
 
 ### 4.4.3 Implementação de um repositório em memória
 
