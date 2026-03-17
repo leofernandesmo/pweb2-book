@@ -1,8 +1,8 @@
-# Capítulo 3 — Arquitetura de Software: MVC, Services e Repository Pattern
+# Capítulo 4 — Arquitetura de Software: MVC, Services e Repository Pattern
 
 ---
 
-## 3.1 Introdução
+## 4.1 Introdução
 
 O Capítulo 2 estabeleceu os fundamentos operacionais do Express: como definir rotas, encadear middlewares e organizar handlers em controllers. O código resultante já é funcional — mas funcionalidade não é sinônimo de boa arquitetura. À medida que uma aplicação cresce, a ausência de uma separação clara entre camadas se manifesta em problemas concretos: controllers que acumulam lógica de negócio, services que constroem queries SQL diretamente, testes que dependem de banco de dados real para verificar regras simples.
 
@@ -12,15 +12,15 @@ Este capítulo aborda os padrões arquiteturais que resolvem esses problemas de 
 
 ---
 
-## 3.2 O Padrão MVC no Contexto de APIs REST
+## 4.2 O Padrão MVC no Contexto de APIs REST
 
-### 3.2.1 Origem e propósito
+### 4.2.1 Origem e propósito
 
 O padrão **MVC** (*Model-View-Controller*) foi concebido na década de 1970 por Trygve Reenskaug, durante seu trabalho na Xerox PARC com a linguagem Smalltalk. Sua motivação original era separar a interface gráfica (*View*) da lógica de negócio (*Model*), conectando-as por meio de um coordenador (*Controller*) que respondesse às ações do usuário. Durante décadas, o padrão dominou o desenvolvimento de aplicações desktop e, posteriormente, frameworks web como Ruby on Rails, Laravel e Django.
 
 📖 Leitura de referência: [Model–view–controller — Wikipedia](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
 
-### 3.2.2 MVC adaptado para APIs REST
+### 4.2.2 MVC adaptado para APIs REST
 
 Em aplicações web tradicionais, a *View* é responsável por renderizar HTML que será exibido no navegador. Em APIs REST, não existe renderização de interface — o servidor produz dados estruturados (tipicamente JSON) que serão consumidos por um cliente independente: um front-end em React, um aplicativo móvel ou outro serviço. Essa diferença fundamental implica uma adaptação do padrão original.
 
@@ -34,7 +34,7 @@ A camada **Controller** permanece com seu papel original: receber a requisição
 
 > 📷 **Sugestão de imagem:** Diagrama comparativo entre o MVC tradicional (com View renderizando HTML) e o MVC para APIs (com res.json() no lugar da View), evidenciando a substituição da camada de apresentação.
 
-### 3.2.3 O problema do controller gordo
+### 4.2.3 O problema do controller gordo
 
 Um antipadrão recorrente em projetos Express iniciantes é o chamado *fat controller* (controller gordo): um controller que acumula validação de entrada, regras de negócio, acesso direto ao banco de dados e montagem da resposta — tudo em uma única função. O exemplo abaixo ilustra esse problema:
 
@@ -65,9 +65,9 @@ Este controller é impossível de testar sem um banco de dados real, não pode s
 
 ---
 
-## 3.3 A Camada de Service em Profundidade
+## 4.3 A Camada de Service em Profundidade
 
-### 3.3.1 Responsabilidades do service
+### 4.3.1 Responsabilidades do service
 
 A camada de **Service** é a guardiã da lógica de negócio da aplicação. Ela reside entre o controller e o repositório de dados, e sua responsabilidade central é expressar *o que a aplicação faz* — independentemente de *como* os dados chegam (HTTP, fila de mensagens, CLI) e de *onde* são armazenados (PostgreSQL, MongoDB, memória).
 
@@ -87,7 +87,7 @@ async criarUsuario({ nome, email, senha }) {
 }
 ```
 
-### 3.3.2 Validações de domínio versus validações de entrada
+### 4.3.2 Validações de domínio versus validações de entrada
 
 Um aspecto importante da camada de service é a distinção entre dois tipos de validação. As **validações de entrada** — formato de e-mail, tamanho mínimo de senha, campos obrigatórios — pertencem aos middlewares de validação, pois dizem respeito ao contrato da API. As **validações de domínio** — um usuário não pode ter dois endereços de e-mail cadastrados, um produto com estoque zero não pode ser vendido — pertencem ao service, pois expressam regras do negócio.
 
@@ -120,19 +120,19 @@ export class UsuariosService {
 
 Observe que o service não sabe *como* o repositório armazena os dados — ele apenas chama métodos bem definidos. Essa abstração é o objeto de estudo da próxima seção.
 
-### 3.3.3 O service como ponto de reutilização
+### 4.3.3 O service como ponto de reutilização
 
 Uma consequência natural da independência do service em relação ao transporte HTTP é sua reutilizabilidade. O mesmo `UsuariosService.criar()` pode ser invocado a partir de um controller HTTP, de um comando CLI de seed de banco de dados, de um worker que processa uma fila de novos cadastros ou de um teste automatizado — sem qualquer modificação. Essa flexibilidade é um dos principais argumentos em favor da arquitetura em camadas.
 
 ---
 
-## 3.4 O Repository Pattern
+## 4.4 O Repository Pattern
 
-### 3.4.1 O problema do acoplamento direto à persistência
+### 4.4.1 O problema do acoplamento direto à persistência
 
 Sem o Repository Pattern, a camada de service acessa diretamente o mecanismo de persistência — seja um ORM, queries SQL brutas ou chamadas a uma API externa. Isso cria um acoplamento que torna o código difícil de testar e de evoluir: trocar o banco de dados de PostgreSQL para MongoDB, por exemplo, exigiria modificar todos os services que constroem queries diretamente.
 
-### 3.4.2 O repositório como contrato
+### 4.4.2 O repositório como contrato
 
 O **Repository Pattern** resolve esse problema introduzindo uma camada de abstração entre o service e o mecanismo de persistência. Um repositório é um objeto que expõe uma interface orientada ao domínio — `buscarPorId`, `criar`, `listarTodos` — ocultando completamente os detalhes de como esses dados são recuperados ou armazenados.
 
@@ -140,7 +140,7 @@ Do ponto de vista do service, um repositório é simplesmente um colaborador que
 
 > 📷 **Sugestão de imagem:** Diagrama em camadas mostrando: Controller → Service → Repository → Banco de Dados, com setas indicando o sentido das dependências e destacando que o service conhece apenas a interface do repositório, não sua implementação.
 
-### 3.4.3 Implementação de um repositório em memória
+### 4.4.3 Implementação de um repositório em memória
 
 O repositório a seguir é funcionalmente equivalente ao array em memória utilizado no Capítulo 2, mas agora encapsulado em uma classe com interface bem definida:
 
@@ -193,7 +193,7 @@ export class UsuariosRepository {
 
 A interface desse repositório — seus nomes de método e suas assinaturas — é o *contrato* que o service depende. Quando o Prisma for introduzido no Capítulo 4, será criado um `UsuariosRepositoryPrisma` que implementa exatamente os mesmos métodos, e o service não precisará ser alterado.
 
-### 3.4.4 O repositório Prisma (prévia do Capítulo 4)
+### 4.4.4 O repositório Prisma (prévia do Capítulo 4)
 
 Para antecipar como a substituição ocorrerá, o repositório baseado em Prisma terá a seguinte estrutura — que pode ser ignorada por ora e retomada no Capítulo 4:
 
@@ -234,9 +234,9 @@ A identidade entre as interfaces dos dois repositórios é proposital. O service
 
 ---
 
-## 3.5 Inversão de Dependência
+## 4.5 Inversão de Dependência
 
-### 3.5.1 O problema do acoplamento estático
+### 4.5.1 O problema do acoplamento estático
 
 Quando um objeto instancia diretamente suas dependências com `new`, ele se torna responsável não apenas por usá-las, mas também por criá-las. Isso gera acoplamento estático: mudar a implementação exige alterar o código do objeto que depende dela.
 
@@ -251,7 +251,7 @@ export class UsuariosService {
 
 Nessa forma, é impossível substituir o repositório por outro — seja para testes, seja para trocar o banco de dados — sem modificar o service.
 
-### 3.5.2 Injeção de dependência manual
+### 4.5.2 Injeção de dependência manual
 
 A solução mais simples é a **injeção de dependência**: em vez de criar o repositório internamente, o service o recebe como parâmetro do construtor. Quem instancia o service é responsável por fornecer a implementação correta.
 
@@ -277,7 +277,7 @@ const controller  = new UsuariosController(service);
 
 Essa composição é realizada uma única vez, no ponto de entrada da aplicação. Controllers, services e repositórios permanecem completamente desacoplados uns dos outros — cada um conhece apenas a interface do colaborador que precisa, não sua implementação concreta.
 
-### 3.5.3 Benefício direto: testabilidade
+### 4.5.3 Benefício direto: testabilidade
 
 O benefício mais imediato da injeção de dependência é a facilidade de teste. Em vez de um banco de dados real, é possível injetar um repositório falso (*mock* ou *stub*) que simula o comportamento esperado:
 
@@ -302,9 +302,9 @@ O teste acima verifica uma regra de negócio real — unicidade de e-mail — se
 
 ---
 
-## 3.6 Refatorando o Projeto do Capítulo 2
+## 4.6 Refatorando o Projeto do Capítulo 2
 
-### 3.6.1 Visão geral da refatoração
+### 4.6.1 Visão geral da refatoração
 
 O projeto do Capítulo 2 terminou com um `UsuariosService` que operava diretamente sobre um array em memória. Aplicando os padrões deste capítulo, a responsabilidade de persistência será extraída para um `UsuariosRepository`, o service passará a depender do repositório via injeção, e o controller será refatorado para usar injeção de dependência no construtor.
 
@@ -325,7 +325,7 @@ src/
     └── AppError.js
 ```
 
-### 3.6.2 O repositório
+### 4.6.2 O repositório
 
 ```javascript
 // src/repositories/usuarios.repository.js
@@ -372,7 +372,7 @@ export class UsuariosRepository {
 }
 ```
 
-### 3.6.3 O service refatorado
+### 4.6.3 O service refatorado
 
 ```javascript
 // src/services/usuarios.service.js
@@ -414,7 +414,7 @@ export class UsuariosService {
 }
 ```
 
-### 3.6.4 O controller refatorado
+### 4.6.4 O controller refatorado
 
 ```javascript
 // src/controllers/usuarios.controller.js
@@ -469,7 +469,7 @@ export class UsuariosController {
 
 > 💡 **Por que o `.bind(this)`?** Quando o Express invoca um método de classe como handler de rota (`router.get('/', controller.listarTodos)`), ele o chama sem o contexto do objeto original — o `this` dentro do método seria `undefined`. O `.bind(this)` no construtor garante que cada método sempre execute no contexto correto da instância.
 
-### 3.6.5 A composição no arquivo de rotas
+### 4.6.5 A composição no arquivo de rotas
 
 O arquivo de rotas é o único lugar onde as dependências são instanciadas e compostas. Essa concentração da composição em um único ponto é denominada *composition root* — um princípio que facilita a localização e a troca de implementações.
 
@@ -499,35 +499,35 @@ export default router;
 
 ---
 
-## 3.7 Exercícios Práticos
+## 4.7 Exercícios Práticos
 
-### Exercício 3.1 — Repository para Produtos
+### Exercício 4.1 — Repository para Produtos
 
 Implemente um `ProdutosRepository` em memória com os métodos `listarTodos`, `buscarPorId`, `criar`, `atualizar` e `remover`. Crie em seguida um `ProdutosService` que receba o repositório via construtor e implemente as seguintes regras de negócio: o preço de um produto não pode ser negativo (lançar `AppError` com status 400); dois produtos não podem ter o mesmo nome (lançar `AppError` com status 409).
 
-### Exercício 3.2 — Controller com injeção de dependência
+### Exercício 4.2 — Controller com injeção de dependência
 
 Implemente um `ProdutosController` que receba o service via construtor e exponha os cinco handlers de CRUD. Realize a composição no arquivo `produtos.routes.js` e monte o router em `/api/produtos` na aplicação principal.
 
-### Exercício 3.3 — Teste unitário do service
+### Exercício 4.3 — Teste unitário do service
 
 Escreva dois testes unitários para o `ProdutosService` utilizando repositórios falsos injetados:
 
 O primeiro deve verificar que a criação de um produto com preço negativo lança `AppError` com status 400. O segundo deve verificar que a criação de um produto com nome duplicado lança `AppError` com status 409. Nenhum dos testes deve instanciar o `ProdutosRepository` real.
 
-### Exercício 3.4 — Refatoração completa
+### Exercício 4.4 — Refatoração completa
 
-Partindo do código do Exercício 2.4 (Capítulo 2), aplique todos os padrões deste capítulo ao recurso `tarefas`: extraia um `TarefasRepository`, refatore o `TarefasService` para usar injeção de dependência e converta o controller para uma classe. Ao final, a estrutura de arquivos deve refletir fielmente a apresentada na seção 3.6.1.
+Partindo do código do Exercício 2.4 (Capítulo 2), aplique todos os padrões deste capítulo ao recurso `tarefas`: extraia um `TarefasRepository`, refatore o `TarefasService` para usar injeção de dependência e converta o controller para uma classe. Ao final, a estrutura de arquivos deve refletir fielmente a apresentada na seção 4.6.1.
 
 ---
 
-## 3.8 Resumo do Capítulo
+## 4.8 Resumo do Capítulo
 
 O MVC adaptado para APIs distribui as responsabilidades entre três camadas: o controller coordena o fluxo da requisição, o service encapsula a lógica de negócio e o model/repositório abstrai o acesso aos dados. O service é a camada mais importante dessa tríade — é nele que residem as regras que definem o comportamento da aplicação, e ele deve ser completamente independente do transporte HTTP. O Repository Pattern formaliza a separação entre lógica de negócio e persistência, definindo um contrato estável que permite trocar o mecanismo de armazenamento sem alterar o service. A injeção de dependência, por sua vez, é o mecanismo que torna essa substituição possível na prática — e que abre caminho para testes rápidos, isolados e confiáveis. A arquitetura resultante é a base sobre a qual o ORM será integrado no Capítulo 4.
 
 ---
 
-## 3.9 Referências e Leituras Complementares
+## 4.9 Referências e Leituras Complementares
 
 - [Model–view–controller — Wikipedia](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
 - [Repository Pattern — Martin Fowler, Patterns of Enterprise Application Architecture](https://www.martinfowler.com/eaaCatalog/repository.html)
