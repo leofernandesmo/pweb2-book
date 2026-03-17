@@ -1,9 +1,9 @@
-# Capítulo 1 — Fundamentos do Node.js
+# Capítulo 2 — Fundamentos do Node.js
 
 > **Vídeo curto explicativo**  
 > *(link será adicionado posteriormente)*
 
-## 1. O Node.js como Ambiente de Execução para APIs
+## 2.1 O Node.js como Ambiente de Execução para APIs
 
 O Node.js deve ser compreendido como um ambiente de execução orientado a eventos, cujo modelo de concorrência é baseado em I/O não bloqueante. Essa característica o torna particularmente adequado para sistemas cuja principal carga está na comunicação com bancos de dados, serviços externos e sistemas distribuídos — cenário típico de APIs REST institucionais.
 
@@ -29,11 +29,11 @@ O entendimento técnico do runtime é pré-requisito para decisões arquiteturai
 
 ---
 
-## 2. Gerenciamento de Projetos com NPM
+## 2.2 Gerenciamento de Projetos com NPM
 
 O **npm** (Node Package Manager) é mais do que um repositório de bibliotecas. Ele é o mecanismo formal de declaração de dependências, scripts e metadados do projeto.
 
-### 2.1 Inicialização de um Projeto
+### 2.2.1 Inicialização de um Projeto
 
 A criação de um novo projeto Node inicia-se com:
 
@@ -68,7 +68,7 @@ O campo `"type": "module"` define que o projeto utilizará o padrão ECMAScript 
 
 ---
 
-### 2.2 Instalação de Dependências
+### 2.2.2 Instalação de Dependências
 
 Para instalar uma dependência de produção:
 
@@ -104,7 +104,7 @@ A distinção entre dependências de produção e desenvolvimento é relevante e
 
 ---
 
-### 2.3 Atualização e Remoção
+### 2.2.3 Atualização e Remoção
 
 Atualizar uma dependência:
 
@@ -127,7 +127,7 @@ npm audit fix
 
 ---
 
-### 2.4 Scripts de Execução
+### 2.2.4 Scripts de Execução
 
 O campo `"scripts"` permite definir comandos padronizados.
 
@@ -157,7 +157,7 @@ Essa funcionalidade é fundamental para padronização de execução em equipes.
 
 ---
 
-## 3. Organização de Módulos no Node.js
+## 2.3 Organização de Módulos no Node.js
 
 Uma aplicação real não deve concentrar toda a lógica em um único arquivo. A modularização permite separação de responsabilidades.
 
@@ -178,7 +178,7 @@ api-academica/
 └── package.json
 ```
 
-### 3.1 Exportando um Módulo (ESM)
+### 2.3.1 Exportando um Módulo (ESM)
 
 Arquivo `studentService.js`:
 
@@ -233,7 +233,7 @@ Esse modelo já antecipa princípios da arquitetura MVC, mesmo antes de formaliz
 
 ---
 
-## 4. Construção de um Servidor HTTP com Módulo Nativo
+## 2.4 Construção de um Servidor HTTP com Módulo Nativo
 
 Antes de utilizar frameworks como Express, é fundamental compreender o funcionamento do módulo HTTP nativo do Node.js. 
 Um servidor HTTP básico pode ser construído da seguinte forma:
@@ -353,7 +353,7 @@ Observa-se que, à medida que novas rotas e métodos HTTP são adicionados, o c�
 
 ---
 
-## 5. Testando a API com cURL
+## 2.5 Testando a API com cURL
 
 Após iniciar o servidor:
 
@@ -369,7 +369,7 @@ npm start
 
 Pode-se realizar requisições HTTP diretamente pelo terminal usando `cURL`.
 
-### 5.1 Teste da Rota /health
+### 2.5.1 Teste da Rota /health
 
 ```bash
 curl http://localhost:3000/health
@@ -381,7 +381,7 @@ Resposta esperada:
 {"status":"ok"}
 ```
 
-### 5.2 Requisição com Método Explícito
+### 2.5.2 Requisição com Método Explícito
 
 ```bash
 curl -X GET http://localhost:3000/student
@@ -391,7 +391,7 @@ curl -X GET http://localhost:3000/student
 curl -X POST http://localhost:3000/student -H "Content-Type: application/json" -d '{"name":"Maria"}'
 ```
 
-### 5.3 Visualizando Cabeçalhos
+### 2.5.3 Visualizando Cabeçalhos
 
 ```bash
 curl -i http://localhost:3000/health
@@ -401,7 +401,7 @@ O parâmetro `-i` exibe cabeçalhos HTTP, permitindo observar código de status 
 
 ---
 
-## 6. Contextualização em Problema Real
+## 2.6 Contextualização em Problema Real
 
 Considere um cenário institucional: um sistema que fornece dados de matrícula para integração com outro serviço governamental. Esse sistema precisa:
 
