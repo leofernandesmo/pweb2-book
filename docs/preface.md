@@ -14,6 +14,4 @@ Ele foi projetado para ser:
 
 ---
 
-[:material-book-open-page-variant: Start Chapter 1 – Introduction](chapters/01-introducao.md)  
-[:material-arrow-left: Back to Title Page](title-page.md)
 
