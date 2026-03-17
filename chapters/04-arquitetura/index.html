@@ -867,13 +867,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#46-refatorando-o-projeto-do-capitulo-2" class="md-nav__link">
+  <a href="#46-refatorando-o-projeto-do-capitulo-anterior" class="md-nav__link">
     <span class="md-ellipsis">
-      4.6 Refatorando o Projeto do Capítulo 2
+      4.6 Refatorando o Projeto do Capítulo Anterior
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4.6 Refatorando o Projeto do Capítulo 2">
+    <nav class="md-nav" aria-label="4.6 Refatorando o Projeto do Capítulo Anterior">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -963,26 +963,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#exercicio-44-refatoracao-completa" class="md-nav__link">
-    <span class="md-ellipsis">
-      Exercício 4.4 — Refatoração completa
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#48-resumo-do-capitulo" class="md-nav__link">
-    <span class="md-ellipsis">
-      4.8 Resumo do Capítulo
-    </span>
-  </a>
   
 </li>
       
@@ -1215,7 +1197,7 @@
 <p>Observe que o service não sabe <em>como</em> o repositório armazena os dados — ele apenas chama métodos bem definidos. Essa abstração é o objeto de estudo da próxima seção.</p>
 <h3 id="433-o-service-como-ponto-de-reutilizacao">4.3.3 O service como ponto de reutilização<a class="headerlink" href="#433-o-service-como-ponto-de-reutilizacao" title="Permanent link">&para;</a></h3>
 <p>Uma consequência natural da independência do service em relação ao transporte HTTP é sua reutilizabilidade. O mesmo <code>UsuariosService.criar()</code> pode ser invocado a partir de um controller HTTP, de um comando CLI de <a href="https://pt.stackoverflow.com/questions/126770/o-que-%C3%A9-e-para-que-serve-um-seeder">seed de banco de dados</a>, de um worker que processa uma fila de novos cadastros ou de um teste automatizado — sem qualquer modificação. Essa flexibilidade é um dos principais argumentos em favor da arquitetura em camadas.</p>
-<p><img src="../figures/04_01-camadas.png" width="300" height="200" /></p>
+<p><img src="../figures/04_01-camadas.png" width="600" height="400" /></p>
 <hr />
 <h2 id="44-o-repository-pattern">4.4 O Repository Pattern<a class="headerlink" href="#44-o-repository-pattern" title="Permanent link">&para;</a></h2>
 <h3 id="441-o-problema-do-acoplamento-direto-a-persistencia">4.4.1 O problema do acoplamento direto à persistência<a class="headerlink" href="#441-o-problema-do-acoplamento-direto-a-persistencia" title="Permanent link">&para;</a></h3>
@@ -1223,8 +1205,8 @@
 <h3 id="442-o-repositorio-como-contrato">4.4.2 O repositório como contrato<a class="headerlink" href="#442-o-repositorio-como-contrato" title="Permanent link">&para;</a></h3>
 <p>O <strong>Repository Pattern</strong> resolve esse problema introduzindo uma camada de abstração entre o service e o mecanismo de persistência. Um repositório é um objeto que expõe uma interface orientada ao domínio — <code>buscarPorId</code>, <code>criar</code>, <code>listarTodos</code> — ocultando completamente os detalhes de como esses dados são recuperados ou armazenados.</p>
 <p>Do ponto de vista do service, um repositório é simplesmente um colaborador que sabe <em>onde</em> os dados vivem. O service não precisa saber se os dados estão em um banco relacional, em memória ou em uma API externa — ele apenas chama os métodos do repositório.</p>
-<p><img src="../figures/04_02-repository.png" width="300" height="200" /></p>
-<p>Obs.: A interface de repositório é como um <strong>contrato</strong> ou um plano que define quais operações um repositório deve ser capaz de realizar. Ela especifica um conjunto de métodos públicos (e seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação do repositório é a classe <strong>concreta</strong> que realiza as operações definidas na interface. É onde a lógica específica para interagir com uma fonte de dados real (como um banco de dados, sistema de arquivos ou API) reside. Veremos isso em mais detalhes a frente no material.</p>
+<p><img src="../figures/04_02-repository.png" width="600" height="400" /></p>
+<p>Obs.: A interface de repositório é como um <strong>contrato</strong> ou um plano que define quais operações um repositório deve ser capaz de realizar. Ela especifica um conjunto de métodos públicos (e seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação do repositório é a <strong>imeplemtação</strong> <strong>concreta</strong> que realiza as operações definidas na interface. É onde a lógica específica para interagir com uma fonte de dados real (como um banco de dados, sistema de arquivos ou API) reside. Veremos isso em mais detalhes a frente no material.</p>
 <h3 id="443-implementacao-de-um-repositorio-em-memoria">4.4.3 Implementação de um repositório em memória<a class="headerlink" href="#443-implementacao-de-um-repositorio-em-memoria" title="Permanent link">&para;</a></h3>
 <p>O repositório a seguir é funcionalmente equivalente ao array em memória utilizado no Capítulo 2, mas agora encapsulado em uma classe com interface bem definida:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/repositories/usuarios.repository.js</span>
@@ -1321,6 +1303,83 @@
 <p>Nessa forma, é impossível substituir o repositório por outro — seja para testes, seja para trocar o banco de dados — sem modificar o service.</p>
 <h3 id="452-injecao-de-dependencia-manual">4.5.2 Injeção de dependência manual<a class="headerlink" href="#452-injecao-de-dependencia-manual" title="Permanent link">&para;</a></h3>
 <p>A solução mais simples é a <strong>injeção de dependência</strong>: em vez de criar o repositório internamente, o service o recebe como parâmetro do construtor. Quem instancia o service é responsável por fornecer a implementação correta.</p>
+<blockquote>
+<p>Material extraído do livro Engenharia de Software Moderna - <a href="https://engsoftmoderna.info/artigos/injecao-dependencia.html">Injenção de Dependência</a></p>
+</blockquote>
+<p>A ideia de Injeção de Dependência é bastante simples e quase que uma aplicação literal do seu nome. Vamos então explicá-la em quatro passos:
+    Suponha que uma classe A depende de uma classe PagtoPIX:</p>
+<div class="codehilite"><pre><span></span><code>class A {
+   PagtoPIX pagto; // A depende de PagtoPIX
+   ...
+}
+</code></pre></div>
+
+<p>No entanto, para seguir a ideia do padrão, a classe A não deve instanciar diretamente objetos desse tipo, como em:</p>
+<div class="codehilite"><pre><span></span><code>class A {
+   PagtoPIX pagto = new PagtoPIX();
+   ... 
+}
+</code></pre></div>
+
+<p>Em vez disso, A deve receber essa dependência por meio de um construtor:</p>
+<div class="codehilite"><pre><span></span><code>class A {
+   PagtoPIX pagto;
+
+   A(PagtoPIX pagto) { // injeção de dependência via construtor
+      this.pagto = pagto;
+   }
+   ...
+}
+</code></pre></div>
+
+<p>ou então receber a dependência por meio de um método set:</p>
+<div class="codehilite"><pre><span></span><code>class A {
+   PagtoPIX pagto;
+
+   void setPagto(PagtoPIX pagto) { // injeção de dependência via setter
+      this.pagto = pagto;
+   }
+   ...
+}
+</code></pre></div>
+
+<p>Logo, agora fica fácil entender o nome do padrão: as dependências de uma classe são injetadas nela, seja por meio de chamadas do seu construtor ou por meio de chamadas de um setter.</p>
+<p>Na verdade, o mais recomendado é que o código de A use uma interface para a classe concreta PagtoPIX. Ou seja, em vez de usar PagtoPIX (uma classe), deve-se usar ServicoPagto (uma interface):</p>
+<div class="codehilite"><pre><span></span><code>class A {
+   ServicoPagto pagto;   // dependência para uma interface
+
+   A(ServicoPagto pagto) {
+      this.pagto = pagto;
+   }
+   ...
+}
+</code></pre></div>
+
+<p>ou</p>
+<div class="codehilite"><pre><span></span><code>class A {
+   ServicoPagto pagto;
+
+   void setPagto(ServicoPagto pagto) { 
+      this.pagto = pagto;
+   }
+   ...
+}
+</code></pre></div>
+
+<p>Ou seja: quando usamos Injeção de Dependência devemos fazer uso do princípio de projeto Prefira Interfaces a Classes Concretas.</p>
+<p>Para concluir, as vantagens de Injeção de Dependência são:</p>
+<ul>
+<li>
+<p>Injeção de Dependência torna mais fácil mudar a dependência concreta (PagtoPIX) usada por uma classe. No nosso exemplo, A é uma classe que precisa realizar pagamentos. Para isso, ela faz uso de uma classe PagtoPIX. Amanhã, no entanto, podemos decidir que os pagamentos serão processados por uma classe PagtoCartaoCredito. Para isso, basta que PagtoPIX e PagtoCartaoCredito implementem a mesma interface ServicoPagto.</p>
+</li>
+<li>
+<p>Injeção de Dependência torna mais fácil o teste da classe A, pois podemos mockar mais facilmente a dependência para ServicoPagto. Por exemplo, em vez de um serviço de pagamento real (PagtoPIX ou PagtoCartaoCredito), podemos usar um serviço de pagamento fictício, que apenas emule alguns pagamentos. Para isso, basta que esse serviço fictício implemente a interface ServicoPagto. Se você ainda não sabe o que é um mock, recomendamos a leitura da seção do Capítulo 8 sobre o assunto.</p>
+</li>
+</ul>
+<blockquote>
+<p>Fim do texto extraído do livro Engenharia de Software Moderna</p>
+</blockquote>
+<p>Em Javascript/Node você poderia fazer:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// ✅ Dependência injetada pelo construtor</span>
 <span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">repository</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -1355,11 +1414,11 @@
 <span class="w">  </span><span class="p">).</span><span class="nx">rejects</span><span class="p">.</span><span class="nx">toThrow</span><span class="p">(</span><span class="s1">&#39;E-mail já cadastrado&#39;</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></div>
-<p>O teste acima verifica uma regra de negócio real — unicidade de e-mail — sem abrir nenhuma conexão com banco de dados, sem configurar fixtures e sem depender de estado externo. Ele é rápido, determinístico e isolado. Esse é o padrão que será aprofundado no Capítulo 7, dedicado a testes automatizados.</p>
+<p>O teste acima verifica uma regra de negócio real — unicidade de e-mail — sem abrir nenhuma conexão com banco de dados, sem configurar fixtures e sem depender de estado externo. Ele é rápido, determinístico e isolado. </p>
 <hr />
-<h2 id="46-refatorando-o-projeto-do-capitulo-2">4.6 Refatorando o Projeto do Capítulo 2<a class="headerlink" href="#46-refatorando-o-projeto-do-capitulo-2" title="Permanent link">&para;</a></h2>
+<h2 id="46-refatorando-o-projeto-do-capitulo-anterior">4.6 Refatorando o Projeto do Capítulo Anterior<a class="headerlink" href="#46-refatorando-o-projeto-do-capitulo-anterior" title="Permanent link">&para;</a></h2>
 <h3 id="461-visao-geral-da-refatoracao">4.6.1 Visão geral da refatoração<a class="headerlink" href="#461-visao-geral-da-refatoracao" title="Permanent link">&para;</a></h3>
-<p>O projeto do Capítulo 2 terminou com um <code>UsuariosService</code> que operava diretamente sobre um array em memória. Aplicando os padrões deste capítulo, a responsabilidade de persistência será extraída para um <code>UsuariosRepository</code>, o service passará a depender do repositório via injeção, e o controller será refatorado para usar injeção de dependência no construtor.</p>
+<p>O projeto do capítulo anterior terminou com um <code>UsuariosService</code> que operava diretamente sobre um array em memória. Aplicando os padrões deste capítulo, a responsabilidade de persistência será extraída para um <code>UsuariosRepository</code>, o service passará a depender do repositório via injeção, e o controller será refatorado para usar injeção de dependência no construtor.</p>
 <p>A estrutura de arquivos resultante é a seguinte:</p>
 <div class="highlight"><pre><span></span><code>src/
 ├── controllers/
@@ -1543,11 +1602,6 @@
 <h3 id="exercicio-43-teste-unitario-do-service">Exercício 4.3 — Teste unitário do service<a class="headerlink" href="#exercicio-43-teste-unitario-do-service" title="Permanent link">&para;</a></h3>
 <p>Escreva dois testes unitários para o <code>ProdutosService</code> utilizando repositórios falsos injetados:</p>
 <p>O primeiro deve verificar que a criação de um produto com preço negativo lança <code>AppError</code> com status 400. O segundo deve verificar que a criação de um produto com nome duplicado lança <code>AppError</code> com status 409. Nenhum dos testes deve instanciar o <code>ProdutosRepository</code> real.</p>
-<h3 id="exercicio-44-refatoracao-completa">Exercício 4.4 — Refatoração completa<a class="headerlink" href="#exercicio-44-refatoracao-completa" title="Permanent link">&para;</a></h3>
-<p>Partindo do código do Exercício 2.4 (Capítulo 2), aplique todos os padrões deste capítulo ao recurso <code>tarefas</code>: extraia um <code>TarefasRepository</code>, refatore o <code>TarefasService</code> para usar injeção de dependência e converta o controller para uma classe. Ao final, a estrutura de arquivos deve refletir fielmente a apresentada na seção 4.6.1.</p>
-<hr />
-<h2 id="48-resumo-do-capitulo">4.8 Resumo do Capítulo<a class="headerlink" href="#48-resumo-do-capitulo" title="Permanent link">&para;</a></h2>
-<p>O MVC adaptado para APIs distribui as responsabilidades entre três camadas: o controller coordena o fluxo da requisição, o service encapsula a lógica de negócio e o model/repositório abstrai o acesso aos dados. O service é a camada mais importante dessa tríade — é nele que residem as regras que definem o comportamento da aplicação, e ele deve ser completamente independente do transporte HTTP. O Repository Pattern formaliza a separação entre lógica de negócio e persistência, definindo um contrato estável que permite trocar o mecanismo de armazenamento sem alterar o service. A injeção de dependência, por sua vez, é o mecanismo que torna essa substituição possível na prática — e que abre caminho para testes rápidos, isolados e confiáveis. A arquitetura resultante é a base sobre a qual o ORM será integrado no Capítulo 4.</p>
 <hr />
 <h2 id="49-referencias-e-leituras-complementares">4.9 Referências e Leituras Complementares<a class="headerlink" href="#49-referencias-e-leituras-complementares" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1558,10 +1612,6 @@
 <li>📖 Martin, R. C. <em>Clean Architecture: A Craftsman's Guide to Software Structure and Design</em>. Prentice Hall, 2017. — Capítulos 5 e 22.</li>
 </ul>
 <hr />
-<div class="admonition note">
-<p class="admonition-title">Próximo Capítulo</p>
-<p>No <strong>Capítulo 4 — Banco de Dados e ORM</strong>, o <code>UsuariosRepository</code> em memória será substituído por uma implementação real com <strong>Prisma</strong>, conectada a um banco de dados PostgreSQL. Graças à arquitetura construída neste capítulo, essa substituição exigirá a criação de um único arquivo novo — sem qualquer alteração no service ou no controller.</p>
-</div>
 
 
 
