@@ -963,6 +963,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#exercicio-44-substituicao-de-implementacao-do-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 4.4 — Substituição de implementação do Repository
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1367,6 +1376,15 @@
 <span class="kd">const</span><span class="w"> </span><span class="nx">controller</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">UsuariosController</span><span class="p">(</span><span class="nx">service</span><span class="p">);</span>
 </code></pre></div>
 <p>Essa composição é realizada uma única vez, no ponto de entrada da aplicação. Controllers, services e repositórios permanecem completamente desacoplados uns dos outros — cada um conhece apenas a interface do colaborador que precisa, não sua implementação concreta.</p>
+<div class="admonition note">
+<p class="admonition-title">Dependency Injection vs Dependency Inversion</p>
+<p>É comum confundir dois conceitos relacionados, mas distintos:</p>
+<ul>
+<li><strong>Dependency Injection (DI)</strong>: é uma técnica de implementação — consiste em fornecer dependências a um objeto (ex: via construtor), em vez de criá-las internamente.</li>
+<li><strong>Dependency Inversion Principle (DIP)</strong>: é um princípio de design — afirma que módulos de alto nível não devem depender de implementações concretas, mas de abstrações.</li>
+</ul>
+<p>A injeção de dependência é uma forma prática de implementar o princípio da inversão de dependência, mas os dois conceitos não são equivalentes.</p>
+</div>
 <h3 id="453-beneficio-direto-testabilidade">4.5.3 Benefício direto: testabilidade<a class="headerlink" href="#453-beneficio-direto-testabilidade" title="Permanent link">&para;</a></h3>
 <p>O benefício mais imediato da injeção de dependência é a facilidade de teste. Em vez de um banco de dados real, é possível injetar um repositório falso (<em>mock</em> ou <em>stub</em>) que simula o comportamento esperado:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Teste do service sem banco de dados</span>
@@ -1486,6 +1504,16 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Exposição de dados e DTOs</p>
+<p>Neste exemplo, o service retorna diretamente os objetos provenientes do repositório. Em aplicações reais, isso pode não ser adequado, pois:</p>
+<ul>
+<li>Dados sensíveis podem ser expostos (ex: senha hash)</li>
+<li>A estrutura interna pode vazar para a API pública</li>
+<li>Mudanças internas podem quebrar clientes</li>
+</ul>
+<p>Uma abordagem mais robusta é utilizar <strong>DTOs (Data Transfer Objects)</strong> ou uma camada de serialização para controlar exatamente quais dados são retornados ao cliente. Esse refinamento será abordado em capítulos futuros.</p>
+</div>
 <h3 id="464-o-controller-refatorado">4.6.4 O controller refatorado<a class="headerlink" href="#464-o-controller-refatorado" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/controllers/usuarios.controller.js</span>
 <span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">UsuariosController</span><span class="w"> </span><span class="p">{</span>
@@ -1539,6 +1567,18 @@
 <blockquote>
 <p>💡 <strong>Por que o <code>.bind(this)</code>?</strong> Quando o Express invoca um método de classe como handler de rota (<code>router.get('/', controller.listarTodos)</code>), ele o chama sem o contexto do objeto original — o <code>this</code> dentro do método seria <code>undefined</code>. O <code>.bind(this)</code> no construtor garante que cada método sempre execute no contexto correto da instância.</p>
 </blockquote>
+<div class="admonition tip">
+<p class="admonition-title">Alternativa ao bind com class fields</p>
+<p>Em JavaScript moderno, é possível evitar o uso de <code>.bind(this)</code> utilizando <em>class fields</em> com funções arrow:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">listarTodos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">usuarios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">service</span><span class="p">.</span><span class="nx">listarTodos</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">usuarios</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>Nesse formato, o <code>this</code> é automaticamente preservado, pois funções arrow não redefinem o contexto. Essa abordagem é comum em projetos mais recentes.</p>
+</div>
 <h3 id="465-a-composicao-no-arquivo-de-rotas">4.6.5 A composição no arquivo de rotas<a class="headerlink" href="#465-a-composicao-no-arquivo-de-rotas" title="Permanent link">&para;</a></h3>
 <p>O arquivo de rotas é o único lugar onde as dependências são instanciadas e compostas. Essa concentração da composição em um único ponto é denominada <em>composition root</em> — um princípio que facilita a localização e a troca de implementações.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/routes/usuarios.routes.js</span>
@@ -1572,6 +1612,19 @@
 <h3 id="exercicio-43-teste-unitario-do-service">Exercício 4.3 — Teste unitário do service<a class="headerlink" href="#exercicio-43-teste-unitario-do-service" title="Permanent link">&para;</a></h3>
 <p>Escreva dois testes unitários para o <code>ProdutosService</code> utilizando repositórios falsos injetados:</p>
 <p>O primeiro deve verificar que a criação de um produto com preço negativo lança <code>AppError</code> com status 400. O segundo deve verificar que a criação de um produto com nome duplicado lança <code>AppError</code> com status 409. Nenhum dos testes deve instanciar o <code>ProdutosRepository</code> real.</p>
+<h3 id="exercicio-44-substituicao-de-implementacao-do-repository">Exercício 4.4 — Substituição de implementação do Repository<a class="headerlink" href="#exercicio-44-substituicao-de-implementacao-do-repository" title="Permanent link">&para;</a></h3>
+<p>Crie uma segunda implementação de <code>ProdutosRepository</code>, por exemplo:</p>
+<ul>
+<li>Um repositório em memória alternativo, ou</li>
+<li>Um repositório falso (mock) com comportamento controlado</li>
+</ul>
+<p>Em seguida:</p>
+<ol>
+<li>Injete essa nova implementação no <code>ProdutosService</code></li>
+<li>Execute a aplicação ou testes utilizando essa nova versão</li>
+<li>Verifique que <strong>nenhuma alteração foi necessária no service</strong></li>
+</ol>
+<p>O objetivo é demonstrar, na prática, o princípio da <strong>Inversão de Dependência</strong>: o service depende do contrato, não da implementação concreta.</p>
 <hr />
 <h2 id="48-referencias-e-leituras-complementares">4.8 Referências e Leituras Complementares<a class="headerlink" href="#48-referencias-e-leituras-complementares" title="Permanent link">&para;</a></h2>
 <ul>
