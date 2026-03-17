@@ -1136,16 +1136,13 @@
 <h2 id="42-o-padrao-mvc-no-contexto-de-apis-rest">4.2 O Padrão MVC no Contexto de APIs REST<a class="headerlink" href="#42-o-padrao-mvc-no-contexto-de-apis-rest" title="Permanent link">&para;</a></h2>
 <h3 id="421-origem-e-proposito">4.2.1 Origem e propósito<a class="headerlink" href="#421-origem-e-proposito" title="Permanent link">&para;</a></h3>
 <p>O padrão <strong>MVC</strong> (<em>Model-View-Controller</em>) foi concebido na década de 1970 por Trygve Reenskaug, durante seu trabalho na Xerox PARC com a linguagem Smalltalk. Sua motivação original era separar a interface gráfica (<em>View</em>) da lógica de negócio (<em>Model</em>), conectando-as por meio de um coordenador (<em>Controller</em>) que respondesse às ações do usuário. Durante décadas, o padrão dominou o desenvolvimento de aplicações desktop e, posteriormente, frameworks web como Ruby on Rails, Laravel e Django.</p>
-<p>📖 Leitura de referência: <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">Model–view–controller — Wikipedia</a></p>
+<p>📖 Leitura de referência: <a href="https://engsoftmoderna.info/cap7.html#arquitetura-mvc">Engenharia de Software Moderna - Cap.7 Arquitetura</a></p>
 <h3 id="422-mvc-adaptado-para-apis-rest">4.2.2 MVC adaptado para APIs REST<a class="headerlink" href="#422-mvc-adaptado-para-apis-rest" title="Permanent link">&para;</a></h3>
 <p>Em aplicações web tradicionais, a <em>View</em> é responsável por renderizar HTML que será exibido no navegador. Em APIs REST, não existe renderização de interface — o servidor produz dados estruturados (tipicamente JSON) que serão consumidos por um cliente independente: um front-end em React, um aplicativo móvel ou outro serviço. Essa diferença fundamental implica uma adaptação do padrão original.</p>
 <p>No contexto de APIs Express, as três camadas do MVC assumem os seguintes papéis:</p>
-<p>A camada <strong>Model</strong> representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 4). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso — um <code>Usuario</code>, um <code>Produto</code> — e o mecanismo responsável por persistir e recuperar esses dados.</p>
+<p>A camada <strong>Model</strong> representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 4). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso (no contexto de recurso web) — um <code>Usuario</code>, um <code>Produto</code> — e o mecanismo responsável por persistir e recuperar esses dados.</p>
 <p>A camada <strong>View</strong> é substituída, na prática, pela resposta JSON produzida pelo servidor. Não existe um arquivo de template ou componente visual — <code>res.json()</code> cumpre o papel de serializar o modelo para o formato que o cliente espera.</p>
 <p>A camada <strong>Controller</strong> permanece com seu papel original: receber a requisição, coordenar o fluxo entre as camadas e devolver a resposta. Sua responsabilidade é exclusivamente orquestrar — nunca processar lógica de negócio diretamente.</p>
-<blockquote>
-<p>📷 <strong>Sugestão de imagem:</strong> Diagrama comparativo entre o MVC tradicional (com View renderizando HTML) e o MVC para APIs (com res.json() no lugar da View), evidenciando a substituição da camada de apresentação.</p>
-</blockquote>
 <h3 id="423-o-problema-do-controller-gordo">4.2.3 O problema do controller gordo<a class="headerlink" href="#423-o-problema-do-controller-gordo" title="Permanent link">&para;</a></h3>
 <p>Um antipadrão recorrente em projetos Express iniciantes é o chamado <em>fat controller</em> (controller gordo): um controller que acumula validação de entrada, regras de negócio, acesso direto ao banco de dados e montagem da resposta — tudo em uma única função. O exemplo abaixo ilustra esse problema:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// ❌ Antipadrão: controller gordo</span>
@@ -1170,6 +1167,7 @@
 <span class="p">};</span>
 </code></pre></div>
 <p>Este controller é impossível de testar sem um banco de dados real, não pode ser reutilizado em outros contextos (como um job em background) e qualquer alteração na regra de negócio exige modificar o controller — violando o princípio da separação de responsabilidades estudado no Capítulo 2. A solução passa pela distribuição dessas responsabilidades entre camadas bem definidas, como será detalhado nas seções seguintes.</p>
+<p>📖 Leitura de referência: <a href="https://engsoftmoderna.info/cap5.html#coes%C3%A3o">Engenharia de Software Moderna - Cap.6 Princípios</a></p>
 <hr />
 <h2 id="43-a-camada-de-service-em-profundidade">4.3 A Camada de Service em Profundidade<a class="headerlink" href="#43-a-camada-de-service-em-profundidade" title="Permanent link">&para;</a></h2>
 <h3 id="431-responsabilidades-do-service">4.3.1 Responsabilidades do service<a class="headerlink" href="#431-responsabilidades-do-service" title="Permanent link">&para;</a></h3>
