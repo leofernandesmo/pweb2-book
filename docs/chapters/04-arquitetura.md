@@ -135,7 +135,7 @@ Uma consequência natural da independência do service em relação ao transport
 
 ### 4.4.1 O problema do acoplamento direto à persistência
 
-Sem o Repository Pattern, a camada de service acessa diretamente o mecanismo de persistência — seja um ORM, queries SQL brutas ou chamadas a uma API externa. Isso cria um acoplamento que torna o código difícil de testar e de evoluir: trocar o banco de dados de PostgreSQL para MongoDB, por exemplo, exigiria modificar todos os services que constroem queries diretamente.
+Sem o Repository Pattern, a camada de service acessa diretamente o mecanismo de persistência — seja um ORM (Object-Relational Mapping, ou Mapeamento Objeto-Relacional), queries SQL brutas ou chamadas a uma API externa. Isso cria um acoplamento que torna o código difícil de testar e de evoluir: trocar o banco de dados de PostgreSQL para MongoDB, por exemplo, exigiria modificar todos os services que constroem queries diretamente.
 
 ### 4.4.2 O repositório como contrato
 
