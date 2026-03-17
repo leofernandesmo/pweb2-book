@@ -127,7 +127,7 @@ Observe que o service não sabe *como* o repositório armazena os dados — ele 
 Uma consequência natural da independência do service em relação ao transporte HTTP é sua reutilizabilidade. O mesmo `UsuariosService.criar()` pode ser invocado a partir de um controller HTTP, de um comando CLI de [seed de banco de dados](https://pt.stackoverflow.com/questions/126770/o-que-%C3%A9-e-para-que-serve-um-seeder), de um worker que processa uma fila de novos cadastros ou de um teste automatizado — sem qualquer modificação. Essa flexibilidade é um dos principais argumentos em favor da arquitetura em camadas.
 
 
-<img src="../figures/04_01-camadas.png" width="300" height="200" />
+<img src="../figures/04_01-camadas.png" width="600" height="400" />
 
 ---
 
@@ -143,10 +143,10 @@ O **Repository Pattern** resolve esse problema introduzindo uma camada de abstra
 
 Do ponto de vista do service, um repositório é simplesmente um colaborador que sabe *onde* os dados vivem. O service não precisa saber se os dados estão em um banco relacional, em memória ou em uma API externa — ele apenas chama os métodos do repositório.
 
-<img src="../figures/04_02-repository.png" width="300" height="200" />
+<img src="../figures/04_02-repository.png" width="600" height="400" />
 
 
-Obs.: A interface de repositório é como um **contrato** ou um plano que define quais operações um repositório deve ser capaz de realizar. Ela especifica um conjunto de métodos públicos (e seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação do repositório é a classe **concreta** que realiza as operações definidas na interface. É onde a lógica específica para interagir com uma fonte de dados real (como um banco de dados, sistema de arquivos ou API) reside. Veremos isso em mais detalhes a frente no material.
+Obs.: A interface de repositório é como um **contrato** ou um plano que define quais operações um repositório deve ser capaz de realizar. Ela especifica um conjunto de métodos públicos (e seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação do repositório é a **imeplemtação** **concreta** que realiza as operações definidas na interface. É onde a lógica específica para interagir com uma fonte de dados real (como um banco de dados, sistema de arquivos ou API) reside. Veremos isso em mais detalhes a frente no material.
 
 ### 4.4.3 Implementação de um repositório em memória
 
@@ -259,9 +259,89 @@ export class UsuariosService {
 
 Nessa forma, é impossível substituir o repositório por outro — seja para testes, seja para trocar o banco de dados — sem modificar o service.
 
+
+
+
 ### 4.5.2 Injeção de dependência manual
 
 A solução mais simples é a **injeção de dependência**: em vez de criar o repositório internamente, o service o recebe como parâmetro do construtor. Quem instancia o service é responsável por fornecer a implementação correta.
+
+
+> Material extraído do livro Engenharia de Software Moderna - [Injenção de Dependência](https://engsoftmoderna.info/artigos/injecao-dependencia.html)
+
+A ideia de Injeção de Dependência é bastante simples e quase que uma aplicação literal do seu nome. Vamos então explicá-la em quatro passos:
+    Suponha que uma classe A depende de uma classe PagtoPIX:
+
+    class A {
+       PagtoPIX pagto; // A depende de PagtoPIX
+       ...
+    }
+
+No entanto, para seguir a ideia do padrão, a classe A não deve instanciar diretamente objetos desse tipo, como em:
+
+    class A {
+       PagtoPIX pagto = new PagtoPIX();
+       ... 
+    }
+
+Em vez disso, A deve receber essa dependência por meio de um construtor:
+
+    class A {
+       PagtoPIX pagto;
+    
+       A(PagtoPIX pagto) { // injeção de dependência via construtor
+          this.pagto = pagto;
+       }
+       ...
+    }
+
+ou então receber a dependência por meio de um método set:
+
+    class A {
+       PagtoPIX pagto;
+    
+       void setPagto(PagtoPIX pagto) { // injeção de dependência via setter
+          this.pagto = pagto;
+       }
+       ...
+    }
+
+Logo, agora fica fácil entender o nome do padrão: as dependências de uma classe são injetadas nela, seja por meio de chamadas do seu construtor ou por meio de chamadas de um setter.
+
+Na verdade, o mais recomendado é que o código de A use uma interface para a classe concreta PagtoPIX. Ou seja, em vez de usar PagtoPIX (uma classe), deve-se usar ServicoPagto (uma interface):
+
+    class A {
+       ServicoPagto pagto;   // dependência para uma interface 
+    
+       A(ServicoPagto pagto) {
+          this.pagto = pagto;
+       }
+       ...
+    }
+
+ou
+
+    class A {
+       ServicoPagto pagto; 
+    
+       void setPagto(ServicoPagto pagto) { 
+          this.pagto = pagto;
+       }
+       ...
+    }
+
+Ou seja: quando usamos Injeção de Dependência devemos fazer uso do princípio de projeto Prefira Interfaces a Classes Concretas.
+
+Para concluir, as vantagens de Injeção de Dependência são:
+
+ - Injeção de Dependência torna mais fácil mudar a dependência concreta (PagtoPIX) usada por uma classe. No nosso exemplo, A é uma classe que precisa realizar pagamentos. Para isso, ela faz uso de uma classe PagtoPIX. Amanhã, no entanto, podemos decidir que os pagamentos serão processados por uma classe PagtoCartaoCredito. Para isso, basta que PagtoPIX e PagtoCartaoCredito implementem a mesma interface ServicoPagto.
+
+ - Injeção de Dependência torna mais fácil o teste da classe A, pois podemos mockar mais facilmente a dependência para ServicoPagto. Por exemplo, em vez de um serviço de pagamento real (PagtoPIX ou PagtoCartaoCredito), podemos usar um serviço de pagamento fictício, que apenas emule alguns pagamentos. Para isso, basta que esse serviço fictício implemente a interface ServicoPagto. Se você ainda não sabe o que é um mock, recomendamos a leitura da seção do Capítulo 8 sobre o assunto.
+
+
+> Fim do texto extraído do livro Engenharia de Software Moderna
+
+Em Javascript/Node você poderia fazer:
 
 ```javascript
 // ✅ Dependência injetada pelo construtor
@@ -285,6 +365,7 @@ const controller  = new UsuariosController(service);
 
 Essa composição é realizada uma única vez, no ponto de entrada da aplicação. Controllers, services e repositórios permanecem completamente desacoplados uns dos outros — cada um conhece apenas a interface do colaborador que precisa, não sua implementação concreta.
 
+
 ### 4.5.3 Benefício direto: testabilidade
 
 O benefício mais imediato da injeção de dependência é a facilidade de teste. Em vez de um banco de dados real, é possível injetar um repositório falso (*mock* ou *stub*) que simula o comportamento esperado:
@@ -306,15 +387,15 @@ it('deve lançar erro 409 se e-mail já existir', async () => {
 });
 ```
 
-O teste acima verifica uma regra de negócio real — unicidade de e-mail — sem abrir nenhuma conexão com banco de dados, sem configurar fixtures e sem depender de estado externo. Ele é rápido, determinístico e isolado. Esse é o padrão que será aprofundado no Capítulo 7, dedicado a testes automatizados.
+O teste acima verifica uma regra de negócio real — unicidade de e-mail — sem abrir nenhuma conexão com banco de dados, sem configurar fixtures e sem depender de estado externo. Ele é rápido, determinístico e isolado. 
 
 ---
 
-## 4.6 Refatorando o Projeto do Capítulo 2
+## 4.6 Refatorando o Projeto do Capítulo Anterior
 
 ### 4.6.1 Visão geral da refatoração
 
-O projeto do Capítulo 2 terminou com um `UsuariosService` que operava diretamente sobre um array em memória. Aplicando os padrões deste capítulo, a responsabilidade de persistência será extraída para um `UsuariosRepository`, o service passará a depender do repositório via injeção, e o controller será refatorado para usar injeção de dependência no construtor.
+O projeto do capítulo anterior terminou com um `UsuariosService` que operava diretamente sobre um array em memória. Aplicando os padrões deste capítulo, a responsabilidade de persistência será extraída para um `UsuariosRepository`, o service passará a depender do repositório via injeção, e o controller será refatorado para usar injeção de dependência no construtor.
 
 A estrutura de arquivos resultante é a seguinte:
 
@@ -523,17 +604,9 @@ Escreva dois testes unitários para o `ProdutosService` utilizando repositórios
 
 O primeiro deve verificar que a criação de um produto com preço negativo lança `AppError` com status 400. O segundo deve verificar que a criação de um produto com nome duplicado lança `AppError` com status 409. Nenhum dos testes deve instanciar o `ProdutosRepository` real.
 
-### Exercício 4.4 — Refatoração completa
-
-Partindo do código do Exercício 2.4 (Capítulo 2), aplique todos os padrões deste capítulo ao recurso `tarefas`: extraia um `TarefasRepository`, refatore o `TarefasService` para usar injeção de dependência e converta o controller para uma classe. Ao final, a estrutura de arquivos deve refletir fielmente a apresentada na seção 4.6.1.
 
 ---
 
-## 4.8 Resumo do Capítulo
-
-O MVC adaptado para APIs distribui as responsabilidades entre três camadas: o controller coordena o fluxo da requisição, o service encapsula a lógica de negócio e o model/repositório abstrai o acesso aos dados. O service é a camada mais importante dessa tríade — é nele que residem as regras que definem o comportamento da aplicação, e ele deve ser completamente independente do transporte HTTP. O Repository Pattern formaliza a separação entre lógica de negócio e persistência, definindo um contrato estável que permite trocar o mecanismo de armazenamento sem alterar o service. A injeção de dependência, por sua vez, é o mecanismo que torna essa substituição possível na prática — e que abre caminho para testes rápidos, isolados e confiáveis. A arquitetura resultante é a base sobre a qual o ORM será integrado no Capítulo 4.
-
----
 
 ## 4.9 Referências e Leituras Complementares
 
@@ -544,6 +617,3 @@ O MVC adaptado para APIs distribui as responsabilidades entre três camadas: o c
 - 📖 Martin, R. C. *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. Prentice Hall, 2017. — Capítulos 5 e 22.
 
 ---
-
-!!! note "Próximo Capítulo"
-    No **Capítulo 4 — Banco de Dados e ORM**, o `UsuariosRepository` em memória será substituído por uma implementação real com **Prisma**, conectada a um banco de dados PostgreSQL. Graças à arquitetura construída neste capítulo, essa substituição exigirá a criação de um único arquivo novo — sem qualquer alteração no service ou no controller.
