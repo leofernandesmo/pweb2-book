@@ -1006,4 +1006,3 @@ Organize os arquivos dos exercícios anteriores seguindo a estrutura de diretór
 - [Node.js Best Practices — Error Handling](https://github.com/goldbergyoni/nodebestpractices#2-error-handling-practices)
 - 📖 Brown, E. *Web Development with Node and Express*. 2ª ed. O'Reilly Media, 2019. — Capítulos 10 e 14.
 
-[⬅ Back to Chapter 1](01-introducao.md)
