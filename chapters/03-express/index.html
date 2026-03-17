@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://leofernandesmo.github.io/pweb2-book/chapters/02-express/">
+        <link rel="canonical" href="https://leofernandesmo.github.io/pweb2-book/chapters/03-express/">
       
       
-        <link rel="prev" href="../01-introducao/">
+        <link rel="prev" href="../02-introducao/">
       
       
-        <link rel="next" href="../03-arquitetura/">
+        <link rel="next" href="../04-arquitetura/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>2. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto - Programação Web 2 - Uma abordagem usando Node/Express</title>
+        <title>3. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto - Programação Web 2 - Uma abordagem usando Node/Express</title>
       
     
     
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#capitulo-2-express-rotas-middlewares-controllers-e-estrutura-de-projeto" class="md-skip">
+        <a href="#capitulo-3-express-rotas-middlewares-controllers-e-estrutura-de-projeto" class="md-skip">
           Ir para o conteúdo
         </a>
       
@@ -130,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              2. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
+              3. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
             
           </span>
         </div>
@@ -506,6 +506,8 @@
       
         
       
+        
+      
     
     
       
@@ -570,11 +572,32 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-introducao/" class="md-nav__link">
+      <a href="../01-revisao-web/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    1. Fundamentos do Node.js
+    1. Web e Ferramentas (Revisão)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-introducao/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2. Fundamentos do Node.js
   </span>
   
 
@@ -604,7 +627,7 @@
           
   
   <span class="md-ellipsis">
-    2. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
+    3. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
   </span>
   
 
@@ -615,7 +638,7 @@
         
   
   <span class="md-ellipsis">
-    2. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
+    3. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
   </span>
   
 
@@ -637,55 +660,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#21-introducao" class="md-nav__link">
+  <a href="#31-introducao" class="md-nav__link">
     <span class="md-ellipsis">
-      2.1 Introdução
+      3.1 Introdução
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#22-o-sistema-de-rotas" class="md-nav__link">
+  <a href="#32-o-sistema-de-rotas" class="md-nav__link">
     <span class="md-ellipsis">
-      2.2 O Sistema de Rotas
+      3.2 O Sistema de Rotas
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.2 O Sistema de Rotas">
+    <nav class="md-nav" aria-label="3.2 O Sistema de Rotas">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#221-o-que-e-uma-rota" class="md-nav__link">
+  <a href="#321-o-que-e-uma-rota" class="md-nav__link">
     <span class="md-ellipsis">
-      2.2.1 O que é uma rota?
+      3.2.1 O que é uma rota?
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#222-metodos-http-e-semantica-rest" class="md-nav__link">
+  <a href="#322-metodos-http-e-semantica-rest" class="md-nav__link">
     <span class="md-ellipsis">
-      2.2.2 Métodos HTTP e semântica REST
+      3.2.2 Métodos HTTP e semântica REST
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#223-parametros-de-rota-de-consulta-e-corpo-da-requisicao" class="md-nav__link">
+  <a href="#323-parametros-de-rota-de-consulta-e-corpo-da-requisicao" class="md-nav__link">
     <span class="md-ellipsis">
-      2.2.3 Parâmetros de rota, de consulta e corpo da requisição
+      3.2.3 Parâmetros de rota, de consulta e corpo da requisição
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#224-o-objeto-router" class="md-nav__link">
+  <a href="#324-o-objeto-router" class="md-nav__link">
     <span class="md-ellipsis">
-      2.2.4 O objeto Router
+      3.2.4 O objeto Router
     </span>
   </a>
   
@@ -697,50 +720,50 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#23-middlewares" class="md-nav__link">
+  <a href="#33-middlewares" class="md-nav__link">
     <span class="md-ellipsis">
-      2.3 Middlewares
+      3.3 Middlewares
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.3 Middlewares">
+    <nav class="md-nav" aria-label="3.3 Middlewares">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#231-a-natureza-do-middleware" class="md-nav__link">
+  <a href="#331-a-natureza-do-middleware" class="md-nav__link">
     <span class="md-ellipsis">
-      2.3.1 A natureza do middleware
+      3.3.1 A natureza do middleware
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#232-o-pipeline-de-execucao" class="md-nav__link">
+  <a href="#332-o-pipeline-de-execucao" class="md-nav__link">
     <span class="md-ellipsis">
-      2.3.2 O pipeline de execução
+      3.3.2 O pipeline de execução
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#233-tipos-de-middleware" class="md-nav__link">
+  <a href="#333-tipos-de-middleware" class="md-nav__link">
     <span class="md-ellipsis">
-      2.3.3 Tipos de middleware
+      3.3.3 Tipos de middleware
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#234-middlewares-de-terceiros-amplamente-utilizados" class="md-nav__link">
+  <a href="#334-middlewares-de-terceiros-amplamente-utilizados" class="md-nav__link">
     <span class="md-ellipsis">
-      2.3.4 Middlewares de terceiros amplamente utilizados
+      3.3.4 Middlewares de terceiros amplamente utilizados
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.3.4 Middlewares de terceiros amplamente utilizados">
+    <nav class="md-nav" aria-label="3.3.4 Middlewares de terceiros amplamente utilizados">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -812,18 +835,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#235-criando-middlewares-customizados" class="md-nav__link">
+  <a href="#335-criando-middlewares-customizados" class="md-nav__link">
     <span class="md-ellipsis">
-      2.3.5 Criando middlewares customizados
+      3.3.5 Criando middlewares customizados
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#236-propagacao-de-erros" class="md-nav__link">
+  <a href="#336-propagacao-de-erros" class="md-nav__link">
     <span class="md-ellipsis">
-      2.3.6 Propagação de erros
+      3.3.6 Propagação de erros
     </span>
   </a>
   
@@ -835,46 +858,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#24-controllers" class="md-nav__link">
+  <a href="#34-controllers" class="md-nav__link">
     <span class="md-ellipsis">
-      2.4 Controllers
+      3.4 Controllers
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.4 Controllers">
+    <nav class="md-nav" aria-label="3.4 Controllers">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#241-a-separacao-de-responsabilidades" class="md-nav__link">
+  <a href="#341-a-separacao-de-responsabilidades" class="md-nav__link">
     <span class="md-ellipsis">
-      2.4.1 A separação de responsabilidades
+      3.4.1 A separação de responsabilidades
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#242-implementacao-do-service" class="md-nav__link">
+  <a href="#342-implementacao-do-service" class="md-nav__link">
     <span class="md-ellipsis">
-      2.4.2 Implementação do Service
+      3.4.2 Implementação do Service
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#243-implementacao-de-um-controller" class="md-nav__link">
+  <a href="#343-implementacao-de-um-controller" class="md-nav__link">
     <span class="md-ellipsis">
-      2.4.3 Implementação de um controller
+      3.4.3 Implementação de um controller
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#244-integracao-com-o-router" class="md-nav__link">
+  <a href="#344-integracao-com-o-router" class="md-nav__link">
     <span class="md-ellipsis">
-      2.4.4 Integração com o router
+      3.4.4 Integração com o router
     </span>
   </a>
   
@@ -886,55 +909,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#25-estrutura-de-projeto" class="md-nav__link">
+  <a href="#35-estrutura-de-projeto" class="md-nav__link">
     <span class="md-ellipsis">
-      2.5 Estrutura de Projeto
+      3.5 Estrutura de Projeto
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.5 Estrutura de Projeto">
+    <nav class="md-nav" aria-label="3.5 Estrutura de Projeto">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#251-a-importancia-da-organizacao" class="md-nav__link">
+  <a href="#351-a-importancia-da-organizacao" class="md-nav__link">
     <span class="md-ellipsis">
-      2.5.1 A importância da organização
+      3.5.1 A importância da organização
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#252-estrutura-recomendada" class="md-nav__link">
+  <a href="#352-estrutura-recomendada" class="md-nav__link">
     <span class="md-ellipsis">
-      2.5.2 Estrutura recomendada
+      3.5.2 Estrutura recomendada
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#253-separacao-entre-appjs-e-serverjs" class="md-nav__link">
+  <a href="#353-separacao-entre-appjs-e-serverjs" class="md-nav__link">
     <span class="md-ellipsis">
-      2.5.3 Separação entre app.js e server.js
+      3.5.3 Separação entre app.js e server.js
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#254-o-agregador-de-rotas" class="md-nav__link">
+  <a href="#354-o-agregador-de-rotas" class="md-nav__link">
     <span class="md-ellipsis">
-      2.5.4 O agregador de rotas
+      3.5.4 O agregador de rotas
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#255-classe-de-erro-customizado" class="md-nav__link">
+  <a href="#355-classe-de-erro-customizado" class="md-nav__link">
     <span class="md-ellipsis">
-      2.5.5 Classe de erro customizado
+      3.5.5 Classe de erro customizado
     </span>
   </a>
   
@@ -946,46 +969,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#26-exercicios-praticos" class="md-nav__link">
+  <a href="#36-exercicios-praticos" class="md-nav__link">
     <span class="md-ellipsis">
-      2.6 Exercícios Práticos
+      3.6 Exercícios Práticos
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.6 Exercícios Práticos">
+    <nav class="md-nav" aria-label="3.6 Exercícios Práticos">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#exercicio-21-router-independente" class="md-nav__link">
+  <a href="#exercicio-31-router-independente" class="md-nav__link">
     <span class="md-ellipsis">
-      Exercício 2.1 — Router independente
+      Exercício 3.1 — Router independente
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#exercicio-22-middleware-de-log-com-tempo-de-resposta" class="md-nav__link">
+  <a href="#exercicio-32-middleware-de-log-com-tempo-de-resposta" class="md-nav__link">
     <span class="md-ellipsis">
-      Exercício 2.2 — Middleware de log com tempo de resposta
+      Exercício 3.2 — Middleware de log com tempo de resposta
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#exercicio-23-tratamento-centralizado-de-erros" class="md-nav__link">
+  <a href="#exercicio-33-tratamento-centralizado-de-erros" class="md-nav__link">
     <span class="md-ellipsis">
-      Exercício 2.3 — Tratamento centralizado de erros
+      Exercício 3.3 — Tratamento centralizado de erros
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#exercicio-24-estrutura-completa-de-projeto" class="md-nav__link">
+  <a href="#exercicio-34-estrutura-completa-de-projeto" class="md-nav__link">
     <span class="md-ellipsis">
-      Exercício 2.4 — Estrutura completa de projeto
+      Exercício 3.4 — Estrutura completa de projeto
     </span>
   </a>
   
@@ -997,9 +1020,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#27-referencias-e-leituras-complementares" class="md-nav__link">
+  <a href="#37-referencias-e-leituras-complementares" class="md-nav__link">
     <span class="md-ellipsis">
-      2.7 Referências e Leituras Complementares
+      3.7 Referências e Leituras Complementares
     </span>
   </a>
   
@@ -1021,11 +1044,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-arquitetura/" class="md-nav__link">
+      <a href="../04-arquitetura/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    3. Arquitetura de Software: MVC, Services e Repository Pattern
+    4. Arquitetura de Software: MVC, Services e Repository Pattern
   </span>
   
 
@@ -1139,7 +1162,7 @@
                   
 
   
-    <a href="https://github.com/leofernandesmo/pweb2-book/edit/master/docs/chapters/02-express.md" title="Editar esta página" class="md-content__button md-icon">
+    <a href="https://github.com/leofernandesmo/pweb2-book/edit/master/docs/chapters/03-express.md" title="Editar esta página" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -1148,16 +1171,16 @@
     
       
     
-    <a href="https://github.com/leofernandesmo/pweb2-book/raw/master/docs/chapters/02-express.md" title="Ver fonte desta página" class="md-content__button md-icon">
+    <a href="https://github.com/leofernandesmo/pweb2-book/raw/master/docs/chapters/03-express.md" title="Ver fonte desta página" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
     </a>
   
 
 
-<h1 id="capitulo-2-express-rotas-middlewares-controllers-e-estrutura-de-projeto">Capítulo 2 – Express: Rotas, Middlewares, Controllers e Estrutura de Projeto<a class="headerlink" href="#capitulo-2-express-rotas-middlewares-controllers-e-estrutura-de-projeto" title="Permanent link">&para;</a></h1>
+<h1 id="capitulo-3-express-rotas-middlewares-controllers-e-estrutura-de-projeto">Capítulo 3 – Express: Rotas, Middlewares, Controllers e Estrutura de Projeto<a class="headerlink" href="#capitulo-3-express-rotas-middlewares-controllers-e-estrutura-de-projeto" title="Permanent link">&para;</a></h1>
 <hr />
-<h2 id="21-introducao">2.1 Introdução<a class="headerlink" href="#21-introducao" title="Permanent link">&para;</a></h2>
+<h2 id="31-introducao">3.1 Introdução<a class="headerlink" href="#31-introducao" title="Permanent link">&para;</a></h2>
 <p>O Express é, até o momento presente, o framework web mais amplamente adotado no ecossistema Node.js. Sua popularidade decorre não de uma coleção exaustiva de funcionalidades embutidas, mas justamente do oposto: trata-se de um framework minimalista, que delega ao desenvolvedor a responsabilidade de compor a aplicação a partir de peças independentes e bem definidas. Essa filosofia de design, comumente denominada <em>unopinionated</em> (sem opinião), oferece liberdade arquitetural considerável, ao mesmo tempo em que exige um entendimento sólido dos conceitos fundamentais sobre os quais o framework se apoia.</p>
 <p>Este capítulo explora quatro desses conceitos de forma aprofundada: o sistema de <strong>rotas</strong>, o mecanismo de <strong>middlewares</strong>, o padrão de <strong>controllers</strong> e a <strong>estrutura de projeto</strong> que emerge da composição desses elementos. Compreendê-los de maneira integrada é condição necessária para o desenvolvimento de APIs REST robustas, legíveis e de fácil manutenção.</p>
 <blockquote>
@@ -1172,8 +1195,8 @@
    A partir desse ponto, é possível importar o Express com <code>import express from 'express'</code> em qualquer arquivo do projeto.</p>
 </blockquote>
 <hr />
-<h2 id="22-o-sistema-de-rotas">2.2 O Sistema de Rotas<a class="headerlink" href="#22-o-sistema-de-rotas" title="Permanent link">&para;</a></h2>
-<h3 id="221-o-que-e-uma-rota">2.2.1 O que é uma rota?<a class="headerlink" href="#221-o-que-e-uma-rota" title="Permanent link">&para;</a></h3>
+<h2 id="32-o-sistema-de-rotas">3.2 O Sistema de Rotas<a class="headerlink" href="#32-o-sistema-de-rotas" title="Permanent link">&para;</a></h2>
+<h3 id="321-o-que-e-uma-rota">3.2.1 O que é uma rota?<a class="headerlink" href="#321-o-que-e-uma-rota" title="Permanent link">&para;</a></h3>
 <p>No contexto de aplicações web, uma <strong>rota</strong> é a associação entre um método HTTP, um padrão de URL e uma função responsável por processar a requisição correspondente. Quando um cliente envia uma requisição HTTP para o servidor, o Express percorre suas rotas registradas em ordem de declaração e, ao encontrar aquela cujo método e padrão coincidem com a requisição recebida, executa a função associada. Esse processo é denominado <em>roteamento</em>.</p>
 <p>A forma mais elementar de definir uma rota em Express é a seguinte:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span><span class="w">       </span><span class="c1">// (1) Importa o framework Express</span>
@@ -1193,7 +1216,7 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 <p>Altere o package.json, atributo "type" de "commonjs" para "module".
 </p>
 </blockquote>
-<h3 id="222-metodos-http-e-semantica-rest">2.2.2 Métodos HTTP e semântica REST<a class="headerlink" href="#222-metodos-http-e-semantica-rest" title="Permanent link">&para;</a></h3>
+<h3 id="322-metodos-http-e-semantica-rest">3.2.2 Métodos HTTP e semântica REST<a class="headerlink" href="#322-metodos-http-e-semantica-rest" title="Permanent link">&para;</a></h3>
 <p>O Express expõe métodos correspondentes aos verbos HTTP mais utilizados: <code>app.get()</code>, <code>app.post()</code>, <code>app.put()</code>, <code>app.patch()</code> e <code>app.delete()</code>. Em uma API REST bem projetada, cada verbo carrega uma semântica específica que deve ser respeitada, conforme descrito a seguir.</p>
 <p>O método <code>GET</code> é utilizado para a recuperação de <strong>recursos</strong>, sem produzir efeitos colaterais no servidor. O <code>POST</code> destina-se à criação de <strong>novos recursos</strong>. O <code>PUT</code> realiza a substituição completa de um <strong>recurso existente</strong>, ao passo que o <code>PATCH</code> aplica modificações parciais. Por fim, o <code>DELETE</code> remove um <strong>recurso</strong> identificado.</p>
 <p>O exemplo abaixo demonstra a definição de rotas para um recurso <code>produtos</code>, seguindo a semântica REST:</p>
@@ -1245,9 +1268,9 @@ Caso apareça o erro:  <em>Failed to load the ES module: /server.js. Make sure t
 Para que <code>req.body</code> esteja disponível nas rotas, é necessário registrar o middleware de parsing de JSON <strong>antes</strong> das definições de rota, por meio de <code>app.use(express.json())</code>:
 Veja na próxima seção para entender melhor.</p>
 <blockquote>
-<p>O conceito de middleware — o que é, como funciona internamente e como criar os seus próprios — será explicado em profundidade na seção 2.3 deste capítulo.</p>
+<p>O conceito de middleware — o que é, como funciona internamente e como criar os seus próprios — será explicado em profundidade na seção 3.3 deste capítulo.</p>
 </blockquote>
-<h3 id="223-parametros-de-rota-de-consulta-e-corpo-da-requisicao">2.2.3 Parâmetros de rota, de consulta e corpo da requisição<a class="headerlink" href="#223-parametros-de-rota-de-consulta-e-corpo-da-requisicao" title="Permanent link">&para;</a></h3>
+<h3 id="323-parametros-de-rota-de-consulta-e-corpo-da-requisicao">3.2.3 Parâmetros de rota, de consulta e corpo da requisição<a class="headerlink" href="#323-parametros-de-rota-de-consulta-e-corpo-da-requisicao" title="Permanent link">&para;</a></h3>
 <p>O Express oferece três mecanismos distintos para o recebimento de dados provenientes do cliente, cada um adequado a uma situação específica.</p>
 <p>Os <strong>parâmetros de rota</strong> (<em>route params</em>) são segmentos dinâmicos da URL, delimitados por dois-pontos na definição da rota. São acessados através de <code>req.params</code> e tipicamente utilizados para identificar recursos específicos.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// URL: GET /usuarios/42</span>
@@ -1285,7 +1308,7 @@ Veja na próxima seção para entender melhor.</p>
 <blockquote>
 <p><strong>Em síntese:</strong> uma rota no Express é sempre a combinação de três elementos — um verbo HTTP, um caminho e uma função handler. Os dados de uma requisição chegam por três canais distintos: <code>req.params</code> para identificadores na URL, <code>req.query</code> para filtros e parâmetros opcionais, e <code>req.body</code> para dados estruturados no corpo. O objeto <code>Router</code> permite modularizar essas rotas por recurso, mantendo o código organizado e de fácil navegação. Por fim, cada verbo HTTP carrega uma semântica precisa que deve ser respeitada: GET para leitura, POST para criação (201), PUT para substituição (200), PATCH para atualização parcial e DELETE para remoção (204) — seguir essa convenção torna a API previsível para qualquer cliente que a consuma.</p>
 </blockquote>
-<h3 id="224-o-objeto-router">2.2.4 O objeto Router<a class="headerlink" href="#224-o-objeto-router" title="Permanent link">&para;</a></h3>
+<h3 id="324-o-objeto-router">3.2.4 O objeto Router<a class="headerlink" href="#324-o-objeto-router" title="Permanent link">&para;</a></h3>
 <p>À medida que a aplicação cresce, concentrar todas as rotas no arquivo principal torna-se inviável. O Express oferece o objeto <code>Router</code>, que permite organizar rotas relacionadas em módulos independentes.</p>
 <p>Um <code>Router</code> se comporta como uma mini-aplicação Express: aceita rotas e middlewares, podendo ser montado em qualquer prefixo de URL da aplicação principal.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/routes/usuarios.routes.js</span>
@@ -1321,8 +1344,8 @@ Veja na próxima seção para entender melhor.</p>
 </code></pre></div>
 <p><strong>IMPORTANTE</strong>: Ao montar o router em <code>/usuarios</code>, todas as rotas definidas nele herdam esse prefixo. Assim, <code>router.get('/')</code> responde a <code>GET /usuarios</code>, e <code>router.get('/:id')</code> responde a <code>GET /usuarios/:id</code>. Logo, ao dividir a responsabilidade, você gerencia melhor as rotas. </p>
 <hr />
-<h2 id="23-middlewares">2.3 Middlewares<a class="headerlink" href="#23-middlewares" title="Permanent link">&para;</a></h2>
-<h3 id="231-a-natureza-do-middleware">2.3.1 A natureza do middleware<a class="headerlink" href="#231-a-natureza-do-middleware" title="Permanent link">&para;</a></h3>
+<h2 id="33-middlewares">3.3 Middlewares<a class="headerlink" href="#33-middlewares" title="Permanent link">&para;</a></h2>
+<h3 id="331-a-natureza-do-middleware">3.3.1 A natureza do middleware<a class="headerlink" href="#331-a-natureza-do-middleware" title="Permanent link">&para;</a></h3>
 <p>O conceito de <strong>middleware</strong> é o mais fundamental de toda a arquitetura Express. Um middleware é uma função que possui acesso ao objeto de requisição (<code>req</code>), ao objeto de resposta (<code>res</code>) e a uma função especial denominada <code>next</code>. Quando chamada, <code>next()</code> transfere o controle para o próximo middleware na cadeia de execução.</p>
 <p>A assinatura de um middleware é a seguinte:</p>
 <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -1331,7 +1354,7 @@ Veja na próxima seção para entender melhor.</p>
 <span class="p">}</span>
 </code></pre></div>
 <p>Toda aplicação Express é, em sua essência, uma sequência de chamadas de middleware. Quando uma requisição chega ao servidor, ela percorre essa sequência de cima para baixo até que uma função envie uma resposta ao cliente — ou até que ocorra um erro. É crucial compreender que <strong>se um middleware não chamar <code>next()</code> e também não enviar uma resposta</strong>, a requisição ficará suspensa indefinidamente, resultando em timeout do lado do cliente.</p>
-<h3 id="232-o-pipeline-de-execucao">2.3.2 O pipeline de execução<a class="headerlink" href="#232-o-pipeline-de-execucao" title="Permanent link">&para;</a></h3>
+<h3 id="332-o-pipeline-de-execucao">3.3.2 O pipeline de execução<a class="headerlink" href="#332-o-pipeline-de-execucao" title="Permanent link">&para;</a></h3>
 <p>Considere a seguinte sequência de middlewares:</p>
 <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">();</span>
 
@@ -1350,7 +1373,7 @@ Veja na próxima seção para entender melhor.</p>
 <span class="p">});</span>
 </code></pre></div>
 <p>Para cada requisição <code>GET /saude</code>, a execução ocorre na seguinte ordem: o primeiro middleware registra a requisição no console e chama <code>next()</code>; o segundo realiza o parsing do corpo JSON e chama <code>next()</code>; o terceiro, sendo a rota correspondente, envia a resposta e encerra o ciclo.</p>
-<h3 id="233-tipos-de-middleware">2.3.3 Tipos de middleware<a class="headerlink" href="#233-tipos-de-middleware" title="Permanent link">&para;</a></h3>
+<h3 id="333-tipos-de-middleware">3.3.3 Tipos de middleware<a class="headerlink" href="#333-tipos-de-middleware" title="Permanent link">&para;</a></h3>
 <p>O Express reconhece quatro categorias principais de middleware, diferenciadas pelo escopo e pela forma de registro.</p>
 <p><strong>Middlewares de aplicação</strong> são registrados com <code>app.use()</code> e executados para todas as requisições, ou para as que correspondem a um prefixo de URL específico.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Executado para todas as requisições</span>
@@ -1383,7 +1406,7 @@ Veja na próxima seção para entender melhor.</p>
 <span class="p">});</span>
 </code></pre></div>
 <p><strong>Middlewares de terceiros</strong> são pacotes npm que encapsulam funcionalidades transversais reutilizáveis. Constituem uma parte essencial do ecossistema Express e serão detalhados na seção seguinte.</p>
-<h3 id="234-middlewares-de-terceiros-amplamente-utilizados">2.3.4 Middlewares de terceiros amplamente utilizados<a class="headerlink" href="#234-middlewares-de-terceiros-amplamente-utilizados" title="Permanent link">&para;</a></h3>
+<h3 id="334-middlewares-de-terceiros-amplamente-utilizados">3.3.4 Middlewares de terceiros amplamente utilizados<a class="headerlink" href="#334-middlewares-de-terceiros-amplamente-utilizados" title="Permanent link">&para;</a></h3>
 <p>Uma das grandes vantagens do Express é a disponibilidade de middlewares de terceiros bem mantidos e amplamente adotados pela comunidade. A seguir, os mais relevantes para o desenvolvimento de APIs em ambiente de produção.</p>
 <h4 id="helmet">helmet<a class="headerlink" href="#helmet" title="Permanent link">&para;</a></h4>
 <p>O <code>helmet</code> é um conjunto de middlewares de segurança que configura automaticamente diversos cabeçalhos HTTP com o objetivo de proteger a aplicação contra vulnerabilidades conhecidas. Entre os cabeçalhos que ele gerencia estão <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>, <code>Strict-Transport-Security</code> e <code>Content-Security-Policy</code>, cada um mitigando um vetor de ataque distinto. Sua adoção é considerada uma prática mínima de segurança em qualquer API exposta publicamente.</p>
@@ -1562,7 +1585,7 @@ Veja na próxima seção para entender melhor.</p>
 
 <span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">app</span><span class="p">;</span>
 </code></pre></div>
-<h3 id="235-criando-middlewares-customizados">2.3.5 Criando middlewares customizados<a class="headerlink" href="#235-criando-middlewares-customizados" title="Permanent link">&para;</a></h3>
+<h3 id="335-criando-middlewares-customizados">3.3.5 Criando middlewares customizados<a class="headerlink" href="#335-criando-middlewares-customizados" title="Permanent link">&para;</a></h3>
 <p>A criação de middlewares próprios é uma prática recorrente no desenvolvimento com Express. A seguir, dois exemplos representativos de casos de uso reais.</p>
 <p><strong>Middleware de autenticação por token:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/middlewares/autenticacao.middleware.js</span>
@@ -1617,7 +1640,7 @@ Veja na próxima seção para entender melhor.</p>
 <p><img alt="Diagrama do Pipeline com Midlewares" src="../../figures/diagrama-midleware-rotas.svg" /></p>
 <p>Para cada requisição recebida, o Express executa um pipeline sequencial e bem definido. No diagrama, a requisição <code>GET /usuarios/42</code> parte do cliente e atravessa primeiramente os <strong>middlewares globais</strong> registrados no <code>app.js</code> — <code>helmet</code>, <code>cors</code>, <code>express.json()</code> e <code>morgan</code> — que são executados independentemente da rota solicitada. Após essa camada, a requisição chega ao <strong>agregador de rotas</strong> (<code>routes/index.js</code>), que a direciona ao router correspondente com base no prefixo da URL: como a URL começa com <code>/usuarios</code>, o <code>usuarios.routes.js</code> é acionado; o <code>produtos.routes.js</code> é completamente ignorado.</p>
 <p>Dentro do router de usuários, o Express compara o método HTTP e o padrão da URL com cada rota registrada. A requisição <code>GET /usuarios/42</code> corresponde à rota <code>GET /:id</code> — destacada em azul no diagrama — e o controle é transferido ao handler <code>obterUsuario</code> no controller. As demais rotas (<code>GET /</code>, <code>POST /</code>, <code>DELETE /:id</code>) não são avaliadas. O controller processa a requisição e devolve a resposta <code>res.json()</code> diretamente ao cliente, representada pela seta em arco na parte inferior do diagrama.</p>
-<h3 id="236-propagacao-de-erros">2.3.6 Propagação de erros<a class="headerlink" href="#236-propagacao-de-erros" title="Permanent link">&para;</a></h3>
+<h3 id="336-propagacao-de-erros">3.3.6 Propagação de erros<a class="headerlink" href="#336-propagacao-de-erros" title="Permanent link">&para;</a></h3>
 <p>Uma prática essencial no desenvolvimento com Express é a propagação correta de erros assíncronos. Em rotas assíncronas, exceções não capturadas não são automaticamente interceptadas pelo middleware de erro — é necessário capturá-las e passá-las para <code>next</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// ❌ Forma incorreta: erro assíncrono não tratado</span>
 <span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/usuarios&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -1648,11 +1671,11 @@ Veja na próxima seção para entender melhor.</p>
 <span class="p">}));</span>
 </code></pre></div>
 <hr />
-<h2 id="24-controllers">2.4 Controllers<a class="headerlink" href="#24-controllers" title="Permanent link">&para;</a></h2>
-<h3 id="241-a-separacao-de-responsabilidades">2.4.1 A separação de responsabilidades<a class="headerlink" href="#241-a-separacao-de-responsabilidades" title="Permanent link">&para;</a></h3>
+<h2 id="34-controllers">3.4 Controllers<a class="headerlink" href="#34-controllers" title="Permanent link">&para;</a></h2>
+<h3 id="341-a-separacao-de-responsabilidades">3.4.1 A separação de responsabilidades<a class="headerlink" href="#341-a-separacao-de-responsabilidades" title="Permanent link">&para;</a></h3>
 <p>À medida que a lógica de cada rota se torna mais complexa, inserir todo o código diretamente nas definições de rota resulta em arquivos extensos, difíceis de testar e de manter. O padrão de <strong>controllers</strong> surge como solução para esse problema, aplicando o princípio da separação de responsabilidades (<em>Separation of Concerns</em>).</p>
 <p>Um controller é um módulo que agrupa as funções responsáveis por processar requisições de um determinado recurso. Sua responsabilidade é exclusivamente coordenar o fluxo: receber os dados da requisição (<code>req</code>), delegar o processamento à camada de serviço e enviar a resposta apropriada ao cliente (<code>res</code>). O controller <strong>não deve</strong> conter lógica de negócio nem acesso direto ao banco de dados — essas responsabilidades pertencem a camadas distintas.</p>
-<h3 id="242-implementacao-do-service">2.4.2 Implementação do Service<a class="headerlink" href="#242-implementacao-do-service" title="Permanent link">&para;</a></h3>
+<h3 id="342-implementacao-do-service">3.4.2 Implementação do Service<a class="headerlink" href="#342-implementacao-do-service" title="Permanent link">&para;</a></h3>
 <p>Antes de apresentar o controller, é necessário definir a camada de serviço que ele consome. Neste capítulo, como o ORM ainda não foi introduzido (Capítulo 4), o <code>UsuariosService</code> utilizará um array em memória para simular a persistência de dados. Essa abordagem é intencional: ela permite focar no contrato entre controller e service sem depender de um banco de dados real.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/services/usuarios.service.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AppError</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../utils/AppError.js&#39;</span><span class="p">;</span>
@@ -1707,7 +1730,7 @@ Veja na próxima seção para entender melhor.</p>
 <blockquote>
 <p>💡 Quando o Prisma ou Sequelize for introduzido no Capítulo 4, o <code>UsuariosService</code> será refatorado para substituir as operações sobre o array pelas chamadas equivalentes ao ORM — sem que o controller precise ser alterado. Essa estabilidade é exatamente o benefício da separação entre camadas.</p>
 </blockquote>
-<h3 id="243-implementacao-de-um-controller">2.4.3 Implementação de um controller<a class="headerlink" href="#243-implementacao-de-um-controller" title="Permanent link">&para;</a></h3>
+<h3 id="343-implementacao-de-um-controller">3.4.3 Implementação de um controller<a class="headerlink" href="#343-implementacao-de-um-controller" title="Permanent link">&para;</a></h3>
 <p>Considere um controller para o recurso <code>usuarios</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/controllers/usuarios.controller.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../services/usuarios.service.js&#39;</span><span class="p">;</span>
@@ -1769,7 +1792,7 @@ Veja na próxima seção para entender melhor.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">};</span>
 </code></pre></div>
-<h3 id="244-integracao-com-o-router">2.4.4 Integração com o router<a class="headerlink" href="#244-integracao-com-o-router" title="Permanent link">&para;</a></h3>
+<h3 id="344-integracao-com-o-router">3.4.4 Integração com o router<a class="headerlink" href="#344-integracao-com-o-router" title="Permanent link">&para;</a></h3>
 <p>Com o controller definido, o arquivo de rotas torna-se declarativo e extremamente enxuto:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/routes/usuarios.routes.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
@@ -1794,11 +1817,11 @@ Veja na próxima seção para entender melhor.</p>
 </code></pre></div>
 <p>Essa separação revela uma divisão clara de papéis: o arquivo de rotas declara <em>quais</em> caminhos existem e <em>quais</em> middlewares os protegem; o controller define <em>como</em> cada requisição é processada; e a camada de serviço (tratada no Capítulo 3) encapsula <em>o que</em> a aplicação faz do ponto de vista do negócio.</p>
 <hr />
-<h2 id="25-estrutura-de-projeto">2.5 Estrutura de Projeto<a class="headerlink" href="#25-estrutura-de-projeto" title="Permanent link">&para;</a></h2>
-<h3 id="251-a-importancia-da-organizacao">2.5.1 A importância da organização<a class="headerlink" href="#251-a-importancia-da-organizacao" title="Permanent link">&para;</a></h3>
+<h2 id="35-estrutura-de-projeto">3.5 Estrutura de Projeto<a class="headerlink" href="#35-estrutura-de-projeto" title="Permanent link">&para;</a></h2>
+<h3 id="351-a-importancia-da-organizacao">3.5.1 A importância da organização<a class="headerlink" href="#351-a-importancia-da-organizacao" title="Permanent link">&para;</a></h3>
 <p>A estrutura de diretórios de um projeto é uma decisão arquitetural com impactos duradouros sobre a produtividade da equipe, a facilidade de onboarding de novos membros e a manutenibilidade do código ao longo do tempo. Uma organização bem pensada torna implícita a separação de responsabilidades: ao abrir qualquer arquivo, o desenvolvedor sabe imediatamente qual é o seu papel na aplicação.</p>
 <p>Existem duas filosofias predominantes de organização de projetos Express: a <strong>organização por tipo de arquivo</strong> e a <strong>organização por funcionalidade</strong> (feature-based). A primeira agrupa todos os controllers juntos, todos os services juntos e assim por diante. A segunda agrupa por domínio — tudo relacionado a <code>usuarios</code> fica em um mesmo módulo. Para aplicações de pequeno e médio porte, a organização por tipo é mais comum e será adotada neste material.</p>
-<h3 id="252-estrutura-recomendada">2.5.2 Estrutura recomendada<a class="headerlink" href="#252-estrutura-recomendada" title="Permanent link">&para;</a></h3>
+<h3 id="352-estrutura-recomendada">3.5.2 Estrutura recomendada<a class="headerlink" href="#352-estrutura-recomendada" title="Permanent link">&para;</a></h3>
 <p>A estrutura a seguir representa uma organização matura e amplamente adotada para APIs Express de médio porte:</p>
 <div class="highlight"><pre><span></span><code>minha-api/
 ├── src/
@@ -1848,7 +1871,7 @@ Veja na próxima seção para entender melhor.</p>
 ├── package.json
 └── server.js                  # Ponto de entrada — inicializa o servidor
 </code></pre></div>
-<h3 id="253-separacao-entre-appjs-e-serverjs">2.5.3 Separação entre <code>app.js</code> e <code>server.js</code><a class="headerlink" href="#253-separacao-entre-appjs-e-serverjs" title="Permanent link">&para;</a></h3>
+<h3 id="353-separacao-entre-appjs-e-serverjs">3.5.3 Separação entre <code>app.js</code> e <code>server.js</code><a class="headerlink" href="#353-separacao-entre-appjs-e-serverjs" title="Permanent link">&para;</a></h3>
 <p>Um detalhe frequentemente negligenciado é a separação entre o arquivo de configuração da aplicação (<code>app.js</code>) e o ponto de entrada do servidor (<code>server.js</code>). Essa separação tem uma razão técnica relevante: durante os testes automatizados, importa-se <code>app.js</code> diretamente, sem iniciar o servidor HTTP. Isso permite testar as rotas com supertest sem conflitos de porta.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/app.js</span>
 <span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
@@ -1883,7 +1906,7 @@ Veja na próxima seção para entender melhor.</p>
 <span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Servidor iniciado na porta </span><span class="si">${</span><span class="nx">PORTA</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></div>
-<h3 id="254-o-agregador-de-rotas">2.5.4 O agregador de rotas<a class="headerlink" href="#254-o-agregador-de-rotas" title="Permanent link">&para;</a></h3>
+<h3 id="354-o-agregador-de-rotas">3.5.4 O agregador de rotas<a class="headerlink" href="#354-o-agregador-de-rotas" title="Permanent link">&para;</a></h3>
 <p>O arquivo <code>src/routes/index.js</code> funciona como ponto central de registro de todos os routers. Sua responsabilidade é exclusivamente importar e montar cada router no prefixo correspondente, mantendo o <code>app.js</code> desacoplado dos detalhes de cada recurso.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/routes/index.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
@@ -1895,7 +1918,7 @@ Veja na próxima seção para entender melhor.</p>
 <span class="nx">router</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/usuarios&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">usuariosRouter</span><span class="p">);</span>
 <span class="nx">router</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/produtos&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">produtosRouter</span><span class="p">);</span>
 </code></pre></div>
-<h3 id="255-classe-de-erro-customizado">2.5.5 Classe de erro customizado<a class="headerlink" href="#255-classe-de-erro-customizado" title="Permanent link">&para;</a></h3>
+<h3 id="355-classe-de-erro-customizado">3.5.5 Classe de erro customizado<a class="headerlink" href="#355-classe-de-erro-customizado" title="Permanent link">&para;</a></h3>
 <p>Uma prática recomendada é criar uma classe de erro que carrega, além da mensagem, o código de status HTTP associado. Isso permite que o middleware de erros construa respostas padronizadas sem lógica condicional dispersa.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/utils/AppError.js</span>
 <span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">AppError</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="ne">Error</span><span class="w"> </span><span class="p">{</span>
@@ -1926,17 +1949,17 @@ Veja na próxima seção para entender melhor.</p>
 <span class="p">};</span>
 </code></pre></div>
 <hr />
-<h2 id="26-exercicios-praticos">2.6 Exercícios Práticos<a class="headerlink" href="#26-exercicios-praticos" title="Permanent link">&para;</a></h2>
-<h3 id="exercicio-21-router-independente">Exercício 2.1 — Router independente<a class="headerlink" href="#exercicio-21-router-independente" title="Permanent link">&para;</a></h3>
+<h2 id="36-exercicios-praticos">3.6 Exercícios Práticos<a class="headerlink" href="#36-exercicios-praticos" title="Permanent link">&para;</a></h2>
+<h3 id="exercicio-31-router-independente">Exercício 3.1 — Router independente<a class="headerlink" href="#exercicio-31-router-independente" title="Permanent link">&para;</a></h3>
 <p>Crie um router para o recurso <code>tarefas</code> com as seguintes rotas: listagem de todas as tarefas, obtenção de uma tarefa por ID, criação, atualização parcial (PATCH) e remoção. As funções handler podem retornar dados fictícios (hardcoded) por enquanto. Monte o router em <code>/api/tarefas</code> na aplicação principal.</p>
-<h3 id="exercicio-22-middleware-de-log-com-tempo-de-resposta">Exercício 2.2 — Middleware de log com tempo de resposta<a class="headerlink" href="#exercicio-22-middleware-de-log-com-tempo-de-resposta" title="Permanent link">&para;</a></h3>
+<h3 id="exercicio-32-middleware-de-log-com-tempo-de-resposta">Exercício 3.2 — Middleware de log com tempo de resposta<a class="headerlink" href="#exercicio-32-middleware-de-log-com-tempo-de-resposta" title="Permanent link">&para;</a></h3>
 <p>Implemente um middleware de aplicação que registre no console, ao final de cada requisição, o método HTTP, a URL, o código de status da resposta e o tempo total de processamento em milissegundos. <strong>Dica:</strong> o Express possui o evento <code>res.on('finish', ...)</code> que é emitido quando a resposta é enviada ao cliente.</p>
-<h3 id="exercicio-23-tratamento-centralizado-de-erros">Exercício 2.3 — Tratamento centralizado de erros<a class="headerlink" href="#exercicio-23-tratamento-centralizado-de-erros" title="Permanent link">&para;</a></h3>
-<p>Partindo da estrutura apresentada na seção 2.5, implemente a classe <code>AppError</code>, o middleware <code>middlewareDeErros</code> e refatore as rotas do Exercício 2.1 para que todos os erros sejam propagados via <code>next(err)</code>. Verifique que uma rota inexistente resulta em uma resposta JSON com status 404 e mensagem padronizada.</p>
-<h3 id="exercicio-24-estrutura-completa-de-projeto">Exercício 2.4 — Estrutura completa de projeto<a class="headerlink" href="#exercicio-24-estrutura-completa-de-projeto" title="Permanent link">&para;</a></h3>
-<p>Organize os arquivos dos exercícios anteriores seguindo a estrutura de diretórios apresentada na seção 2.5.2. Ao final, o projeto deve conter: <code>server.js</code>, <code>src/app.js</code>, <code>src/routes/index.js</code>, <code>src/routes/tarefas.routes.js</code>, <code>src/controllers/tarefas.controller.js</code> e <code>src/middlewares/erros.middleware.js</code>.</p>
+<h3 id="exercicio-33-tratamento-centralizado-de-erros">Exercício 3.3 — Tratamento centralizado de erros<a class="headerlink" href="#exercicio-33-tratamento-centralizado-de-erros" title="Permanent link">&para;</a></h3>
+<p>Partindo da estrutura apresentada na seção 3.5, implemente a classe <code>AppError</code>, o middleware <code>middlewareDeErros</code> e refatore as rotas do Exercício 3.1 para que todos os erros sejam propagados via <code>next(err)</code>. Verifique que uma rota inexistente resulta em uma resposta JSON com status 404 e mensagem padronizada.</p>
+<h3 id="exercicio-34-estrutura-completa-de-projeto">Exercício 3.4 — Estrutura completa de projeto<a class="headerlink" href="#exercicio-34-estrutura-completa-de-projeto" title="Permanent link">&para;</a></h3>
+<p>Organize os arquivos dos exercícios anteriores seguindo a estrutura de diretórios apresentada na seção 3.5.2. Ao final, o projeto deve conter: <code>server.js</code>, <code>src/app.js</code>, <code>src/routes/index.js</code>, <code>src/routes/tarefas.routes.js</code>, <code>src/controllers/tarefas.controller.js</code> e <code>src/middlewares/erros.middleware.js</code>.</p>
 <hr />
-<h2 id="27-referencias-e-leituras-complementares">2.7 Referências e Leituras Complementares<a class="headerlink" href="#27-referencias-e-leituras-complementares" title="Permanent link">&para;</a></h2>
+<h2 id="37-referencias-e-leituras-complementares">3.7 Referências e Leituras Complementares<a class="headerlink" href="#37-referencias-e-leituras-complementares" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://expressjs.com/en/guide/routing.html">Documentação oficial do Express — Routing</a></li>
 <li><a href="https://expressjs.com/en/guide/writing-middleware.html">Documentação oficial do Express — Writing middleware</a></li>
@@ -1944,7 +1967,6 @@ Veja na próxima seção para entender melhor.</p>
 <li><a href="https://github.com/goldbergyoni/nodebestpractices#2-error-handling-practices">Node.js Best Practices — Error Handling</a></li>
 <li>📖 Brown, E. <em>Web Development with Node and Express</em>. 2ª ed. O'Reilly Media, 2019. — Capítulos 10 e 14.</li>
 </ul>
-<p><a href="../01-introducao/">⬅ Back to Chapter 1</a></p>
 
 
 
