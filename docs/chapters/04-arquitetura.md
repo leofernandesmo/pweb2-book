@@ -127,7 +127,7 @@ Observe que o service não sabe *como* o repositório armazena os dados — ele 
 Uma consequência natural da independência do service em relação ao transporte HTTP é sua reutilizabilidade. O mesmo `UsuariosService.criar()` pode ser invocado a partir de um controller HTTP, de um comando CLI de [seed de banco de dados](https://pt.stackoverflow.com/questions/126770/o-que-%C3%A9-e-para-que-serve-um-seeder), de um worker que processa uma fila de novos cadastros ou de um teste automatizado — sem qualquer modificação. Essa flexibilidade é um dos principais argumentos em favor da arquitetura em camadas.
 
 
-![Separando em Camadas](../figures/04_01-camadas.png)
+<img src="../figures/04_01-camadas.png" width="300" height="200" />
 
 ---
 
@@ -143,7 +143,8 @@ O **Repository Pattern** resolve esse problema introduzindo uma camada de abstra
 
 Do ponto de vista do service, um repositório é simplesmente um colaborador que sabe *onde* os dados vivem. O service não precisa saber se os dados estão em um banco relacional, em memória ou em uma API externa — ele apenas chama os métodos do repositório.
 
-![Repository](../figures/04_02-repository.png)
+<img src="../figures/04_02-repository.png" width="300" height="200" />
+
 
 Obs.: A interface de repositório é como um **contrato** ou um plano que define quais operações um repositório deve ser capaz de realizar. Ela especifica um conjunto de métodos públicos (e seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação do repositório é a classe **concreta** que realiza as operações definidas na interface. É onde a lógica específica para interagir com uma fonte de dados real (como um banco de dados, sistema de arquivos ou API) reside. Veremos isso em mais detalhes a frente no material.
 
