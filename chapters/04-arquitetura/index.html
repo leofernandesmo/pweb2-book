@@ -1123,6 +1123,16 @@
 <p>Em aplicações web tradicionais, a <em>View</em> é responsável por renderizar HTML que será exibido no navegador. Em APIs REST, não existe renderização de interface — o servidor produz dados estruturados (tipicamente JSON) que serão consumidos por um cliente independente: um front-end em React, um aplicativo móvel ou outro serviço. Essa diferença fundamental implica uma adaptação do padrão original.</p>
 <p>No contexto de APIs Express, as três camadas do MVC assumem os seguintes papéis:</p>
 <p>A camada <strong>Model</strong> representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 5). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso — um <code>Usuario</code>, um <code>Produto</code> — e o mecanismo responsável por persistir e recuperar esses dados.</p>
+<div class="admonition note">
+<p class="admonition-title">O que é o Model neste estágio do curso?</p>
+<p>Neste capítulo, o termo <strong>Model</strong> é utilizado em um sentido mais amplo e ainda simplificado. Em aplicações completas, especialmente com ORM e Domain-Driven Design, o Model pode assumir diferentes formas:</p>
+<ul>
+<li><strong>Entidades de domínio</strong>: objetos que encapsulam dados e comportamento (regras de negócio)</li>
+<li><strong>DTOs (Data Transfer Objects)</strong>: estruturas usadas para transporte de dados entre camadas</li>
+<li><strong>Modelos de persistência</strong>: representações alinhadas ao banco de dados (tabelas, documentos)</li>
+</ul>
+<p>Neste momento do curso, como ainda não utilizamos um ORM nem modelagem rica de domínio, o Model pode ser entendido como <strong>uma estrutura de dados que representa os recursos da aplicação</strong> (ex: <code>Usuario</code>, <code>Produto</code>) e que será evoluída nos próximos capítulos.</p>
+</div>
 <p>A camada <strong>View</strong> é substituída, na prática, pela resposta JSON produzida pelo servidor. Não existe um arquivo de template ou componente visual — <code>res.json()</code> cumpre o papel de serializar o modelo para o formato que o cliente espera.</p>
 <p>A camada <strong>Controller</strong> permanece com seu papel original: receber a requisição, coordenar o fluxo entre as camadas e devolver a resposta. Sua responsabilidade é exclusivamente orquestrar — nunca processar lógica de negócio diretamente.</p>
 <h3 id="423-o-problema-do-controller-gordo">4.2.3 O problema do controller gordo<a class="headerlink" href="#423-o-problema-do-controller-gordo" title="Permanent link">&para;</a></h3>
