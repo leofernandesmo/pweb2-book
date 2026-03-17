@@ -811,9 +811,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#444-o-repositorio-prisma-previa-do-capitulo-4" class="md-nav__link">
+  <a href="#444-o-repositorio-prisma-previa-do-capitulo-5" class="md-nav__link">
     <span class="md-ellipsis">
-      4.4.4 O repositório Prisma (prévia do Capítulo 4)
+      4.4.4 O repositório Prisma (prévia do Capítulo 5)
     </span>
   </a>
   
@@ -969,9 +969,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#49-referencias-e-leituras-complementares" class="md-nav__link">
+  <a href="#48-referencias-e-leituras-complementares" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9 Referências e Leituras Complementares
+      4.8 Referências e Leituras Complementares
     </span>
   </a>
   
@@ -1110,7 +1110,7 @@
 <hr />
 <h2 id="41-introducao">4.1 Introdução<a class="headerlink" href="#41-introducao" title="Permanent link">&para;</a></h2>
 <p>O Capítulo 2 estabeleceu os fundamentos operacionais do Express: como definir rotas, encadear middlewares e organizar handlers em controllers. O código resultante já é funcional — mas funcionalidade não é sinônimo de boa arquitetura. À medida que uma aplicação cresce, a ausência de uma separação clara entre camadas se manifesta em problemas concretos: controllers que acumulam lógica de negócio, services que constroem queries SQL diretamente, testes que dependem de banco de dados real para verificar regras simples.</p>
-<p>Este capítulo aborda os padrões arquiteturais que resolvem esses problemas de forma sistemática. O ponto de partida é o padrão <strong>MVC</strong> adaptado ao contexto de APIs REST; em seguida, aprofunda-se o papel da camada de <strong>Service</strong> como guardiã da lógica de negócio; depois, introduz-se o <strong>Repository Pattern</strong> como mecanismo de abstração do acesso a dados; e, por fim, apresenta-se o princípio de <strong>Inversão de Dependência</strong> em sua forma mais elementar. O capítulo encerra com a refatoração completa do projeto construído no Capítulo 2, consolidando todos esses conceitos em uma base sólida para a introdução do ORM no Capítulo 4.</p>
+<p>Este capítulo aborda os padrões arquiteturais que resolvem esses problemas de forma sistemática. O ponto de partida é o padrão <strong>MVC</strong> adaptado ao contexto de APIs REST; em seguida, aprofunda-se o papel da camada de <strong>Service</strong> como guardiã da lógica de negócio; depois, introduz-se o <strong>Repository Pattern</strong> como mecanismo de abstração do acesso a dados; e, por fim, apresenta-se o princípio de <strong>Inversão de Dependência</strong> em sua forma mais elementar. O capítulo encerra com a refatoração completa do projeto construído no Capítulo 2, consolidando todos esses conceitos em uma base sólida para a introdução do ORM no Capítulo 5.</p>
 <blockquote>
 <p>💡 <strong>Pré-requisito:</strong> Este capítulo pressupõe familiaridade com o conteúdo do Capítulo 2, especialmente controllers, a estrutura de projeto proposta e a classe <code>AppError</code>.</p>
 </blockquote>
@@ -1122,7 +1122,7 @@
 <h3 id="422-mvc-adaptado-para-apis-rest">4.2.2 MVC adaptado para APIs REST<a class="headerlink" href="#422-mvc-adaptado-para-apis-rest" title="Permanent link">&para;</a></h3>
 <p>Em aplicações web tradicionais, a <em>View</em> é responsável por renderizar HTML que será exibido no navegador. Em APIs REST, não existe renderização de interface — o servidor produz dados estruturados (tipicamente JSON) que serão consumidos por um cliente independente: um front-end em React, um aplicativo móvel ou outro serviço. Essa diferença fundamental implica uma adaptação do padrão original.</p>
 <p>No contexto de APIs Express, as três camadas do MVC assumem os seguintes papéis:</p>
-<p>A camada <strong>Model</strong> representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 4). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso (no contexto de recurso web) — um <code>Usuario</code>, um <code>Produto</code> — e o mecanismo responsável por persistir e recuperar esses dados.</p>
+<p>A camada <strong>Model</strong> representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 5). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso — um <code>Usuario</code>, um <code>Produto</code> — e o mecanismo responsável por persistir e recuperar esses dados.</p>
 <p>A camada <strong>View</strong> é substituída, na prática, pela resposta JSON produzida pelo servidor. Não existe um arquivo de template ou componente visual — <code>res.json()</code> cumpre o papel de serializar o modelo para o formato que o cliente espera.</p>
 <p>A camada <strong>Controller</strong> permanece com seu papel original: receber a requisição, coordenar o fluxo entre as camadas e devolver a resposta. Sua responsabilidade é exclusivamente orquestrar — nunca processar lógica de negócio diretamente.</p>
 <h3 id="423-o-problema-do-controller-gordo">4.2.3 O problema do controller gordo<a class="headerlink" href="#423-o-problema-do-controller-gordo" title="Permanent link">&para;</a></h3>
@@ -1201,19 +1201,22 @@
 <hr />
 <h2 id="44-o-repository-pattern">4.4 O Repository Pattern<a class="headerlink" href="#44-o-repository-pattern" title="Permanent link">&para;</a></h2>
 <h3 id="441-o-problema-do-acoplamento-direto-a-persistencia">4.4.1 O problema do acoplamento direto à persistência<a class="headerlink" href="#441-o-problema-do-acoplamento-direto-a-persistencia" title="Permanent link">&para;</a></h3>
-<p>Sem o Repository Pattern, a camada de service acessa diretamente o mecanismo de persistência — seja um ORM (Object-Relational Mapping, ou Mapeamento Objeto-Relacional), queries SQL brutas ou chamadas a uma API externa. Isso cria um acoplamento que torna o código difícil de testar e de evoluir: trocar o banco de dados de PostgreSQL para MongoDB, por exemplo, exigiria modificar todos os services que constroem queries diretamente.</p>
+<p>Sem o Repository Pattern, a camada de service acessa diretamente o mecanismo de persistência — seja um ORM, queries SQL brutas ou chamadas a uma API externa. Isso cria um acoplamento que torna o código difícil de testar e de evoluir: trocar o banco de dados de PostgreSQL para MongoDB, por exemplo, exigiria modificar todos os services que constroem queries diretamente.</p>
 <h3 id="442-o-repositorio-como-contrato">4.4.2 O repositório como contrato<a class="headerlink" href="#442-o-repositorio-como-contrato" title="Permanent link">&para;</a></h3>
 <p>O <strong>Repository Pattern</strong> resolve esse problema introduzindo uma camada de abstração entre o service e o mecanismo de persistência. Um repositório é um objeto que expõe uma interface orientada ao domínio — <code>buscarPorId</code>, <code>criar</code>, <code>listarTodos</code> — ocultando completamente os detalhes de como esses dados são recuperados ou armazenados.</p>
 <p>Do ponto de vista do service, um repositório é simplesmente um colaborador que sabe <em>onde</em> os dados vivem. O service não precisa saber se os dados estão em um banco relacional, em memória ou em uma API externa — ele apenas chama os métodos do repositório.</p>
 <p><img src="../figures/04_02-repository.png" width="600" height="400" /></p>
-<p>Obs.: A interface de repositório é como um <strong>contrato</strong> ou um plano que define quais operações um repositório deve ser capaz de realizar. Ela especifica um conjunto de métodos públicos (e seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação do repositório é a <strong>imeplemtação</strong> <strong>concreta</strong> que realiza as operações definidas na interface. É onde a lógica específica para interagir com uma fonte de dados real (como um banco de dados, sistema de arquivos ou API) reside. Veremos isso em mais detalhes a frente no material.</p>
+<div class="admonition note">
+<p class="admonition-title">Contrato vs. Implementação</p>
+<p>A interface de repositório é como um <strong>contrato</strong> que define quais operações devem ser realizadas. Ela especifica um conjunto de métodos públicos (com seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação concreta é onde a lógica específica para interagir com a fonte de dados reside.</p>
+</div>
 <h3 id="443-implementacao-de-um-repositorio-em-memoria">4.4.3 Implementação de um repositório em memória<a class="headerlink" href="#443-implementacao-de-um-repositorio-em-memoria" title="Permanent link">&para;</a></h3>
 <p>O repositório a seguir é funcionalmente equivalente ao array em memória utilizado no Capítulo 2, mas agora encapsulado em uma classe com interface bem definida:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/repositories/usuarios.repository.js</span>
 
 <span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">UsuariosRepository</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// Dados em memória — será substituído pelo ORM no Capítulo 4</span>
+<span class="w">    </span><span class="c1">// Dados em memória — será substituído pelo ORM no Capítulo 5</span>
 <span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">usuarios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Ana Silva&#39;</span><span class="p">,</span><span class="w">   </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ana@exemplo.com&#39;</span><span class="p">,</span><span class="w">   </span><span class="nx">senha</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;hash1&#39;</span><span class="w"> </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Bruno Costa&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;bruno@exemplo.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">senha</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;hash2&#39;</span><span class="w"> </span><span class="p">},</span>
@@ -1254,9 +1257,9 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>A interface desse repositório — seus nomes de método e suas assinaturas — é o <em>contrato</em> que o service depende. Quando o Prisma for introduzido no Capítulo 4, será criado um <code>UsuariosRepositoryPrisma</code> que implementa exatamente os mesmos métodos, e o service não precisará ser alterado.</p>
-<h3 id="444-o-repositorio-prisma-previa-do-capitulo-4">4.4.4 O repositório Prisma (prévia do Capítulo 4)<a class="headerlink" href="#444-o-repositorio-prisma-previa-do-capitulo-4" title="Permanent link">&para;</a></h3>
-<p>Para antecipar como a substituição ocorrerá, o repositório baseado em Prisma terá a seguinte estrutura — que pode ser ignorada por ora e retomada no Capítulo 4:</p>
+<p>A interface desse repositório — seus nomes de método e suas assinaturas — é o <em>contrato</em> que o service depende. Quando o Prisma for introduzido no Capítulo 5, será criado um <code>UsuariosRepositoryPrisma</code> que implementa exatamente os mesmos métodos, e o service não precisará ser alterado.</p>
+<h3 id="444-o-repositorio-prisma-previa-do-capitulo-5">4.4.4 O repositório Prisma (prévia do Capítulo 5)<a class="headerlink" href="#444-o-repositorio-prisma-previa-do-capitulo-5" title="Permanent link">&para;</a></h3>
+<p>Para antecipar como a substituição ocorrerá, o repositório baseado em Prisma terá a seguinte estrutura — que pode ser ignorada por ora e retomada no Capítulo 5:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/repositories/usuarios.repository.prisma.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prisma</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../config/database.js&#39;</span><span class="p">;</span>
 
@@ -1304,82 +1307,17 @@
 <h3 id="452-injecao-de-dependencia-manual">4.5.2 Injeção de dependência manual<a class="headerlink" href="#452-injecao-de-dependencia-manual" title="Permanent link">&para;</a></h3>
 <p>A solução mais simples é a <strong>injeção de dependência</strong>: em vez de criar o repositório internamente, o service o recebe como parâmetro do construtor. Quem instancia o service é responsável por fornecer a implementação correta.</p>
 <blockquote>
-<p>Material extraído do livro Engenharia de Software Moderna - <a href="https://engsoftmoderna.info/artigos/injecao-dependencia.html">Injenção de Dependência</a></p>
+<p>Material extraído do livro Engenharia de Software Moderna — <a href="https://engsoftmoderna.info/artigos/injecao-dependencia.html">Injeção de Dependência</a></p>
+<p>A ideia de Injeção de Dependência é bastante simples. Suponha que uma classe A depende de uma classe <code>PagtoPIX</code>. Em vez de instanciar a dependência diretamente (<code>new PagtoPIX()</code>), a classe A deve recebê-la por meio do construtor:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">pagto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// injeção via construtor</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">pagto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">pagto</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>O mais recomendado é que A dependa de uma <strong>interface</strong> (<code>ServicoPagto</code>), não de uma classe concreta (<code>PagtoPIX</code>). Isso permite trocar a implementação sem modificar A, e facilita o uso de mocks nos testes.</p>
 </blockquote>
-<p>A ideia de Injeção de Dependência é bastante simples e quase que uma aplicação literal do seu nome. Vamos então explicá-la em quatro passos:
-    Suponha que uma classe A depende de uma classe PagtoPIX:</p>
-<div class="codehilite"><pre><span></span><code>class A {
-   PagtoPIX pagto; // A depende de PagtoPIX
-   ...
-}
-</code></pre></div>
-
-<p>No entanto, para seguir a ideia do padrão, a classe A não deve instanciar diretamente objetos desse tipo, como em:</p>
-<div class="codehilite"><pre><span></span><code>class A {
-   PagtoPIX pagto = new PagtoPIX();
-   ... 
-}
-</code></pre></div>
-
-<p>Em vez disso, A deve receber essa dependência por meio de um construtor:</p>
-<div class="codehilite"><pre><span></span><code>class A {
-   PagtoPIX pagto;
-
-   A(PagtoPIX pagto) { // injeção de dependência via construtor
-      this.pagto = pagto;
-   }
-   ...
-}
-</code></pre></div>
-
-<p>ou então receber a dependência por meio de um método set:</p>
-<div class="codehilite"><pre><span></span><code>class A {
-   PagtoPIX pagto;
-
-   void setPagto(PagtoPIX pagto) { // injeção de dependência via setter
-      this.pagto = pagto;
-   }
-   ...
-}
-</code></pre></div>
-
-<p>Logo, agora fica fácil entender o nome do padrão: as dependências de uma classe são injetadas nela, seja por meio de chamadas do seu construtor ou por meio de chamadas de um setter.</p>
-<p>Na verdade, o mais recomendado é que o código de A use uma interface para a classe concreta PagtoPIX. Ou seja, em vez de usar PagtoPIX (uma classe), deve-se usar ServicoPagto (uma interface):</p>
-<div class="codehilite"><pre><span></span><code>class A {
-   ServicoPagto pagto;   // dependência para uma interface
-
-   A(ServicoPagto pagto) {
-      this.pagto = pagto;
-   }
-   ...
-}
-</code></pre></div>
-
-<p>ou</p>
-<div class="codehilite"><pre><span></span><code>class A {
-   ServicoPagto pagto;
-
-   void setPagto(ServicoPagto pagto) { 
-      this.pagto = pagto;
-   }
-   ...
-}
-</code></pre></div>
-
-<p>Ou seja: quando usamos Injeção de Dependência devemos fazer uso do princípio de projeto Prefira Interfaces a Classes Concretas.</p>
-<p>Para concluir, as vantagens de Injeção de Dependência são:</p>
-<ul>
-<li>
-<p>Injeção de Dependência torna mais fácil mudar a dependência concreta (PagtoPIX) usada por uma classe. No nosso exemplo, A é uma classe que precisa realizar pagamentos. Para isso, ela faz uso de uma classe PagtoPIX. Amanhã, no entanto, podemos decidir que os pagamentos serão processados por uma classe PagtoCartaoCredito. Para isso, basta que PagtoPIX e PagtoCartaoCredito implementem a mesma interface ServicoPagto.</p>
-</li>
-<li>
-<p>Injeção de Dependência torna mais fácil o teste da classe A, pois podemos mockar mais facilmente a dependência para ServicoPagto. Por exemplo, em vez de um serviço de pagamento real (PagtoPIX ou PagtoCartaoCredito), podemos usar um serviço de pagamento fictício, que apenas emule alguns pagamentos. Para isso, basta que esse serviço fictício implemente a interface ServicoPagto. Se você ainda não sabe o que é um mock, recomendamos a leitura da seção do Capítulo 8 sobre o assunto.</p>
-</li>
-</ul>
-<blockquote>
-<p>Fim do texto extraído do livro Engenharia de Software Moderna</p>
-</blockquote>
-<p>Em Javascript/Node você poderia fazer:</p>
+<p>Em JavaScript/Node.js, a injeção via construtor se expressa da seguinte forma:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// ✅ Dependência injetada pelo construtor</span>
 <span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">repository</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -1387,10 +1325,10 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1">// Composição na camada de inicialização (app.js ou arquivo de rotas)</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UsuariosRepository</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../repositories/usuarios.repository.js&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../services/usuarios.service.js&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UsuariosController</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../controllers/usuarios.controller.js&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Composição na camada de inicialização (composition root)</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UsuariosRepository</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../repositories/usuarios.repository.js&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="w"> </span><span class="p">}</span><span class="w">     </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../services/usuarios.service.js&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UsuariosController</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../controllers/usuarios.controller.js&#39;</span><span class="p">;</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">repository</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">UsuariosRepository</span><span class="p">();</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">service</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="p">(</span><span class="nx">repository</span><span class="p">);</span>
@@ -1414,7 +1352,7 @@
 <span class="w">  </span><span class="p">).</span><span class="nx">rejects</span><span class="p">.</span><span class="nx">toThrow</span><span class="p">(</span><span class="s1">&#39;E-mail já cadastrado&#39;</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></div>
-<p>O teste acima verifica uma regra de negócio real — unicidade de e-mail — sem abrir nenhuma conexão com banco de dados, sem configurar fixtures e sem depender de estado externo. Ele é rápido, determinístico e isolado. </p>
+<p>O teste acima verifica uma regra de negócio real — unicidade de e-mail — sem abrir nenhuma conexão com banco de dados, sem configurar fixtures e sem depender de estado externo. Ele é rápido, determinístico e isolado.</p>
 <hr />
 <h2 id="46-refatorando-o-projeto-do-capitulo-anterior">4.6 Refatorando o Projeto do Capítulo Anterior<a class="headerlink" href="#46-refatorando-o-projeto-do-capitulo-anterior" title="Permanent link">&para;</a></h2>
 <h3 id="461-visao-geral-da-refatoracao">4.6.1 Visão geral da refatoração<a class="headerlink" href="#461-visao-geral-da-refatoracao" title="Permanent link">&para;</a></h3>
@@ -1603,7 +1541,7 @@
 <p>Escreva dois testes unitários para o <code>ProdutosService</code> utilizando repositórios falsos injetados:</p>
 <p>O primeiro deve verificar que a criação de um produto com preço negativo lança <code>AppError</code> com status 400. O segundo deve verificar que a criação de um produto com nome duplicado lança <code>AppError</code> com status 409. Nenhum dos testes deve instanciar o <code>ProdutosRepository</code> real.</p>
 <hr />
-<h2 id="49-referencias-e-leituras-complementares">4.9 Referências e Leituras Complementares<a class="headerlink" href="#49-referencias-e-leituras-complementares" title="Permanent link">&para;</a></h2>
+<h2 id="48-referencias-e-leituras-complementares">4.8 Referências e Leituras Complementares<a class="headerlink" href="#48-referencias-e-leituras-complementares" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">Model–view–controller — Wikipedia</a></li>
 <li><a href="https://www.martinfowler.com/eaaCatalog/repository.html">Repository Pattern — Martin Fowler, Patterns of Enterprise Application Architecture</a></li>
