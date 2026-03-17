@@ -127,7 +127,7 @@ Observe que o service não sabe *como* o repositório armazena os dados — ele 
 Uma consequência natural da independência do service em relação ao transporte HTTP é sua reutilizabilidade. O mesmo `UsuariosService.criar()` pode ser invocado a partir de um controller HTTP, de um comando CLI de [seed de banco de dados](https://pt.stackoverflow.com/questions/126770/o-que-%C3%A9-e-para-que-serve-um-seeder), de um worker que processa uma fila de novos cadastros ou de um teste automatizado — sem qualquer modificação. Essa flexibilidade é um dos principais argumentos em favor da arquitetura em camadas.
 
 
-
+![Separando em Camadas](../figures/04_01-camadas.png)
 
 ---
 
