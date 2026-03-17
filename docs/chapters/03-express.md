@@ -1,8 +1,8 @@
-# Capítulo 2 – Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
+# Capítulo 3 – Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
 
 ---
 
-## 2.1 Introdução
+## 3.1 Introdução
 
 O Express é, até o momento presente, o framework web mais amplamente adotado no ecossistema Node.js. Sua popularidade decorre não de uma coleção exaustiva de funcionalidades embutidas, mas justamente do oposto: trata-se de um framework minimalista, que delega ao desenvolvedor a responsabilidade de compor a aplicação a partir de peças independentes e bem definidas. Essa filosofia de design, comumente denominada *unopinionated* (sem opinião), oferece liberdade arquitetural considerável, ao mesmo tempo em que exige um entendimento sólido dos conceitos fundamentais sobre os quais o framework se apoia.
 
@@ -23,9 +23,9 @@ Este capítulo explora quatro desses conceitos de forma aprofundada: o sistema d
 
 ---
 
-## 2.2 O Sistema de Rotas
+## 3.2 O Sistema de Rotas
 
-### 2.2.1 O que é uma rota?
+### 3.2.1 O que é uma rota?
 
 No contexto de aplicações web, uma **rota** é a associação entre um método HTTP, um padrão de URL e uma função responsável por processar a requisição correspondente. Quando um cliente envia uma requisição HTTP para o servidor, o Express percorre suas rotas registradas em ordem de declaração e, ao encontrar aquela cujo método e padrão coincidem com a requisição recebida, executa a função associada. Esse processo é denominado *roteamento*.
 
@@ -52,7 +52,7 @@ Neste exemplo, a aplicação responde às requisições `GET /usuarios` com um o
 > Altere o package.json, atributo "type" de "commonjs" para "module".
 > 
 
-### 2.2.2 Métodos HTTP e semântica REST
+### 3.2.2 Métodos HTTP e semântica REST
 
 O Express expõe métodos correspondentes aos verbos HTTP mais utilizados: `app.get()`, `app.post()`, `app.put()`, `app.patch()` e `app.delete()`. Em uma API REST bem projetada, cada verbo carrega uma semântica específica que deve ser respeitada, conforme descrito a seguir.
 
@@ -127,10 +127,10 @@ O código anterior pode dar erro, porque ainda não foi feito o registro do midl
 Para que `req.body` esteja disponível nas rotas, é necessário registrar o middleware de parsing de JSON **antes** das definições de rota, por meio de `app.use(express.json())`:
 Veja na próxima seção para entender melhor.
 
-> O conceito de middleware — o que é, como funciona internamente e como criar os seus próprios — será explicado em profundidade na seção 2.3 deste capítulo.
+> O conceito de middleware — o que é, como funciona internamente e como criar os seus próprios — será explicado em profundidade na seção 3.3 deste capítulo.
 
 
-### 2.2.3 Parâmetros de rota, de consulta e corpo da requisição
+### 3.2.3 Parâmetros de rota, de consulta e corpo da requisição
 
 O Express oferece três mecanismos distintos para o recebimento de dados provenientes do cliente, cada um adequado a uma situação específica.
 
@@ -187,7 +187,7 @@ app.post('/usuarios', (req, res) => {
 > **Em síntese:** uma rota no Express é sempre a combinação de três elementos — um verbo HTTP, um caminho e uma função handler. Os dados de uma requisição chegam por três canais distintos: `req.params` para identificadores na URL, `req.query` para filtros e parâmetros opcionais, e `req.body` para dados estruturados no corpo. O objeto `Router` permite modularizar essas rotas por recurso, mantendo o código organizado e de fácil navegação. Por fim, cada verbo HTTP carrega uma semântica precisa que deve ser respeitada: GET para leitura, POST para criação (201), PUT para substituição (200), PATCH para atualização parcial e DELETE para remoção (204) — seguir essa convenção torna a API previsível para qualquer cliente que a consuma.
 
 
-### 2.2.4 O objeto Router
+### 3.2.4 O objeto Router
 
 À medida que a aplicação cresce, concentrar todas as rotas no arquivo principal torna-se inviável. O Express oferece o objeto `Router`, que permite organizar rotas relacionadas em módulos independentes.
 
@@ -234,9 +234,9 @@ export default app;
 
 ---
 
-## 2.3 Middlewares
+## 3.3 Middlewares
 
-### 2.3.1 A natureza do middleware
+### 3.3.1 A natureza do middleware
 
 O conceito de **middleware** é o mais fundamental de toda a arquitetura Express. Um middleware é uma função que possui acesso ao objeto de requisição (`req`), ao objeto de resposta (`res`) e a uma função especial denominada `next`. Quando chamada, `next()` transfere o controle para o próximo middleware na cadeia de execução.
 
@@ -252,7 +252,7 @@ A assinatura de um middleware é a seguinte:
 Toda aplicação Express é, em sua essência, uma sequência de chamadas de middleware. Quando uma requisição chega ao servidor, ela percorre essa sequência de cima para baixo até que uma função envie uma resposta ao cliente — ou até que ocorra um erro. É crucial compreender que **se um middleware não chamar `next()` e também não enviar uma resposta**, a requisição ficará suspensa indefinidamente, resultando em timeout do lado do cliente.
 
 
-### 2.3.2 O pipeline de execução
+### 3.3.2 O pipeline de execução
 
 Considere a seguinte sequência de middlewares:
 
@@ -276,7 +276,7 @@ app.get('/saude', (req, res) => {
 
 Para cada requisição `GET /saude`, a execução ocorre na seguinte ordem: o primeiro middleware registra a requisição no console e chama `next()`; o segundo realiza o parsing do corpo JSON e chama `next()`; o terceiro, sendo a rota correspondente, envia a resposta e encerra o ciclo.
 
-### 2.3.3 Tipos de middleware
+### 3.3.3 Tipos de middleware
 
 O Express reconhece quatro categorias principais de middleware, diferenciadas pelo escopo e pela forma de registro.
 
@@ -321,7 +321,7 @@ app.use((err, req, res, next) => {
 
 **Middlewares de terceiros** são pacotes npm que encapsulam funcionalidades transversais reutilizáveis. Constituem uma parte essencial do ecossistema Express e serão detalhados na seção seguinte.
 
-### 2.3.4 Middlewares de terceiros amplamente utilizados
+### 3.3.4 Middlewares de terceiros amplamente utilizados
 
 Uma das grandes vantagens do Express é a disponibilidade de middlewares de terceiros bem mantidos e amplamente adotados pela comunidade. A seguir, os mais relevantes para o desenvolvimento de APIs em ambiente de produção.
 
@@ -541,7 +541,7 @@ app.use(middlewareDeErros);
 export default app;
 ```
 
-### 2.3.5 Criando middlewares customizados
+### 3.3.5 Criando middlewares customizados
 
 A criação de middlewares próprios é uma prática recorrente no desenvolvimento com Express. A seguir, dois exemplos representativos de casos de uso reais.
 
@@ -614,7 +614,7 @@ Para cada requisição recebida, o Express executa um pipeline sequencial e bem 
 Dentro do router de usuários, o Express compara o método HTTP e o padrão da URL com cada rota registrada. A requisição `GET /usuarios/42` corresponde à rota `GET /:id` — destacada em azul no diagrama — e o controle é transferido ao handler `obterUsuario` no controller. As demais rotas (`GET /`, `POST /`, `DELETE /:id`) não são avaliadas. O controller processa a requisição e devolve a resposta `res.json()` diretamente ao cliente, representada pela seta em arco na parte inferior do diagrama.
 
 
-### 2.3.6 Propagação de erros
+### 3.3.6 Propagação de erros
 
 Uma prática essencial no desenvolvimento com Express é a propagação correta de erros assíncronos. Em rotas assíncronas, exceções não capturadas não são automaticamente interceptadas pelo middleware de erro — é necessário capturá-las e passá-las para `next`.
 
@@ -656,15 +656,15 @@ app.get('/usuarios', asyncHandler(async (req, res) => {
 
 
 
-## 2.4 Controllers
+## 3.4 Controllers
 
-### 2.4.1 A separação de responsabilidades
+### 3.4.1 A separação de responsabilidades
 
 À medida que a lógica de cada rota se torna mais complexa, inserir todo o código diretamente nas definições de rota resulta em arquivos extensos, difíceis de testar e de manter. O padrão de **controllers** surge como solução para esse problema, aplicando o princípio da separação de responsabilidades (*Separation of Concerns*).
 
 Um controller é um módulo que agrupa as funções responsáveis por processar requisições de um determinado recurso. Sua responsabilidade é exclusivamente coordenar o fluxo: receber os dados da requisição (`req`), delegar o processamento à camada de serviço e enviar a resposta apropriada ao cliente (`res`). O controller **não deve** conter lógica de negócio nem acesso direto ao banco de dados — essas responsabilidades pertencem a camadas distintas.
 
-### 2.4.2 Implementação do Service
+### 3.4.2 Implementação do Service
 
 Antes de apresentar o controller, é necessário definir a camada de serviço que ele consome. Neste capítulo, como o ORM ainda não foi introduzido (Capítulo 4), o `UsuariosService` utilizará um array em memória para simular a persistência de dados. Essa abordagem é intencional: ela permite focar no contrato entre controller e service sem depender de um banco de dados real.
 
@@ -722,7 +722,7 @@ export class UsuariosService {
 
 > 💡 Quando o Prisma ou Sequelize for introduzido no Capítulo 4, o `UsuariosService` será refatorado para substituir as operações sobre o array pelas chamadas equivalentes ao ORM — sem que o controller precise ser alterado. Essa estabilidade é exatamente o benefício da separação entre camadas.
 
-### 2.4.3 Implementação de um controller
+### 3.4.3 Implementação de um controller
 
 Considere um controller para o recurso `usuarios`:
 
@@ -788,7 +788,7 @@ export const removerUsuario = async (req, res, next) => {
 };
 ```
 
-### 2.4.4 Integração com o router
+### 3.4.4 Integração com o router
 
 Com o controller definido, o arquivo de rotas torna-se declarativo e extremamente enxuto:
 
@@ -819,15 +819,15 @@ Essa separação revela uma divisão clara de papéis: o arquivo de rotas declar
 
 ---
 
-## 2.5 Estrutura de Projeto
+## 3.5 Estrutura de Projeto
 
-### 2.5.1 A importância da organização
+### 3.5.1 A importância da organização
 
 A estrutura de diretórios de um projeto é uma decisão arquitetural com impactos duradouros sobre a produtividade da equipe, a facilidade de onboarding de novos membros e a manutenibilidade do código ao longo do tempo. Uma organização bem pensada torna implícita a separação de responsabilidades: ao abrir qualquer arquivo, o desenvolvedor sabe imediatamente qual é o seu papel na aplicação.
 
 Existem duas filosofias predominantes de organização de projetos Express: a **organização por tipo de arquivo** e a **organização por funcionalidade** (feature-based). A primeira agrupa todos os controllers juntos, todos os services juntos e assim por diante. A segunda agrupa por domínio — tudo relacionado a `usuarios` fica em um mesmo módulo. Para aplicações de pequeno e médio porte, a organização por tipo é mais comum e será adotada neste material.
 
-### 2.5.2 Estrutura recomendada
+### 3.5.2 Estrutura recomendada
 
 A estrutura a seguir representa uma organização matura e amplamente adotada para APIs Express de médio porte:
 
@@ -881,7 +881,7 @@ minha-api/
 └── server.js                  # Ponto de entrada — inicializa o servidor
 ```
 
-### 2.5.3 Separação entre `app.js` e `server.js`
+### 3.5.3 Separação entre `app.js` e `server.js`
 
 Um detalhe frequentemente negligenciado é a separação entre o arquivo de configuração da aplicação (`app.js`) e o ponto de entrada do servidor (`server.js`). Essa separação tem uma razão técnica relevante: durante os testes automatizados, importa-se `app.js` diretamente, sem iniciar o servidor HTTP. Isso permite testar as rotas com supertest sem conflitos de porta.
 
@@ -922,7 +922,7 @@ app.listen(PORTA, () => {
 });
 ```
 
-### 2.5.4 O agregador de rotas
+### 3.5.4 O agregador de rotas
 
 O arquivo `src/routes/index.js` funciona como ponto central de registro de todos os routers. Sua responsabilidade é exclusivamente importar e montar cada router no prefixo correspondente, mantendo o `app.js` desacoplado dos detalhes de cada recurso.
 
@@ -938,7 +938,7 @@ router.use('/usuarios', usuariosRouter);
 router.use('/produtos', produtosRouter);
 ```
 
-### 2.5.5 Classe de erro customizado
+### 3.5.5 Classe de erro customizado
 
 Uma prática recomendada é criar uma classe de erro que carrega, além da mensagem, o código de status HTTP associado. Isso permite que o middleware de erros construa respostas padronizadas sem lógica condicional dispersa.
 
@@ -978,27 +978,27 @@ export const middlewareDeErros = (err, req, res, next) => {
 
 ---
 
-## 2.6 Exercícios Práticos
+## 3.6 Exercícios Práticos
 
-### Exercício 2.1 — Router independente
+### Exercício 3.1 — Router independente
 
 Crie um router para o recurso `tarefas` com as seguintes rotas: listagem de todas as tarefas, obtenção de uma tarefa por ID, criação, atualização parcial (PATCH) e remoção. As funções handler podem retornar dados fictícios (hardcoded) por enquanto. Monte o router em `/api/tarefas` na aplicação principal.
 
-### Exercício 2.2 — Middleware de log com tempo de resposta
+### Exercício 3.2 — Middleware de log com tempo de resposta
 
 Implemente um middleware de aplicação que registre no console, ao final de cada requisição, o método HTTP, a URL, o código de status da resposta e o tempo total de processamento em milissegundos. **Dica:** o Express possui o evento `res.on('finish', ...)` que é emitido quando a resposta é enviada ao cliente.
 
-### Exercício 2.3 — Tratamento centralizado de erros
+### Exercício 3.3 — Tratamento centralizado de erros
 
-Partindo da estrutura apresentada na seção 2.5, implemente a classe `AppError`, o middleware `middlewareDeErros` e refatore as rotas do Exercício 2.1 para que todos os erros sejam propagados via `next(err)`. Verifique que uma rota inexistente resulta em uma resposta JSON com status 404 e mensagem padronizada.
+Partindo da estrutura apresentada na seção 3.5, implemente a classe `AppError`, o middleware `middlewareDeErros` e refatore as rotas do Exercício 3.1 para que todos os erros sejam propagados via `next(err)`. Verifique que uma rota inexistente resulta em uma resposta JSON com status 404 e mensagem padronizada.
 
-### Exercício 2.4 — Estrutura completa de projeto
+### Exercício 3.4 — Estrutura completa de projeto
 
-Organize os arquivos dos exercícios anteriores seguindo a estrutura de diretórios apresentada na seção 2.5.2. Ao final, o projeto deve conter: `server.js`, `src/app.js`, `src/routes/index.js`, `src/routes/tarefas.routes.js`, `src/controllers/tarefas.controller.js` e `src/middlewares/erros.middleware.js`.
+Organize os arquivos dos exercícios anteriores seguindo a estrutura de diretórios apresentada na seção 3.5.2. Ao final, o projeto deve conter: `server.js`, `src/app.js`, `src/routes/index.js`, `src/routes/tarefas.routes.js`, `src/controllers/tarefas.controller.js` e `src/middlewares/erros.middleware.js`.
 
 ---
 
-## 2.7 Referências e Leituras Complementares
+## 3.7 Referências e Leituras Complementares
 
 - [Documentação oficial do Express — Routing](https://expressjs.com/en/guide/routing.html)
 - [Documentação oficial do Express — Writing middleware](https://expressjs.com/en/guide/writing-middleware.html)
