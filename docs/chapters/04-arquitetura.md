@@ -18,7 +18,7 @@ Este capítulo aborda os padrões arquiteturais que resolvem esses problemas de 
 
 O padrão **MVC** (*Model-View-Controller*) foi concebido na década de 1970 por Trygve Reenskaug, durante seu trabalho na Xerox PARC com a linguagem Smalltalk. Sua motivação original era separar a interface gráfica (*View*) da lógica de negócio (*Model*), conectando-as por meio de um coordenador (*Controller*) que respondesse às ações do usuário. Durante décadas, o padrão dominou o desenvolvimento de aplicações desktop e, posteriormente, frameworks web como Ruby on Rails, Laravel e Django.
 
-📖 Leitura de referência: [Model–view–controller — Wikipedia](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
+📖 Leitura de referência: [Engenharia de Software Moderna - Cap.7 Arquitetura](https://engsoftmoderna.info/cap7.html#arquitetura-mvc)
 
 ### 4.2.2 MVC adaptado para APIs REST
 
@@ -26,13 +26,12 @@ Em aplicações web tradicionais, a *View* é responsável por renderizar HTML q
 
 No contexto de APIs Express, as três camadas do MVC assumem os seguintes papéis:
 
-A camada **Model** representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 4). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso — um `Usuario`, um `Produto` — e o mecanismo responsável por persistir e recuperar esses dados.
+A camada **Model** representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 4). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso (no contexto de recurso web) — um `Usuario`, um `Produto` — e o mecanismo responsável por persistir e recuperar esses dados.
 
 A camada **View** é substituída, na prática, pela resposta JSON produzida pelo servidor. Não existe um arquivo de template ou componente visual — `res.json()` cumpre o papel de serializar o modelo para o formato que o cliente espera.
 
 A camada **Controller** permanece com seu papel original: receber a requisição, coordenar o fluxo entre as camadas e devolver a resposta. Sua responsabilidade é exclusivamente orquestrar — nunca processar lógica de negócio diretamente.
 
-> 📷 **Sugestão de imagem:** Diagrama comparativo entre o MVC tradicional (com View renderizando HTML) e o MVC para APIs (com res.json() no lugar da View), evidenciando a substituição da camada de apresentação.
 
 ### 4.2.3 O problema do controller gordo
 
@@ -62,6 +61,9 @@ export const criarUsuario = async (req, res) => {
 ```
 
 Este controller é impossível de testar sem um banco de dados real, não pode ser reutilizado em outros contextos (como um job em background) e qualquer alteração na regra de negócio exige modificar o controller — violando o princípio da separação de responsabilidades estudado no Capítulo 2. A solução passa pela distribuição dessas responsabilidades entre camadas bem definidas, como será detalhado nas seções seguintes.
+
+📖 Leitura de referência: [Engenharia de Software Moderna - Cap.6 Princípios](https://engsoftmoderna.info/cap5.html#coes%C3%A3o)
+
 
 ---
 
