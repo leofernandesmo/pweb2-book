@@ -1186,7 +1186,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="432-validacoes-de-dominio-versus-validacoes-de-entrada">4.3.2 Validações de domínio versus validações de entrada<a class="headerlink" href="#432-validacoes-de-dominio-versus-validacoes-de-entrada" title="Permanent link">&para;</a></h3>
-<p>Um aspecto importante da camada de service é a distinção entre dois tipos de validação. As <strong>validações de entrada</strong> — formato de e-mail, tamanho mínimo de senha, campos obrigatórios — pertencem aos middlewares de validação, pois dizem respeito ao contrato da API. As <strong>validações de domínio</strong> — um usuário não pode ter dois endereços de e-mail cadastrados, um produto com estoque zero não pode ser vendido — pertencem ao service, pois expressam regras do negócio.</p>
+<p>Um aspecto importante da camada de service é a distinção entre dois tipos de validação. As <strong>validações de entrada</strong> — formato de e-mail, tamanho mínimo de senha, campos obrigatórios — pertencem aos middlewares de validação, pois dizem respeito ao contrato da API. As <strong>validações de domínio</strong> — <em>um usuário não pode ter dois endereços de e-mail cadastrados</em>, ou então <em>um produto com estoque zero não pode ser vendido</em> — pertencem ao service, pois expressam regras do negócio.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/services/usuarios.service.js</span>
 <span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">UsuariosService</span><span class="w"> </span><span class="p">{</span>
 
@@ -1214,7 +1214,7 @@
 </code></pre></div>
 <p>Observe que o service não sabe <em>como</em> o repositório armazena os dados — ele apenas chama métodos bem definidos. Essa abstração é o objeto de estudo da próxima seção.</p>
 <h3 id="433-o-service-como-ponto-de-reutilizacao">4.3.3 O service como ponto de reutilização<a class="headerlink" href="#433-o-service-como-ponto-de-reutilizacao" title="Permanent link">&para;</a></h3>
-<p>Uma consequência natural da independência do service em relação ao transporte HTTP é sua reutilizabilidade. O mesmo <code>UsuariosService.criar()</code> pode ser invocado a partir de um controller HTTP, de um comando CLI de seed de banco de dados, de um worker que processa uma fila de novos cadastros ou de um teste automatizado — sem qualquer modificação. Essa flexibilidade é um dos principais argumentos em favor da arquitetura em camadas.</p>
+<p>Uma consequência natural da independência do service em relação ao transporte HTTP é sua reutilizabilidade. O mesmo <code>UsuariosService.criar()</code> pode ser invocado a partir de um controller HTTP, de um comando CLI de <a href="https://pt.stackoverflow.com/questions/126770/o-que-%C3%A9-e-para-que-serve-um-seeder">seed de banco de dados</a>, de um worker que processa uma fila de novos cadastros ou de um teste automatizado — sem qualquer modificação. Essa flexibilidade é um dos principais argumentos em favor da arquitetura em camadas.</p>
 <hr />
 <h2 id="44-o-repository-pattern">4.4 O Repository Pattern<a class="headerlink" href="#44-o-repository-pattern" title="Permanent link">&para;</a></h2>
 <h3 id="441-o-problema-do-acoplamento-direto-a-persistencia">4.4.1 O problema do acoplamento direto à persistência<a class="headerlink" href="#441-o-problema-do-acoplamento-direto-a-persistencia" title="Permanent link">&para;</a></h3>
