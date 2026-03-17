@@ -36,6 +36,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://leofernandesmo.github.io/pweb2-book/chapters/01-revisao-web/</loc>
+         <lastmod>2026-03-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://leofernandesmo.github.io/pweb2-book/chapters/02-express/</loc>
          <lastmod>2026-03-17</lastmod>
          <changefreq>daily</changefreq>
