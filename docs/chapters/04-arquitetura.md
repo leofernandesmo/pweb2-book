@@ -91,7 +91,7 @@ async criarUsuario({ nome, email, senha }) {
 
 ### 4.3.2 Validações de domínio versus validações de entrada
 
-Um aspecto importante da camada de service é a distinção entre dois tipos de validação. As **validações de entrada** — formato de e-mail, tamanho mínimo de senha, campos obrigatórios — pertencem aos middlewares de validação, pois dizem respeito ao contrato da API. As **validações de domínio** — um usuário não pode ter dois endereços de e-mail cadastrados, um produto com estoque zero não pode ser vendido — pertencem ao service, pois expressam regras do negócio.
+Um aspecto importante da camada de service é a distinção entre dois tipos de validação. As **validações de entrada** — formato de e-mail, tamanho mínimo de senha, campos obrigatórios — pertencem aos middlewares de validação, pois dizem respeito ao contrato da API. As **validações de domínio** — _um usuário não pode ter dois endereços de e-mail cadastrados_, ou então _um produto com estoque zero não pode ser vendido_ — pertencem ao service, pois expressam regras do negócio.
 
 ```javascript
 // src/services/usuarios.service.js
@@ -124,7 +124,10 @@ Observe que o service não sabe *como* o repositório armazena os dados — ele 
 
 ### 4.3.3 O service como ponto de reutilização
 
-Uma consequência natural da independência do service em relação ao transporte HTTP é sua reutilizabilidade. O mesmo `UsuariosService.criar()` pode ser invocado a partir de um controller HTTP, de um comando CLI de seed de banco de dados, de um worker que processa uma fila de novos cadastros ou de um teste automatizado — sem qualquer modificação. Essa flexibilidade é um dos principais argumentos em favor da arquitetura em camadas.
+Uma consequência natural da independência do service em relação ao transporte HTTP é sua reutilizabilidade. O mesmo `UsuariosService.criar()` pode ser invocado a partir de um controller HTTP, de um comando CLI de [seed de banco de dados](https://pt.stackoverflow.com/questions/126770/o-que-%C3%A9-e-para-que-serve-um-seeder), de um worker que processa uma fila de novos cadastros ou de um teste automatizado — sem qualquer modificação. Essa flexibilidade é um dos principais argumentos em favor da arquitetura em camadas.
+
+
+
 
 ---
 
