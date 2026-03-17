@@ -28,6 +28,15 @@ No contexto de APIs Express, as três camadas do MVC assumem os seguintes papéi
 
 A camada **Model** representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 5). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso — um `Usuario`, um `Produto` — e o mecanismo responsável por persistir e recuperar esses dados.
 
+!!! note "O que é o Model neste estágio do curso?"
+    Neste capítulo, o termo **Model** é utilizado em um sentido mais amplo e ainda simplificado. Em aplicações completas, especialmente com ORM e Domain-Driven Design, o Model pode assumir diferentes formas:
+    
+    - **Entidades de domínio**: objetos que encapsulam dados e comportamento (regras de negócio)
+    - **DTOs (Data Transfer Objects)**: estruturas usadas para transporte de dados entre camadas
+    - **Modelos de persistência**: representações alinhadas ao banco de dados (tabelas, documentos)
+
+    Neste momento do curso, como ainda não utilizamos um ORM nem modelagem rica de domínio, o Model pode ser entendido como **uma estrutura de dados que representa os recursos da aplicação** (ex: `Usuario`, `Produto`) e que será evoluída nos próximos capítulos.
+
 A camada **View** é substituída, na prática, pela resposta JSON produzida pelo servidor. Não existe um arquivo de template ou componente visual — `res.json()` cumpre o papel de serializar o modelo para o formato que o cliente espera.
 
 A camada **Controller** permanece com seu papel original: receber a requisição, coordenar o fluxo entre as camadas e devolver a resposta. Sua responsabilidade é exclusivamente orquestrar — nunca processar lógica de negócio diretamente.
