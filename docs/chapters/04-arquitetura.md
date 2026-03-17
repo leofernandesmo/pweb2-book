@@ -6,7 +6,7 @@
 
 O Capítulo 2 estabeleceu os fundamentos operacionais do Express: como definir rotas, encadear middlewares e organizar handlers em controllers. O código resultante já é funcional — mas funcionalidade não é sinônimo de boa arquitetura. À medida que uma aplicação cresce, a ausência de uma separação clara entre camadas se manifesta em problemas concretos: controllers que acumulam lógica de negócio, services que constroem queries SQL diretamente, testes que dependem de banco de dados real para verificar regras simples.
 
-Este capítulo aborda os padrões arquiteturais que resolvem esses problemas de forma sistemática. O ponto de partida é o padrão **MVC** adaptado ao contexto de APIs REST; em seguida, aprofunda-se o papel da camada de **Service** como guardiã da lógica de negócio; depois, introduz-se o **Repository Pattern** como mecanismo de abstração do acesso a dados; e, por fim, apresenta-se o princípio de **Inversão de Dependência** em sua forma mais elementar. O capítulo encerra com a refatoração completa do projeto construído no Capítulo 2, consolidando todos esses conceitos em uma base sólida para a introdução do ORM no Capítulo 4.
+Este capítulo aborda os padrões arquiteturais que resolvem esses problemas de forma sistemática. O ponto de partida é o padrão **MVC** adaptado ao contexto de APIs REST; em seguida, aprofunda-se o papel da camada de **Service** como guardiã da lógica de negócio; depois, introduz-se o **Repository Pattern** como mecanismo de abstração do acesso a dados; e, por fim, apresenta-se o princípio de **Inversão de Dependência** em sua forma mais elementar. O capítulo encerra com a refatoração completa do projeto construído no Capítulo 2, consolidando todos esses conceitos em uma base sólida para a introdução do ORM no Capítulo 5.
 
 > 💡 **Pré-requisito:** Este capítulo pressupõe familiaridade com o conteúdo do Capítulo 2, especialmente controllers, a estrutura de projeto proposta e a classe `AppError`.
 
@@ -26,12 +26,11 @@ Em aplicações web tradicionais, a *View* é responsável por renderizar HTML q
 
 No contexto de APIs Express, as três camadas do MVC assumem os seguintes papéis:
 
-A camada **Model** representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 4). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso (no contexto de recurso web) — um `Usuario`, um `Produto` — e o mecanismo responsável por persistir e recuperar esses dados.
+A camada **Model** representa as entidades do domínio e as regras de acesso aos dados. Em projetos com ORM, os models são as definições de tabelas e seus relacionamentos (Capítulo 5). Por enquanto, pode-se pensar no Model como a estrutura de dados que descreve um recurso — um `Usuario`, um `Produto` — e o mecanismo responsável por persistir e recuperar esses dados.
 
 A camada **View** é substituída, na prática, pela resposta JSON produzida pelo servidor. Não existe um arquivo de template ou componente visual — `res.json()` cumpre o papel de serializar o modelo para o formato que o cliente espera.
 
 A camada **Controller** permanece com seu papel original: receber a requisição, coordenar o fluxo entre as camadas e devolver a resposta. Sua responsabilidade é exclusivamente orquestrar — nunca processar lógica de negócio diretamente.
-
 
 ### 4.2.3 O problema do controller gordo
 
@@ -63,7 +62,6 @@ export const criarUsuario = async (req, res) => {
 Este controller é impossível de testar sem um banco de dados real, não pode ser reutilizado em outros contextos (como um job em background) e qualquer alteração na regra de negócio exige modificar o controller — violando o princípio da separação de responsabilidades estudado no Capítulo 2. A solução passa pela distribuição dessas responsabilidades entre camadas bem definidas, como será detalhado nas seções seguintes.
 
 📖 Leitura de referência: [Engenharia de Software Moderna - Cap.6 Princípios](https://engsoftmoderna.info/cap5.html#coes%C3%A3o)
-
 
 ---
 
@@ -126,7 +124,6 @@ Observe que o service não sabe *como* o repositório armazena os dados — ele 
 
 Uma consequência natural da independência do service em relação ao transporte HTTP é sua reutilizabilidade. O mesmo `UsuariosService.criar()` pode ser invocado a partir de um controller HTTP, de um comando CLI de [seed de banco de dados](https://pt.stackoverflow.com/questions/126770/o-que-%C3%A9-e-para-que-serve-um-seeder), de um worker que processa uma fila de novos cadastros ou de um teste automatizado — sem qualquer modificação. Essa flexibilidade é um dos principais argumentos em favor da arquitetura em camadas.
 
-
 <img src="../figures/04_01-camadas.png" width="600" height="400" />
 
 ---
@@ -135,7 +132,7 @@ Uma consequência natural da independência do service em relação ao transport
 
 ### 4.4.1 O problema do acoplamento direto à persistência
 
-Sem o Repository Pattern, a camada de service acessa diretamente o mecanismo de persistência — seja um ORM (Object-Relational Mapping, ou Mapeamento Objeto-Relacional), queries SQL brutas ou chamadas a uma API externa. Isso cria um acoplamento que torna o código difícil de testar e de evoluir: trocar o banco de dados de PostgreSQL para MongoDB, por exemplo, exigiria modificar todos os services que constroem queries diretamente.
+Sem o Repository Pattern, a camada de service acessa diretamente o mecanismo de persistência — seja um ORM, queries SQL brutas ou chamadas a uma API externa. Isso cria um acoplamento que torna o código difícil de testar e de evoluir: trocar o banco de dados de PostgreSQL para MongoDB, por exemplo, exigiria modificar todos os services que constroem queries diretamente.
 
 ### 4.4.2 O repositório como contrato
 
@@ -145,8 +142,8 @@ Do ponto de vista do service, um repositório é simplesmente um colaborador que
 
 <img src="../figures/04_02-repository.png" width="600" height="400" />
 
-
-Obs.: A interface de repositório é como um **contrato** ou um plano que define quais operações um repositório deve ser capaz de realizar. Ela especifica um conjunto de métodos públicos (e seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação do repositório é a **imeplemtação** **concreta** que realiza as operações definidas na interface. É onde a lógica específica para interagir com uma fonte de dados real (como um banco de dados, sistema de arquivos ou API) reside. Veremos isso em mais detalhes a frente no material.
+!!! note "Contrato vs. Implementação"
+    A interface de repositório é como um **contrato** que define quais operações devem ser realizadas. Ela especifica um conjunto de métodos públicos (com seus tipos de retorno e parâmetros) que qualquer classe que implemente essa interface terá que fornecer. A implementação concreta é onde a lógica específica para interagir com a fonte de dados reside.
 
 ### 4.4.3 Implementação de um repositório em memória
 
@@ -157,7 +154,7 @@ O repositório a seguir é funcionalmente equivalente ao array em memória utili
 
 export class UsuariosRepository {
   constructor() {
-    // Dados em memória — será substituído pelo ORM no Capítulo 4
+    // Dados em memória — será substituído pelo ORM no Capítulo 5
     this.usuarios = [
       { id: 1, nome: 'Ana Silva',   email: 'ana@exemplo.com',   senha: 'hash1' },
       { id: 2, nome: 'Bruno Costa', email: 'bruno@exemplo.com', senha: 'hash2' },
@@ -199,11 +196,11 @@ export class UsuariosRepository {
 }
 ```
 
-A interface desse repositório — seus nomes de método e suas assinaturas — é o *contrato* que o service depende. Quando o Prisma for introduzido no Capítulo 4, será criado um `UsuariosRepositoryPrisma` que implementa exatamente os mesmos métodos, e o service não precisará ser alterado.
+A interface desse repositório — seus nomes de método e suas assinaturas — é o *contrato* que o service depende. Quando o Prisma for introduzido no Capítulo 5, será criado um `UsuariosRepositoryPrisma` que implementa exatamente os mesmos métodos, e o service não precisará ser alterado.
 
-### 4.4.4 O repositório Prisma (prévia do Capítulo 4)
+### 4.4.4 O repositório Prisma (prévia do Capítulo 5)
 
-Para antecipar como a substituição ocorrerá, o repositório baseado em Prisma terá a seguinte estrutura — que pode ser ignorada por ora e retomada no Capítulo 4:
+Para antecipar como a substituição ocorrerá, o repositório baseado em Prisma terá a seguinte estrutura — que pode ser ignorada por ora e retomada no Capítulo 5:
 
 ```javascript
 // src/repositories/usuarios.repository.prisma.js
@@ -259,89 +256,25 @@ export class UsuariosService {
 
 Nessa forma, é impossível substituir o repositório por outro — seja para testes, seja para trocar o banco de dados — sem modificar o service.
 
-
-
-
 ### 4.5.2 Injeção de dependência manual
 
 A solução mais simples é a **injeção de dependência**: em vez de criar o repositório internamente, o service o recebe como parâmetro do construtor. Quem instancia o service é responsável por fornecer a implementação correta.
 
+> Material extraído do livro Engenharia de Software Moderna — [Injeção de Dependência](https://engsoftmoderna.info/artigos/injecao-dependencia.html)
+>
+> A ideia de Injeção de Dependência é bastante simples. Suponha que uma classe A depende de uma classe `PagtoPIX`. Em vez de instanciar a dependência diretamente (`new PagtoPIX()`), a classe A deve recebê-la por meio do construtor:
+>
+> ```javascript
+> class A {
+>   constructor(pagto) { // injeção via construtor
+>     this.pagto = pagto;
+>   }
+> }
+> ```
+>
+> O mais recomendado é que A dependa de uma **interface** (`ServicoPagto`), não de uma classe concreta (`PagtoPIX`). Isso permite trocar a implementação sem modificar A, e facilita o uso de mocks nos testes.
 
-> Material extraído do livro Engenharia de Software Moderna - [Injenção de Dependência](https://engsoftmoderna.info/artigos/injecao-dependencia.html)
-
-A ideia de Injeção de Dependência é bastante simples e quase que uma aplicação literal do seu nome. Vamos então explicá-la em quatro passos:
-    Suponha que uma classe A depende de uma classe PagtoPIX:
-
-    class A {
-       PagtoPIX pagto; // A depende de PagtoPIX
-       ...
-    }
-
-No entanto, para seguir a ideia do padrão, a classe A não deve instanciar diretamente objetos desse tipo, como em:
-
-    class A {
-       PagtoPIX pagto = new PagtoPIX();
-       ... 
-    }
-
-Em vez disso, A deve receber essa dependência por meio de um construtor:
-
-    class A {
-       PagtoPIX pagto;
-    
-       A(PagtoPIX pagto) { // injeção de dependência via construtor
-          this.pagto = pagto;
-       }
-       ...
-    }
-
-ou então receber a dependência por meio de um método set:
-
-    class A {
-       PagtoPIX pagto;
-    
-       void setPagto(PagtoPIX pagto) { // injeção de dependência via setter
-          this.pagto = pagto;
-       }
-       ...
-    }
-
-Logo, agora fica fácil entender o nome do padrão: as dependências de uma classe são injetadas nela, seja por meio de chamadas do seu construtor ou por meio de chamadas de um setter.
-
-Na verdade, o mais recomendado é que o código de A use uma interface para a classe concreta PagtoPIX. Ou seja, em vez de usar PagtoPIX (uma classe), deve-se usar ServicoPagto (uma interface):
-
-    class A {
-       ServicoPagto pagto;   // dependência para uma interface 
-    
-       A(ServicoPagto pagto) {
-          this.pagto = pagto;
-       }
-       ...
-    }
-
-ou
-
-    class A {
-       ServicoPagto pagto; 
-    
-       void setPagto(ServicoPagto pagto) { 
-          this.pagto = pagto;
-       }
-       ...
-    }
-
-Ou seja: quando usamos Injeção de Dependência devemos fazer uso do princípio de projeto Prefira Interfaces a Classes Concretas.
-
-Para concluir, as vantagens de Injeção de Dependência são:
-
- - Injeção de Dependência torna mais fácil mudar a dependência concreta (PagtoPIX) usada por uma classe. No nosso exemplo, A é uma classe que precisa realizar pagamentos. Para isso, ela faz uso de uma classe PagtoPIX. Amanhã, no entanto, podemos decidir que os pagamentos serão processados por uma classe PagtoCartaoCredito. Para isso, basta que PagtoPIX e PagtoCartaoCredito implementem a mesma interface ServicoPagto.
-
- - Injeção de Dependência torna mais fácil o teste da classe A, pois podemos mockar mais facilmente a dependência para ServicoPagto. Por exemplo, em vez de um serviço de pagamento real (PagtoPIX ou PagtoCartaoCredito), podemos usar um serviço de pagamento fictício, que apenas emule alguns pagamentos. Para isso, basta que esse serviço fictício implemente a interface ServicoPagto. Se você ainda não sabe o que é um mock, recomendamos a leitura da seção do Capítulo 8 sobre o assunto.
-
-
-> Fim do texto extraído do livro Engenharia de Software Moderna
-
-Em Javascript/Node você poderia fazer:
+Em JavaScript/Node.js, a injeção via construtor se expressa da seguinte forma:
 
 ```javascript
 // ✅ Dependência injetada pelo construtor
@@ -353,10 +286,10 @@ export class UsuariosService {
 ```
 
 ```javascript
-// Composição na camada de inicialização (app.js ou arquivo de rotas)
-import { UsuariosRepository } from '../repositories/usuarios.repository.js';
-import { UsuariosService } from '../services/usuarios.service.js';
-import { UsuariosController } from '../controllers/usuarios.controller.js';
+// Composição na camada de inicialização (composition root)
+import { UsuariosRepository }  from '../repositories/usuarios.repository.js';
+import { UsuariosService }     from '../services/usuarios.service.js';
+import { UsuariosController }  from '../controllers/usuarios.controller.js';
 
 const repository  = new UsuariosRepository();
 const service     = new UsuariosService(repository);
@@ -364,7 +297,6 @@ const controller  = new UsuariosController(service);
 ```
 
 Essa composição é realizada uma única vez, no ponto de entrada da aplicação. Controllers, services e repositórios permanecem completamente desacoplados uns dos outros — cada um conhece apenas a interface do colaborador que precisa, não sua implementação concreta.
-
 
 ### 4.5.3 Benefício direto: testabilidade
 
@@ -387,7 +319,7 @@ it('deve lançar erro 409 se e-mail já existir', async () => {
 });
 ```
 
-O teste acima verifica uma regra de negócio real — unicidade de e-mail — sem abrir nenhuma conexão com banco de dados, sem configurar fixtures e sem depender de estado externo. Ele é rápido, determinístico e isolado. 
+O teste acima verifica uma regra de negócio real — unicidade de e-mail — sem abrir nenhuma conexão com banco de dados, sem configurar fixtures e sem depender de estado externo. Ele é rápido, determinístico e isolado.
 
 ---
 
@@ -604,11 +536,9 @@ Escreva dois testes unitários para o `ProdutosService` utilizando repositórios
 
 O primeiro deve verificar que a criação de um produto com preço negativo lança `AppError` com status 400. O segundo deve verificar que a criação de um produto com nome duplicado lança `AppError` com status 409. Nenhum dos testes deve instanciar o `ProdutosRepository` real.
 
-
 ---
 
-
-## 4.9 Referências e Leituras Complementares
+## 4.8 Referências e Leituras Complementares
 
 - [Model–view–controller — Wikipedia](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
 - [Repository Pattern — Martin Fowler, Patterns of Enterprise Application Architecture](https://www.martinfowler.com/eaaCatalog/repository.html)
