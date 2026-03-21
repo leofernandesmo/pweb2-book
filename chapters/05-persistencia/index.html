@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://leofernandesmo.github.io/pweb2-book/chapters/05-persistencia/">
       
       
+        <link rel="prev" href="../04-arquitetura/">
+      
+      
+        <link rel="next" href="../06-ejs/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +24,7 @@
     
     
       
-        <title>Capítulo 5 — Banco de Dados e ORM: Prisma e Sequelize - Programação Web 2 - Uma abordagem usando Node/Express</title>
+        <title>5. Banco de Dados e ORM: Prisma e Sequelize - Programação Web 2 - Uma abordagem usando Node/Express</title>
       
     
     
@@ -126,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Capítulo 5 — Banco de Dados e ORM: Prisma e Sequelize
+              5. Banco de Dados e ORM: Prisma e Sequelize
             
           </span>
         </div>
@@ -299,10 +303,12 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../00-how-to-use/" class="md-tabs__link">
           
   
@@ -481,8 +487,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -500,22 +508,31 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -526,7 +543,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Chapters
@@ -629,6 +646,664 @@
   
   <span class="md-ellipsis">
     4. Arquitetura de Software: MVC, Services e Repository Pattern
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    5. Banco de Dados e ORM: Prisma e Sequelize
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    5. Banco de Dados e ORM: Prisma e Sequelize
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#51-introducao" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Introdução
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-fundamentos-de-banco-de-dados-relacional" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Fundamentos de Banco de Dados Relacional
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.2 Fundamentos de Banco de Dados Relacional">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#521-por-que-bancos-relacionais" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2.1 Por que bancos relacionais?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#522-conceitos-essenciais" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2.2 Conceitos essenciais
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#523-sql-essencial-para-desenvolvedores-nodejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2.3 SQL essencial para desenvolvedores Node.js
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53-persistindo-dados-diretamente-com-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 Persistindo Dados Diretamente com SQL
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.3 Persistindo Dados Diretamente com SQL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#531-o-driver-pg-para-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.1 O driver pg para PostgreSQL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#532-crud-com-sql-puro" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.2 CRUD com SQL puro
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#533-repositorio-com-sql-puro" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.3 Repositório com SQL puro
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#534-quando-usar-sql-direto-vs-orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.4 Quando usar SQL direto vs. ORM
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-o-que-e-um-orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4 O que é um ORM?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.4 O que é um ORM?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#541-vantagens-e-limitacoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4.1 Vantagens e limitações
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#542-prisma-vs-sequelize-visao-geral-comparativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4.2 Prisma vs. Sequelize: visão geral comparativa
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.5 Prisma
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.5 Prisma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#551-instalacao-e-configuracao-inicial" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.5.1 Instalação e configuração inicial
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#552-o-prisma-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.5.2 O Prisma Schema
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#553-migrations-com-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.5.3 Migrations com Prisma
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#554-configurando-o-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.5.4 Configurando o Prisma Client
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#555-crud-completo-com-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.5.5 CRUD completo com Prisma
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#556-relacionamentos-com-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.5.6 Relacionamentos com Prisma
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#56-sequelize" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.6 Sequelize
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.6 Sequelize">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#561-instalacao-e-configuracao-inicial" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.6.1 Instalação e configuração inicial
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#562-configuracao-da-conexao" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.6.2 Configuração da conexão
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#563-definicao-de-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.6.3 Definição de Models
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#564-migrations-com-sequelize" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.6.4 Migrations com Sequelize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#565-crud-completo-com-sequelize" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.6.5 CRUD completo com Sequelize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#566-relacionamentos-com-sequelize" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.6.6 Relacionamentos com Sequelize
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#57-substituindo-o-repository-em-memoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.7 Substituindo o Repository em Memória
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.7 Substituindo o Repository em Memória">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#571-usuariosrepositoryprisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.7.1 UsuariosRepositoryPrisma
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#572-usuariosrepositorysequelize" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.7.2 UsuariosRepositorySequelize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#573-trocando-a-implementacao-no-composition-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.7.3 Trocando a implementação no Composition Root
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#58-persistindo-relacionamentos-1n-n1-e-nm" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.8 Persistindo Relacionamentos: 1:N, N:1 e N:M
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.8 Persistindo Relacionamentos: 1:N, N:1 e N:M">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#581-relacionamento-1n-e-n1-um-para-muitos-muitos-para-um" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.8.1 Relacionamento 1:N e N:1 (Um para Muitos / Muitos para Um)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#582-relacionamento-nm-muitos-para-muitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.8.2 Relacionamento N:M (Muitos para Muitos)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#583-boas-praticas-com-relacionamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.8.3 Boas práticas com relacionamentos
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#59-filtros-ordenacao-e-paginacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.9 Filtros, Ordenação e Paginação
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.9 Filtros, Ordenação e Paginação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#591-filtros-com-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.9.1 Filtros com Prisma
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#592-filtros-com-sequelize" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.9.2 Filtros com Sequelize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#593-ordenacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.9.3 Ordenação
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#594-paginacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.9.4 Paginação
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#510-comparativo-final-prisma-vs-sequelize" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.10 Comparativo Final: Prisma vs. Sequelize
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#511-bancos-de-dados-nao-relacionais" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.11 Bancos de Dados Não Relacionais
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.11 Bancos de Dados Não Relacionais">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5111-por-que-existem-bancos-nosql" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.11.1 Por que existem bancos NoSQL?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5112-principais-categorias" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.11.2 Principais categorias
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5113-comparativo-sql-vs-nosql" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.11.3 Comparativo: SQL vs. NoSQL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5114-mongodb-e-mongoose-com-nodejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.11.4 MongoDB e Mongoose com Node.js
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5115-redis-como-cache-em-apis-express" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.11.5 Redis como cache em APIs Express
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5116-quando-usar-cada-paradigma" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.11.6 Quando usar cada paradigma
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#512-exercicios-praticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.12 Exercícios Práticos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.12 Exercícios Práticos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-51-schema-prisma-com-relacionamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 5.1 — Schema Prisma com relacionamento
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-52-crud-com-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 5.2 — CRUD com Prisma
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-53-crud-com-sequelize" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 5.3 — CRUD com Sequelize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-54-relacionamento-com-include" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 5.4 — Relacionamento com include
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-55-paginacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 5.5 — Paginação
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#513-referencias-e-leituras-complementares" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.13 Referências e Leituras Complementares
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-ejs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6. Renderização no Servidor com EJS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-frontend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7. Integração com Frontend Moderno: Vue.js e React
   </span>
   
 

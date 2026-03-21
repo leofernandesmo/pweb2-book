@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://leofernandesmo.github.io/pweb2-book/chapters/07-frontend/">
       
       
+        <link rel="prev" href="../06-ejs/">
+      
+      
+        <link rel="next" href="../apendice-cheatsheet/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +24,7 @@
     
     
       
-        <title>Capítulo 7 — Integração com Frontend Moderno: Vue.js e React - Programação Web 2 - Uma abordagem usando Node/Express</title>
+        <title>7. Integração com Frontend Moderno: Vue.js e React - Programação Web 2 - Uma abordagem usando Node/Express</title>
       
     
     
@@ -126,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Capítulo 7 — Integração com Frontend Moderno: Vue.js e React
+              7. Integração com Frontend Moderno: Vue.js e React
             
           </span>
         </div>
@@ -299,10 +303,12 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../00-how-to-use/" class="md-tabs__link">
           
   
@@ -481,8 +487,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -500,22 +508,31 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -526,7 +543,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Chapters
@@ -633,6 +650,742 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-persistencia/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Banco de Dados e ORM: Prisma e Sequelize
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-ejs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6. Renderização no Servidor com EJS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    7. Integração com Frontend Moderno: Vue.js e React
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    7. Integração com Frontend Moderno: Vue.js e React
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#71-introducao" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Introdução
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#72-como-express-e-uma-spa-se-relacionam" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 Como Express e uma SPA se Relacionam
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.2 Como Express e uma SPA se Relacionam">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#721-a-separacao-de-responsabilidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2.1 A separação de responsabilidades
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#722-o-fluxo-de-uma-requisicao-na-arquitetura-spa" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2.2 O fluxo de uma requisição na arquitetura SPA
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#723-desenvolvimento-local-dois-servidores" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2.3 Desenvolvimento local: dois servidores
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#73-configurando-cors-no-express" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3 Configurando CORS no Express
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.3 Configurando CORS no Express">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#731-o-que-e-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3.1 O que é CORS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#732-configuracao-basica-com-o-pacote-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3.2 Configuração básica com o pacote cors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#733-requisicoes-preflight" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3.3 Requisições preflight
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#74-servindo-a-build-do-frontend-com-express" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.4 Servindo a Build do Frontend com Express
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.4 Servindo a Build do Frontend com Express">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#741-o-processo-de-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.4.1 O processo de build
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#742-configuracao-do-express-para-servir-o-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.4.2 Configuração do Express para servir o frontend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#743-estrutura-de-projeto-monorepo" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.4.3 Estrutura de projeto monorepo
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#75-comunicacao-via-fetch-e-axios" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.5 Comunicação via Fetch e Axios
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.5 Comunicação via Fetch e Axios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#751-a-fetch-api-nativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.5.1 A Fetch API nativa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#752-axios-cliente-http-com-mais-recursos" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.5.2 Axios — cliente HTTP com mais recursos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#753-tratamento-de-erros-http-no-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.5.3 Tratamento de erros HTTP no cliente
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#76-vuejs-fundamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6 Vue.js — Fundamentos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.6 Vue.js — Fundamentos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#761-o-que-e-vuejs-e-por-que-ele-existe" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6.1 O que é Vue.js e por que ele existe
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#762-criando-um-projeto-vue-com-vite" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6.2 Criando um projeto Vue com Vite
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#763-componentes-de-arquivo-unico-sfc" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6.3 Componentes de arquivo único (SFC)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#764-reatividade-ref-e-reactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6.4 Reatividade: ref e reactive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#765-computed-e-watch" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6.5 Computed e Watch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#766-diretivas-essenciais" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6.6 Diretivas essenciais
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#767-ciclo-de-vida-do-componente" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6.7 Ciclo de vida do componente
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#768-props-e-emits-comunicacao-entre-componentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6.8 Props e Emits — comunicação entre componentes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#769-vue-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6.9 Vue Router
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7610-pinia-gerenciamento-de-estado-global" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6.10 Pinia — gerenciamento de estado global
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7611-options-api-vs-composition-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6.11 Options API vs. Composition API
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#77-vuejs-consumindo-a-api-do-express" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.7 Vue.js — Consumindo a API do Express
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.7 Vue.js — Consumindo a API do Express">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#771-configuracao-do-servico-de-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.7.1 Configuração do serviço de API
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#772-store-de-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.7.2 Store de usuários
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#773-listagem-de-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.7.3 Listagem de usuários
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#774-formulario-de-criacao-e-edicao" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.7.4 Formulário de criação e edição
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#775-configuracao-das-rotas" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.7.5 Configuração das rotas
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#78-react-fundamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8 React — Fundamentos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.8 React — Fundamentos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#781-o-que-e-react-e-por-que-ele-existe" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8.1 O que é React e por que ele existe
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#782-criando-um-projeto-react-com-vite" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8.2 Criando um projeto React com Vite
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#783-jsx-html-dentro-do-javascript" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8.3 JSX — HTML dentro do JavaScript
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#784-usestate-estado-local-do-componente" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8.4 useState — estado local do componente
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#785-useeffect-efeitos-colaterais" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8.5 useEffect — efeitos colaterais
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#786-props-comunicacao-pai-filho" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8.6 Props — comunicação pai → filho
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#787-renderizacao-condicional-e-listas" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8.7 Renderização condicional e listas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#788-react-router-dom" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8.8 React Router DOM
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#789-context-api-estado-global-sem-biblioteca-extra" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8.9 Context API — estado global sem biblioteca extra
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#79-react-consumindo-a-api-do-express" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.9 React — Consumindo a API do Express
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.9 React — Consumindo a API do Express">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#791-pagina-de-listagem" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.9.1 Página de listagem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#792-formulario-de-criacao-e-edicao" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.9.2 Formulário de criação e edição
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#710-variaveis-de-ambiente-e-configuracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.10 Variáveis de Ambiente e Configuração
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.10 Variáveis de Ambiente e Configuração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#7101-variaveis-de-ambiente-no-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.10.1 Variáveis de ambiente no backend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7102-variaveis-de-ambiente-no-frontend-vite" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.10.2 Variáveis de ambiente no frontend (Vite)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#711-comparativo-ssr-spa-hibrido" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.11 Comparativo: SSR · SPA · Híbrido
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.11 Comparativo: SSR · SPA · Híbrido">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#7111-quadro-comparativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.11.1 Quadro comparativo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7112-quando-escolher-cada-arquitetura" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.11.2 Quando escolher cada arquitetura
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7113-a-posicao-do-express-em-cada-cenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.11.3 A posição do Express em cada cenário
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#712-exercicios-praticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.12 Exercícios Práticos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.12 Exercícios Práticos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-71-configuracao-de-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 7.1 — Configuração de CORS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-72-vuejs-listagem-de-produtos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 7.2 — Vue.js: listagem de produtos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-73-vuejs-formulario-de-criacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 7.3 — Vue.js: formulário de criação
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-74-react-listagem-de-produtos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 7.4 — React: listagem de produtos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-75-comparativo-vue-vs-react" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 7.5 — Comparativo Vue vs. React
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-76-build-e-deploy-integrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 7.6 — Build e deploy integrado
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#713-referencias-e-leituras-complementares" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.13 Referências e Leituras Complementares
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 

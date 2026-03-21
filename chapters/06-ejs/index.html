@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://leofernandesmo.github.io/pweb2-book/chapters/06-ejs/">
       
       
+        <link rel="prev" href="../05-persistencia/">
+      
+      
+        <link rel="next" href="../07-frontend/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +24,7 @@
     
     
       
-        <title>Capítulo 6 — Renderização no Servidor com EJS - Programação Web 2 - Uma abordagem usando Node/Express</title>
+        <title>6. Renderização no Servidor com EJS - Programação Web 2 - Uma abordagem usando Node/Express</title>
       
     
     
@@ -126,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Capítulo 6 — Renderização no Servidor com EJS
+              6. Renderização no Servidor com EJS
             
           </span>
         </div>
@@ -299,10 +303,12 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../00-how-to-use/" class="md-tabs__link">
           
   
@@ -481,8 +487,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -500,22 +508,31 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -526,7 +543,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Chapters
@@ -629,6 +646,514 @@
   
   <span class="md-ellipsis">
     4. Arquitetura de Software: MVC, Services e Repository Pattern
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-persistencia/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Banco de Dados e ORM: Prisma e Sequelize
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    6. Renderização no Servidor com EJS
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    6. Renderização no Servidor com EJS
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#61-introducao" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1 Introdução
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-ssr-vs-spa-quando-usar-cada-abordagem" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2 SSR vs. SPA: quando usar cada abordagem
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2 SSR vs. SPA: quando usar cada abordagem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#621-como-funciona-a-renderizacao-no-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2.1 Como funciona a renderização no servidor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#622-como-funciona-uma-spa" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2.2 Como funciona uma SPA
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#623-comparativo-e-criterios-de-escolha" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2.3 Comparativo e critérios de escolha
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-configurando-ejs-no-express" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3 Configurando EJS no Express
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 Configurando EJS no Express">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#631-instalacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3.1 Instalação
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#632-configuracao-do-express" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3.2 Configuração do Express
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#633-estrutura-de-diretorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3.3 Estrutura de diretórios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#634-renderizando-a-primeira-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3.4 Renderizando a primeira view
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-sintaxe-ejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.4 Sintaxe EJS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4 Sintaxe EJS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#641-tags-essenciais" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.4.1 Tags essenciais
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#642-condicionais-e-loops" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.4.2 Condicionais e loops
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-layouts-e-partials" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.5 Layouts e Partials
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.5 Layouts e Partials">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#651-criando-partials" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.5.1 Criando partials
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#652-usando-partials-nos-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.5.2 Usando partials nos templates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#653-layout-com-conteudo-dinamico" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.5.3 Layout com conteúdo dinâmico
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#66-passando-dados-do-controller-para-a-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.6 Passando Dados do Controller para a View
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.6 Passando Dados do Controller para a View">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#661-padrao-de-controller-para-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.6.1 Padrão de controller para views
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#662-variaveis-locais-globais-com-reslocals" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.6.2 Variáveis locais globais com res.locals
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#67-formularios-validacao-e-feedback-ao-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.7 Formulários, Validação e Feedback ao Usuário
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.7 Formulários, Validação e Feedback ao Usuário">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#671-o-padrao-post-redirect-get-prg" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.7.1 O padrão Post-Redirect-Get (PRG)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#672-formulario-de-criacao-com-ejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.7.2 Formulário de criação com EJS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#673-validacao-no-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.7.3 Validação no middleware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#674-mensagens-flash" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.7.4 Mensagens flash
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#675-method-override-put-e-delete-em-formularios-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.7.5 Method Override (PUT e DELETE em formulários HTML)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#68-crud-completo-exemplo-integrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.8 CRUD Completo: Exemplo Integrado
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.8 CRUD Completo: Exemplo Integrado">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#681-rotas-completas" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.8.1 Rotas completas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#682-template-de-detalhe-e-edicao" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.8.2 Template de detalhe e edição
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#683-css-minimo-de-suporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.8.3 CSS mínimo de suporte
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#69-tratamento-de-erros-em-aplicacoes-ssr" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.9 Tratamento de Erros em Aplicações SSR
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.9 Tratamento de Erros em Aplicações SSR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#691-middleware-de-erros-para-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.9.1 Middleware de erros para views
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#610-exercicios-praticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.10 Exercícios Práticos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.10 Exercícios Práticos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-61-configuracao-inicial" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 6.1 — Configuração inicial
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-62-crud-completo-de-tarefas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 6.2 — CRUD completo de Tarefas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-63-validacao-e-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 6.3 — Validação e feedback
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-64-paginacao-na-listagem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 6.4 — Paginação na listagem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-65-integracao-com-banco-de-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 6.5 — Integração com banco de dados
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#611-referencias-e-leituras-complementares" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.11 Referências e Leituras Complementares
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-frontend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7. Integração com Frontend Moderno: Vue.js e React
   </span>
   
 
