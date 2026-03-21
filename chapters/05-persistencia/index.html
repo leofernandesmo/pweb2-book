@@ -762,9 +762,9 @@
 <hr />
 <h2 id="51-introducao">5.1 Introdução<a class="headerlink" href="#51-introducao" title="Permanent link">&para;</a></h2>
 <p>O Capítulo 4 encerrou com uma arquitetura bem estruturada: controllers que orquestram, services que guardam a lógica de negócio e repositórios que abstraem a persistência. No entanto, toda aquela persistência ainda era simulada — os dados viviam em arrays na memória e desapareciam a cada reinicialização do servidor. Este capítulo resolve esse problema de forma definitiva, substituindo os repositórios em memória por implementações reais apoiadas em banco de dados relacional.</p>
-<p>O ponto de partida é uma revisão dos fundamentos de bancos de dados relacionais e da linguagem SQL, suficiente para compreender o que os ORMs fazem por baixo dos panos. Em seguida, o capítulo apresenta dois dos ORMs mais relevantes do ecossistema Node.js: o <strong>Prisma</strong>, com sua abordagem declarativa e fortemente tipada, e o <strong>Sequelize</strong>, o ORM mais maduro e amplamente adotado no ecossistema. Para cada um, são cobertos: instalação e configuração, definição de modelos, migrations, CRUD completo e relacionamentos. O capítulo encerra com a substituição do <code>UsuariosRepository</code> em memória — construído no Capítulo 4 — pelas implementações Prisma e Sequelize, demonstrando na prática o benefício do Repository Pattern: o service não precisa ser alterado.</p>
+<p>O ponto de partida é uma revisão dos fundamentos de bancos de dados relacionais e da linguagem SQL, incluindo uma seção dedicada à persistência com SQL puro — antes de qualquer abstração — para que o funcionamento interno dos ORMs seja compreendido com clareza. Em seguida, o capítulo apresenta dois dos ORMs mais relevantes do ecossistema Node.js: o <strong>Prisma</strong>, com sua abordagem declarativa e fortemente tipada, e o <strong>Sequelize</strong>, o ORM mais maduro e amplamente adotado no ecossistema. Para cada um, são cobertos: instalação e configuração, definição de modelos, migrations e CRUD completo. Uma seção dedicada aprofunda os relacionamentos 1:N, N:1 e N:M em ambos os ORMs, seguida de uma seção completa sobre filtros, ordenação e paginação. O capítulo encerra com a substituição do <code>UsuariosRepository</code> em memória pelas implementações Prisma e Sequelize, uma introdução aos bancos de dados não relacionais (MongoDB, Redis) e um comparativo final para orientar a escolha em projetos reais.</p>
 <blockquote>
-<p>💡 <strong>Pré-requisito:</strong> Este capítulo pressupõe familiaridade com o Capítulo 4, especialmente o Repository Pattern e a injeção de dependência. O conhecimento básico de SQL (SELECT, INSERT, UPDATE, DELETE) é útil mas não obrigatório — os conceitos essenciais são revisados na seção 5.2.</p>
+<p>💡 <strong>Pré-requisito:</strong> Este capítulo pressupõe familiaridade com o Capítulo 4, especialmente o Repository Pattern e a injeção de dependência. O conhecimento básico de SQL é útil mas não obrigatório — os conceitos essenciais são revisados nas seções 5.2 e 5.3.</p>
 </blockquote>
 <hr />
 <h2 id="52-fundamentos-de-banco-de-dados-relacional">5.2 Fundamentos de Banco de Dados Relacional<a class="headerlink" href="#52-fundamentos-de-banco-de-dados-relacional" title="Permanent link">&para;</a></h2>
@@ -810,13 +810,122 @@
 </code></pre></div>
 <p>Cada uma dessas operações tem um equivalente direto nas APIs dos ORMs que serão estudados nas seções seguintes.</p>
 <hr />
-<h2 id="53-o-que-e-um-orm">5.3 O que é um ORM?<a class="headerlink" href="#53-o-que-e-um-orm" title="Permanent link">&para;</a></h2>
+<h2 id="53-persistindo-dados-diretamente-com-sql">5.3 Persistindo Dados Diretamente com SQL<a class="headerlink" href="#53-persistindo-dados-diretamente-com-sql" title="Permanent link">&para;</a></h2>
+<p>Antes de introduzir os ORMs, vale compreender como a persistência funciona sem nenhuma abstração: conectando-se ao banco de dados diretamente e executando SQL puro a partir do Node.js. Essa abordagem é denominada <strong>acesso direto</strong> ou <em>raw SQL</em>, e é importante por duas razões: ela revela o que os ORMs fazem por baixo dos panos, e é a única opção disponível quando a complexidade da consulta supera o que a API do ORM consegue expressar.</p>
+<h3 id="531-o-driver-pg-para-postgresql">5.3.1 O driver <code>pg</code> para PostgreSQL<a class="headerlink" href="#531-o-driver-pg-para-postgresql" title="Permanent link">&para;</a></h3>
+<p>Para conectar uma aplicação Node.js a um banco PostgreSQL sem ORM, utiliza-se o pacote <code>pg</code> (também chamado de <em>node-postgres</em>):</p>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>pg
+</code></pre></div>
+<p>A conexão é gerenciada por um <strong>pool</strong> — um conjunto de conexões reutilizáveis que evita a sobrecarga de abrir e fechar uma nova conexão a cada query:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/config/database.js</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">pg</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;pg&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Pool</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">pg</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">pool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Pool</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">connectionString</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DATABASE_URL</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">max</span><span class="o">:</span><span class="w">     </span><span class="mf">10</span><span class="p">,</span><span class="w">   </span><span class="c1">// máximo de conexões simultâneas no pool</span>
+<span class="w">  </span><span class="nx">idleTimeoutMillis</span><span class="o">:</span><span class="w"> </span><span class="mf">30000</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
+<h3 id="532-crud-com-sql-puro">5.3.2 CRUD com SQL puro<a class="headerlink" href="#532-crud-com-sql-puro" title="Permanent link">&para;</a></h3>
+<p>Com o pool configurado, as queries são executadas via <code>pool.query()</code>. O segundo argumento é um array de valores parametrizados — prática essencial para prevenir <strong>SQL Injection</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pool</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../config/database.js&#39;</span><span class="p">;</span>
+
+<span class="c1">// ── CREATE ──────────────────────────────────────────────</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">resultado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+<span class="w">  </span><span class="sb">`INSERT INTO usuarios (nome, email, senha)</span>
+<span class="sb">   VALUES ($1, $2, $3)</span>
+<span class="sb">   RETURNING *`</span><span class="p">,</span>
+<span class="w">  </span><span class="p">[</span><span class="nx">nome</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">senhaHash</span><span class="p">]</span>
+<span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">novoUsuario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">resultado</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
+
+<span class="c1">// ── READ ────────────────────────────────────────────────</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">todos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM usuarios ORDER BY criado_em DESC&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">usuarios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">todos</span><span class="p">.</span><span class="nx">rows</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM usuarios WHERE id = $1&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">id</span><span class="p">]);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">usuario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="c1">// ── UPDATE ──────────────────────────────────────────────</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">upd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+<span class="w">  </span><span class="s1">&#39;UPDATE usuarios SET nome = $1 WHERE id = $2 RETURNING *&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">[</span><span class="nx">novoNome</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">]</span>
+<span class="p">);</span>
+
+<span class="c1">// ── DELETE ──────────────────────────────────────────────</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="s1">&#39;DELETE FROM usuarios WHERE id = $1&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">id</span><span class="p">]);</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">SQL Injection</p>
+<p>Nunca interpole valores diretamente na string SQL com template literals. Use sempre os parâmetros posicionais <code>$1</code>, <code>$2</code>, ... — o driver <code>pg</code> os escapa automaticamente, prevenindo injeção de SQL.</p>
+</div>
+<h3 id="533-repositorio-com-sql-puro">5.3.3 Repositório com SQL puro<a class="headerlink" href="#533-repositorio-com-sql-puro" title="Permanent link">&para;</a></h3>
+<p>O Repository Pattern funciona igualmente bem com SQL direto. O <code>UsuariosRepositorySQL</code> a seguir implementa o mesmo contrato dos repositórios em memória do Capítulo 4, agora persistindo no banco:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/repositories/usuarios.repository.sql.js</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pool</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../config/database.js&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">UsuariosRepositorySQL</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">listarTodos</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">rows</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+<span class="w">      </span><span class="s1">&#39;SELECT id, nome, email, criado_em FROM usuarios ORDER BY criado_em DESC&#39;</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">rows</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">buscarPorId</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">rows</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+<span class="w">      </span><span class="s1">&#39;SELECT * FROM usuarios WHERE id = $1&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">id</span><span class="p">]</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">rows</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">buscarPorEmail</span><span class="p">(</span><span class="nx">email</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">rows</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+<span class="w">      </span><span class="s1">&#39;SELECT * FROM usuarios WHERE email = $1&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">email</span><span class="p">]</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">rows</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">criar</span><span class="p">(</span><span class="nx">dados</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">senha</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">dados</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">rows</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+<span class="w">      </span><span class="sb">`INSERT INTO usuarios (nome, email, senha)</span>
+<span class="sb">       VALUES ($1, $2, $3) RETURNING *`</span><span class="p">,</span>
+<span class="w">      </span><span class="p">[</span><span class="nx">nome</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">senha</span><span class="p">]</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">rows</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">atualizar</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">dados</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">dados</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">rows</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+<span class="w">      </span><span class="s1">&#39;UPDATE usuarios SET nome = $1, email = $2 WHERE id = $3 RETURNING *&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="p">[</span><span class="nx">nome</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">]</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">rows</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">remover</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">rowCount</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+<span class="w">      </span><span class="s1">&#39;DELETE FROM usuarios WHERE id = $1&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">id</span><span class="p">]</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">rowCount</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="534-quando-usar-sql-direto-vs-orm">5.3.4 Quando usar SQL direto vs. ORM<a class="headerlink" href="#534-quando-usar-sql-direto-vs-orm" title="Permanent link">&para;</a></h3>
+<p>O acesso direto via SQL é adequado em cenários específicos: consultas analíticas muito complexas com múltiplos JOINs e agregações, operações de alta performance onde cada milissegundo importa, ou integração com bancos legados que possuem stored procedures e triggers específicos. Para a grande maioria dos casos em APIs REST, porém, os ORMs oferecem produtividade, segurança e manutenibilidade superiores.</p>
+<hr />
+<h2 id="54-o-que-e-um-orm">5.4 O que é um ORM?<a class="headerlink" href="#54-o-que-e-um-orm" title="Permanent link">&para;</a></h2>
 <p>Um <strong>ORM</strong> (<em>Object-Relational Mapper</em>, ou Mapeador Objeto-Relacional) é uma biblioteca que estabelece uma ponte entre o modelo de objetos da linguagem de programação e o modelo relacional do banco de dados. Em vez de escrever SQL diretamente, o desenvolvedor trabalha com objetos e métodos JavaScript — e o ORM se encarrega de traduzir essas operações para as queries SQL equivalentes.</p>
 <p>A analogia mais direta é a do intérprete: o ORM fala tanto "JavaScript" quanto "SQL", traduzindo um para o outro em tempo real. Quando se chama <code>usuario.save()</code>, o ORM gera e executa o <code>INSERT</code> ou <code>UPDATE</code> apropriado; quando se chama <code>Usuario.findAll({ where: { ativo: true } })</code>, o ORM produz <code>SELECT * FROM usuarios WHERE ativo = true</code>.</p>
-<h3 id="531-vantagens-e-limitacoes">5.3.1 Vantagens e limitações<a class="headerlink" href="#531-vantagens-e-limitacoes" title="Permanent link">&para;</a></h3>
+<h3 id="541-vantagens-e-limitacoes">5.4.1 Vantagens e limitações<a class="headerlink" href="#541-vantagens-e-limitacoes" title="Permanent link">&para;</a></h3>
 <p>As principais vantagens de um ORM são a produtividade — escrever menos SQL boilerplate —, a portabilidade entre bancos de dados diferentes, e a integração natural com o sistema de tipos da linguagem. No caso do Prisma, essa integração vai além: o TypeScript (e o JavaScript com JSDoc) obtém autocompletar e verificação de tipos para todas as operações do banco.</p>
 <p>As limitações surgem em cenários de alta complexidade: consultas muito específicas, otimizações finas de performance ou uso de funcionalidades avançadas do banco podem exigir SQL bruto (<em>raw queries</em>), que todos os ORMs suportam como válvula de escape.</p>
-<h3 id="532-prisma-vs-sequelize-visao-geral-comparativa">5.3.2 Prisma vs. Sequelize: visão geral comparativa<a class="headerlink" href="#532-prisma-vs-sequelize-visao-geral-comparativa" title="Permanent link">&para;</a></h3>
+<h3 id="542-prisma-vs-sequelize-visao-geral-comparativa">5.4.2 Prisma vs. Sequelize: visão geral comparativa<a class="headerlink" href="#542-prisma-vs-sequelize-visao-geral-comparativa" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -865,8 +974,8 @@
 </table>
 <p>A escolha entre os dois depende do contexto: o Prisma é recomendado para projetos novos que valorizam produtividade e tipagem; o Sequelize é frequentemente encontrado em projetos existentes e equipes com experiência prévia em ORMs tradicionais. Este capítulo cobre ambos para que o desenvolvedor possa atuar em qualquer cenário.</p>
 <hr />
-<h2 id="54-prisma">5.4 Prisma<a class="headerlink" href="#54-prisma" title="Permanent link">&para;</a></h2>
-<h3 id="541-instalacao-e-configuracao-inicial">5.4.1 Instalação e configuração inicial<a class="headerlink" href="#541-instalacao-e-configuracao-inicial" title="Permanent link">&para;</a></h3>
+<h2 id="55-prisma">5.5 Prisma<a class="headerlink" href="#55-prisma" title="Permanent link">&para;</a></h2>
+<h3 id="551-instalacao-e-configuracao-inicial">5.5.1 Instalação e configuração inicial<a class="headerlink" href="#551-instalacao-e-configuracao-inicial" title="Permanent link">&para;</a></h3>
 <p>O Prisma é composto por três partes: o <strong>Prisma Client</strong> (a biblioteca de acesso ao banco, usada no código da aplicação), o <strong>Prisma CLI</strong> (ferramenta de linha de comando para migrations e geração de código) e o <strong>Prisma Schema</strong> (arquivo declarativo que define os modelos e a conexão).</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Instalar as dependências</span>
 npm<span class="w"> </span>install<span class="w"> </span>@prisma/client
@@ -885,7 +994,7 @@ npx<span class="w"> </span>prisma<span class="w"> </span>init<span class="w"> </
 <span class="c1"># SQLite (arquivo local — ideal para desenvolvimento)</span>
 <span class="nv">DATABASE_URL</span><span class="o">=</span><span class="s2">&quot;file:./dev.db&quot;</span>
 </code></pre></div>
-<h3 id="542-o-prisma-schema">5.4.2 O Prisma Schema<a class="headerlink" href="#542-o-prisma-schema" title="Permanent link">&para;</a></h3>
+<h3 id="552-o-prisma-schema">5.5.2 O Prisma Schema<a class="headerlink" href="#552-o-prisma-schema" title="Permanent link">&para;</a></h3>
 <p>O <strong>Prisma Schema</strong> (<code>prisma/schema.prisma</code>) é o coração do Prisma. Nele são definidos o provider do banco de dados, a URL de conexão e os <strong>models</strong> — representações das entidades do domínio. A sintaxe é declarativa e fortemente tipada:</p>
 <div class="highlight"><pre><span></span><code>// prisma/schema.prisma
 
@@ -922,7 +1031,7 @@ model Post {
 }
 </code></pre></div>
 <p>Cada campo do model corresponde a uma coluna da tabela. Os decoradores (<code>@id</code>, <code>@unique</code>, <code>@default</code>, <code>@map</code>) controlam o comportamento do campo no banco. A diretiva <code>@@map</code> define o nome da tabela, permitindo usar convenções diferentes no código e no banco (camelCase no código, snake_case no banco).</p>
-<h3 id="543-migrations-com-prisma">5.4.3 Migrations com Prisma<a class="headerlink" href="#543-migrations-com-prisma" title="Permanent link">&para;</a></h3>
+<h3 id="553-migrations-com-prisma">5.5.3 Migrations com Prisma<a class="headerlink" href="#553-migrations-com-prisma" title="Permanent link">&para;</a></h3>
 <p>Uma <strong>migration</strong> é a tradução das alterações no schema para comandos SQL que modificam o banco de dados. O Prisma gera as migrations automaticamente a partir das diferenças entre o schema atual e o estado do banco:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Cria a migration e aplica ao banco de desenvolvimento</span>
 npx<span class="w"> </span>prisma<span class="w"> </span>migrate<span class="w"> </span>dev<span class="w"> </span>--name<span class="w"> </span>criar_tabelas_iniciais
@@ -940,7 +1049,7 @@ npx<span class="w"> </span>prisma<span class="w"> </span>migrate<span class="w">
 <p>Após qualquer alteração no schema, é necessário regenerar o Prisma Client:</p>
 <div class="highlight"><pre><span></span><code>npx<span class="w"> </span>prisma<span class="w"> </span>generate
 </code></pre></div>
-<h3 id="544-configurando-o-prisma-client">5.4.4 Configurando o Prisma Client<a class="headerlink" href="#544-configurando-o-prisma-client" title="Permanent link">&para;</a></h3>
+<h3 id="554-configurando-o-prisma-client">5.5.4 Configurando o Prisma Client<a class="headerlink" href="#554-configurando-o-prisma-client" title="Permanent link">&para;</a></h3>
 <p>O Prisma Client deve ser instanciado uma única vez na aplicação e reutilizado por todos os módulos. O padrão recomendado é criar um singleton:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/config/database.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@prisma/client&#39;</span><span class="p">;</span>
@@ -957,7 +1066,7 @@ npx<span class="w"> </span>prisma<span class="w"> </span>migrate<span class="w">
 <p class="admonition-title">Por que um singleton?</p>
 <p>O <code>PrismaClient</code> mantém um pool de conexões com o banco. Instanciar múltiplos clients desperdiça conexões e pode causar erros de limite de conexões em produção. O singleton garante que toda a aplicação compartilhe o mesmo pool.</p>
 </div>
-<h3 id="545-crud-completo-com-prisma">5.4.5 CRUD completo com Prisma<a class="headerlink" href="#545-crud-completo-com-prisma" title="Permanent link">&para;</a></h3>
+<h3 id="555-crud-completo-com-prisma">5.5.5 CRUD completo com Prisma<a class="headerlink" href="#555-crud-completo-com-prisma" title="Permanent link">&para;</a></h3>
 <p>Com o client configurado, as operações de CRUD são realizadas através de métodos tipados gerados automaticamente para cada model:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prisma</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../config/database.js&#39;</span><span class="p">;</span>
 
@@ -1008,7 +1117,7 @@ npx<span class="w"> </span>prisma<span class="w"> </span>migrate<span class="w">
 <span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ativo</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div>
-<h3 id="546-relacionamentos-com-prisma">5.4.6 Relacionamentos com Prisma<a class="headerlink" href="#546-relacionamentos-com-prisma" title="Permanent link">&para;</a></h3>
+<h3 id="556-relacionamentos-com-prisma">5.5.6 Relacionamentos com Prisma<a class="headerlink" href="#556-relacionamentos-com-prisma" title="Permanent link">&para;</a></h3>
 <p>O Prisma torna os relacionamentos de primeira classe. O campo <code>posts</code> no model <code>Usuario</code> e o campo <code>autor</code> no model <code>Post</code> definem um relacionamento <strong>1:N</strong> (um usuário tem muitos posts). Para incluir dados relacionados em uma consulta, usa-se <code>include</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Buscar usuário com seus posts</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">usuarioComPosts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span>
@@ -1060,8 +1169,8 @@ model Tag {
 <span class="p">});</span>
 </code></pre></div>
 <hr />
-<h2 id="55-sequelize">5.5 Sequelize<a class="headerlink" href="#55-sequelize" title="Permanent link">&para;</a></h2>
-<h3 id="551-instalacao-e-configuracao-inicial">5.5.1 Instalação e configuração inicial<a class="headerlink" href="#551-instalacao-e-configuracao-inicial" title="Permanent link">&para;</a></h3>
+<h2 id="56-sequelize">5.6 Sequelize<a class="headerlink" href="#56-sequelize" title="Permanent link">&para;</a></h2>
+<h3 id="561-instalacao-e-configuracao-inicial">5.6.1 Instalação e configuração inicial<a class="headerlink" href="#561-instalacao-e-configuracao-inicial" title="Permanent link">&para;</a></h3>
 <p>O Sequelize é instalado junto com o driver específico do banco de dados. Para PostgreSQL, usa-se o <code>pg</code>; para SQLite, o <code>better-sqlite3</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># PostgreSQL</span>
 npm<span class="w"> </span>install<span class="w"> </span>sequelize<span class="w"> </span>pg<span class="w"> </span>pg-hstore
@@ -1083,7 +1192,7 @@ models/
   index.js             # inicialização da instância Sequelize
 seeders/               # dados iniciais para o banco
 </code></pre></div>
-<h3 id="552-configuracao-da-conexao">5.5.2 Configuração da conexão<a class="headerlink" href="#552-configuracao-da-conexao" title="Permanent link">&para;</a></h3>
+<h3 id="562-configuracao-da-conexao">5.6.2 Configuração da conexão<a class="headerlink" href="#562-configuracao-da-conexao" title="Permanent link">&para;</a></h3>
 <p>O arquivo <code>config/config.json</code> (ou <code>config/config.js</code> para suportar variáveis de ambiente) define as conexões por ambiente:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// config/config.js</span>
 <span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="p">{</span>
@@ -1119,7 +1228,7 @@ seeders/               # dados iniciais para o banco
 <span class="w">  </span><span class="o">?</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Sequelize</span><span class="p">(</span><span class="nx">dbConfig</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span><span class="w"> </span><span class="nx">dbConfig</span><span class="p">)</span>
 <span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Sequelize</span><span class="p">(</span><span class="nx">dbConfig</span><span class="p">);</span>
 </code></pre></div>
-<h3 id="553-definicao-de-models">5.5.3 Definição de Models<a class="headerlink" href="#553-definicao-de-models" title="Permanent link">&para;</a></h3>
+<h3 id="563-definicao-de-models">5.6.3 Definição de Models<a class="headerlink" href="#563-definicao-de-models" title="Permanent link">&para;</a></h3>
 <p>No Sequelize, os models são definidos com <code>sequelize.define()</code> ou estendendo a classe <code>Model</code>. A abordagem com classe é mais moderna e recomendada:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/models/usuario.model.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Model</span><span class="p">,</span><span class="w"> </span><span class="nx">DataTypes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sequelize&#39;</span><span class="p">;</span>
@@ -1158,7 +1267,7 @@ seeders/               # dados iniciais para o banco
 <span class="w">  </span><span class="p">}</span>
 <span class="p">);</span>
 </code></pre></div>
-<h3 id="554-migrations-com-sequelize">5.5.4 Migrations com Sequelize<a class="headerlink" href="#554-migrations-com-sequelize" title="Permanent link">&para;</a></h3>
+<h3 id="564-migrations-com-sequelize">5.6.4 Migrations com Sequelize<a class="headerlink" href="#564-migrations-com-sequelize" title="Permanent link">&para;</a></h3>
 <p>As migrations do Sequelize são criadas manualmente pela CLI ou escritas à mão:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Gerar arquivo de migration em branco</span>
 npx<span class="w"> </span>sequelize-cli<span class="w"> </span>migration:generate<span class="w"> </span>--name<span class="w"> </span>criar-tabela-usuarios
@@ -1213,7 +1322,7 @@ npx<span class="w"> </span>sequelize-cli<span class="w"> </span>db:migrate:undo:
 <span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">queryInterface</span><span class="p">.</span><span class="nx">dropTable</span><span class="p">(</span><span class="s1">&#39;usuarios&#39;</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="555-crud-completo-com-sequelize">5.5.5 CRUD completo com Sequelize<a class="headerlink" href="#555-crud-completo-com-sequelize" title="Permanent link">&para;</a></h3>
+<h3 id="565-crud-completo-com-sequelize">5.6.5 CRUD completo com Sequelize<a class="headerlink" href="#565-crud-completo-com-sequelize" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Usuario</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../models/usuario.model.js&#39;</span><span class="p">;</span>
 
 <span class="c1">// ── CREATE ──────────────────────────────────────────────</span>
@@ -1268,7 +1377,7 @@ npx<span class="w"> </span>sequelize-cli<span class="w"> </span>db:migrate:undo:
 <span class="c1">// ── COUNT ───────────────────────────────────────────────</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">count</span><span class="p">({</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ativo</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
 </code></pre></div>
-<h3 id="556-relacionamentos-com-sequelize">5.5.6 Relacionamentos com Sequelize<a class="headerlink" href="#556-relacionamentos-com-sequelize" title="Permanent link">&para;</a></h3>
+<h3 id="566-relacionamentos-com-sequelize">5.6.6 Relacionamentos com Sequelize<a class="headerlink" href="#566-relacionamentos-com-sequelize" title="Permanent link">&para;</a></h3>
 <p>Os relacionamentos são definidos chamando métodos de associação após a definição dos models. O padrão recomendado é centralizar as associações em um arquivo dedicado ou no próprio model:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/models/post.model.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Model</span><span class="p">,</span><span class="w"> </span><span class="nx">DataTypes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sequelize&#39;</span><span class="p">;</span>
@@ -1319,9 +1428,9 @@ npx<span class="w"> </span>sequelize-cli<span class="w"> </span>db:migrate:undo:
 <span class="p">});</span>
 </code></pre></div>
 <hr />
-<h2 id="56-substituindo-o-repository-em-memoria">5.6 Substituindo o Repository em Memória<a class="headerlink" href="#56-substituindo-o-repository-em-memoria" title="Permanent link">&para;</a></h2>
+<h2 id="57-substituindo-o-repository-em-memoria">5.7 Substituindo o Repository em Memória<a class="headerlink" href="#57-substituindo-o-repository-em-memoria" title="Permanent link">&para;</a></h2>
 <p>O benefício central do Repository Pattern — demonstrado no Capítulo 4 — materializa-se agora: basta criar novas implementações do repositório, uma para Prisma e outra para Sequelize, sem alterar uma linha do <code>UsuariosService</code>.</p>
-<h3 id="561-usuariosrepositoryprisma">5.6.1 UsuariosRepositoryPrisma<a class="headerlink" href="#561-usuariosrepositoryprisma" title="Permanent link">&para;</a></h3>
+<h3 id="571-usuariosrepositoryprisma">5.7.1 UsuariosRepositoryPrisma<a class="headerlink" href="#571-usuariosrepositoryprisma" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/repositories/usuarios.repository.prisma.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prisma</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../config/database.js&#39;</span><span class="p">;</span>
 
@@ -1355,7 +1464,7 @@ npx<span class="w"> </span>sequelize-cli<span class="w"> </span>db:migrate:undo:
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="562-usuariosrepositorysequelize">5.6.2 UsuariosRepositorySequelize<a class="headerlink" href="#562-usuariosrepositorysequelize" title="Permanent link">&para;</a></h3>
+<h3 id="572-usuariosrepositorysequelize">5.7.2 UsuariosRepositorySequelize<a class="headerlink" href="#572-usuariosrepositorysequelize" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/repositories/usuarios.repository.sequelize.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Usuario</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../models/usuario.model.js&#39;</span><span class="p">;</span>
 
@@ -1391,7 +1500,7 @@ npx<span class="w"> </span>sequelize-cli<span class="w"> </span>db:migrate:undo:
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="563-trocando-a-implementacao-no-composition-root">5.6.3 Trocando a implementação no Composition Root<a class="headerlink" href="#563-trocando-a-implementacao-no-composition-root" title="Permanent link">&para;</a></h3>
+<h3 id="573-trocando-a-implementacao-no-composition-root">5.7.3 Trocando a implementação no Composition Root<a class="headerlink" href="#573-trocando-a-implementacao-no-composition-root" title="Permanent link">&para;</a></h3>
 <p>Para alternar entre as implementações, basta mudar uma linha no arquivo de rotas — o service e o controller não são tocados:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// src/routes/usuarios.routes.js</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
@@ -1420,7 +1529,386 @@ npx<span class="w"> </span>sequelize-cli<span class="w"> </span>db:migrate:undo:
 </code></pre></div>
 <p>Esta é a prova concreta do valor do Repository Pattern: quatro capítulos de construção arquitetural resultam em uma troca de implementação de banco de dados que afeta exatamente <strong>uma linha</strong> de código.</p>
 <hr />
-<h2 id="57-comparativo-final-prisma-vs-sequelize">5.7 Comparativo Final: Prisma vs. Sequelize<a class="headerlink" href="#57-comparativo-final-prisma-vs-sequelize" title="Permanent link">&para;</a></h2>
+<h2 id="58-persistindo-relacionamentos-1n-n1-e-nm">5.8 Persistindo Relacionamentos: 1:N, N:1 e N:M<a class="headerlink" href="#58-persistindo-relacionamentos-1n-n1-e-nm" title="Permanent link">&para;</a></h2>
+<p>Os relacionamentos entre entidades são um dos pontos em que os ORMs entregam mais valor em relação ao SQL puro. Esta seção consolida os padrões de relacionamento para Prisma e Sequelize lado a lado, usando o domínio <code>Usuario → Post → Tag</code> como fio condutor.</p>
+<h3 id="581-relacionamento-1n-e-n1-um-para-muitos-muitos-para-um">5.8.1 Relacionamento 1:N e N:1 (Um para Muitos / Muitos para Um)<a class="headerlink" href="#581-relacionamento-1n-e-n1-um-para-muitos-muitos-para-um" title="Permanent link">&para;</a></h3>
+<p>Um <strong>relacionamento 1:N</strong> existe quando um registro de uma tabela pode se associar a muitos registros de outra. No domínio do curso, um <code>Usuario</code> tem muitos <code>Post</code>s; inversamente, cada <code>Post</code> pertence a um único <code>Usuario</code> — esse lado inverso é o <strong>N:1</strong>.</p>
+<p><strong>Schema Prisma:</strong></p>
+<div class="highlight"><pre><span></span><code>model Usuario {
+  id    Int    @id @default(autoincrement())
+  nome  String
+  posts Post[]          // lado &quot;1&quot; — array de posts
+}
+
+model Post {
+  id      Int     @id @default(autoincrement())
+  titulo  String
+  autor   Usuario @relation(fields: [autorId], references: [id], onDelete: Cascade)
+  autorId Int     @map(&quot;autor_id&quot;)  // lado &quot;N&quot; — chave estrangeira
+}
+</code></pre></div>
+<p><strong>Model Sequelize:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Definição da associação (associations.js)</span>
+<span class="nx">Usuario</span><span class="p">.</span><span class="nx">hasMany</span><span class="p">(</span><span class="nx">Post</span><span class="p">,</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="nx">foreignKey</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;autorId&#39;</span><span class="p">,</span><span class="w"> </span><span class="kr">as</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;posts&#39;</span><span class="w">  </span><span class="p">});</span><span class="w">  </span><span class="c1">// 1:N</span>
+<span class="nx">Post</span><span class="p">.</span><span class="nx">belongsTo</span><span class="p">(</span><span class="nx">Usuario</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">foreignKey</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;autorId&#39;</span><span class="p">,</span><span class="w"> </span><span class="kr">as</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;autor&#39;</span><span class="w">  </span><span class="p">});</span><span class="w">  </span><span class="c1">// N:1</span>
+</code></pre></div>
+<p><strong>Consultas com Prisma:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Buscar usuário com todos os seus posts (1:N)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">usuario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">posts</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">orderBy</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">criadoEm</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;desc&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Buscar post com o autor (N:1)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">post</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">post</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">autor</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Criar post já vinculado ao autor existente</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">post</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">titulo</span><span class="o">:</span><span class="w">  </span><span class="s1">&#39;Novo post&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">autor</span><span class="o">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="nx">connect</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Consultas com Sequelize:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Usuario</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../models/usuario.model.js&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Post</span><span class="w"> </span><span class="p">}</span><span class="w">    </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../models/post.model.js&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="s1">&#39;../models/associations.js&#39;</span><span class="p">;</span>
+
+<span class="c1">// Buscar usuário com posts (1:N)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">usuario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findByPk</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="nx">Post</span><span class="p">,</span><span class="w"> </span><span class="kr">as</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;posts&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">order</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s1">&#39;createdAt&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DESC&#39;</span><span class="p">]]</span><span class="w"> </span><span class="p">}],</span>
+<span class="p">});</span>
+
+<span class="c1">// Buscar post com autor (N:1)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">post</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Post</span><span class="p">.</span><span class="nx">findByPk</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">,</span><span class="w"> </span><span class="kr">as</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;autor&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">attributes</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;nome&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}],</span>
+<span class="p">});</span>
+
+<span class="c1">// Criar post via método de instância</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findByPk</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">u</span><span class="p">.</span><span class="nx">createPost</span><span class="p">({</span><span class="w"> </span><span class="nx">titulo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Novo post&#39;</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div>
+<h3 id="582-relacionamento-nm-muitos-para-muitos">5.8.2 Relacionamento N:M (Muitos para Muitos)<a class="headerlink" href="#582-relacionamento-nm-muitos-para-muitos" title="Permanent link">&para;</a></h3>
+<p>Um <strong>relacionamento N:M</strong> existe quando muitos registros de uma tabela podem se associar a muitos registros de outra — e vice-versa. O exemplo clássico é <code>Post</code> ↔ <code>Tag</code>: um post tem muitas tags, e uma tag aparece em muitos posts. Esse relacionamento exige uma <strong>tabela de junção</strong> intermediária (<code>post_tags</code>).</p>
+<p><strong>Schema Prisma — N:M implícito (Prisma gerencia a tabela de junção):</strong></p>
+<div class="highlight"><pre><span></span><code>model Post {
+  id   Int   @id @default(autoincrement())
+  tags Tag[]
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  nome  String @unique
+  posts Post[]
+}
+// Prisma cria automaticamente a tabela _PostToTag
+</code></pre></div>
+<p><strong>Schema Prisma — N:M explícito (tabela de junção com campos extras):</strong></p>
+<div class="highlight"><pre><span></span><code>model Post {
+  id       Int       @id @default(autoincrement())
+  postTags PostTag[]
+}
+
+model Tag {
+  id       Int       @id @default(autoincrement())
+  nome     String    @unique
+  postTags PostTag[]
+}
+
+// Tabela de junção explícita — permite campos adicionais
+model PostTag {
+  postId    Int      @map(&quot;post_id&quot;)
+  tagId     Int      @map(&quot;tag_id&quot;)
+  atribuido DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id])
+  tag  Tag  @relation(fields: [tagId],  references: [id])
+
+  @@id([postId, tagId])
+  @@map(&quot;post_tags&quot;)
+}
+</code></pre></div>
+<p><strong>Consultas N:M com Prisma:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Criar post e conectar tags existentes (ou criar novas)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">post</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">post</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">titulo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Post com tags&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">tags</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">connectOrCreate</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;nodejs&#39;</span><span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;nodejs&#39;</span><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;backend&#39;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;backend&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tags</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Buscar todos os posts de uma tag</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">postsNodejs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">tag</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;nodejs&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">posts</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Adicionar tag a post existente</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">post</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">data</span><span class="o">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">tags</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">connect</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;prisma&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Remover tag de post</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">post</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">data</span><span class="o">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">tags</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">disconnect</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;prisma&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Associação e consultas N:M com Sequelize:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// associations.js</span>
+<span class="nx">Post</span><span class="p">.</span><span class="nx">belongsToMany</span><span class="p">(</span><span class="nx">Tag</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">through</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;post_tags&#39;</span><span class="p">,</span><span class="w"> </span><span class="kr">as</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;tags&#39;</span><span class="w">  </span><span class="p">});</span>
+<span class="nx">Tag</span><span class="p">.</span><span class="nx">belongsToMany</span><span class="p">(</span><span class="nx">Post</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">through</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;post_tags&#39;</span><span class="p">,</span><span class="w"> </span><span class="kr">as</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;posts&#39;</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Buscar post com suas tags</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">post</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Post</span><span class="p">.</span><span class="nx">findByPk</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="nx">Tag</span><span class="p">,</span><span class="w"> </span><span class="kr">as</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;tags&#39;</span><span class="w"> </span><span class="p">}],</span>
+<span class="p">});</span>
+
+<span class="c1">// Adicionar tags a um post</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Post</span><span class="p">.</span><span class="nx">findByPk</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Tag</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;nodejs&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">p</span><span class="p">.</span><span class="nx">addTag</span><span class="p">(</span><span class="nx">tag</span><span class="p">);</span><span class="w">          </span><span class="c1">// método gerado automaticamente pela associação</span>
+
+<span class="c1">// Definir tags (substitui todas as anteriores)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Tag</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;nodejs&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;backend&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">p</span><span class="p">.</span><span class="nx">setTags</span><span class="p">(</span><span class="nx">tags</span><span class="p">);</span>
+
+<span class="c1">// Remover uma tag</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">p</span><span class="p">.</span><span class="nx">removeTag</span><span class="p">(</span><span class="nx">tag</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="583-boas-praticas-com-relacionamentos">5.8.3 Boas práticas com relacionamentos<a class="headerlink" href="#583-boas-praticas-com-relacionamentos" title="Permanent link">&para;</a></h3>
+<p><strong><code>onDelete</code> e <code>onUpdate</code>:</strong> defina o comportamento ao deletar ou atualizar o registro pai. <code>Cascade</code> remove os filhos automaticamente; <code>Restrict</code> impede a remoção do pai enquanto houver filhos; <code>SetNull</code> atribui <code>NULL</code> à chave estrangeira dos filhos.</p>
+<p><strong>Evite o problema N+1:</strong> buscar um usuário e depois fazer um <code>findMany</code> de posts para cada usuário resulta em N+1 queries. Use sempre <code>include</code> / <code>eager loading</code> para trazer os dados relacionados em uma única query com JOIN.</p>
+<p><strong><code>select</code> parcial em includes:</strong> nunca faça <code>include: { autor: true }</code> quando só precisa do nome. Use <code>include: { autor: { select: { nome: true } } }</code> para evitar trazer campos desnecessários (especialmente <code>senha</code>).</p>
+<hr />
+<h2 id="59-filtros-ordenacao-e-paginacao">5.9 Filtros, Ordenação e Paginação<a class="headerlink" href="#59-filtros-ordenacao-e-paginacao" title="Permanent link">&para;</a></h2>
+<p>Qualquer API REST de produção precisa suportar filtragem, ordenação e paginação nos endpoints de listagem. Esta seção apresenta as APIs de Prisma e Sequelize para esses casos de uso, cobrindo desde os casos mais simples até combinações avançadas.</p>
+<h3 id="591-filtros-com-prisma">5.9.1 Filtros com Prisma<a class="headerlink" href="#591-filtros-com-prisma" title="Permanent link">&para;</a></h3>
+<p>O Prisma usa a chave <code>where</code> com operadores de comparação nativos:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prisma</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../config/database.js&#39;</span><span class="p">;</span>
+
+<span class="c1">// Igualdade simples</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">usuarios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ativo</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Comparações numéricas e de data</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">recentes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">post</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">criadoEm</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">gte</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="s1">&#39;2025-01-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// &gt;=</span>
+<span class="w">    </span><span class="nx">visualizacoes</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">gt</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="w"> </span><span class="p">},</span><span class="w">                  </span><span class="c1">// &gt;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Busca textual (LIKE)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">resultado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">contains</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;silva&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">mode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;insensitive&#39;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// ILIKE &#39;%silva%&#39;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Operadores lógicos AND, OR, NOT</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">filtrado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">post</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">AND</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">publicado</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">OR</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nx">titulo</span><span class="o">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="nx">contains</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;node&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nx">conteudo</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">contains</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;node&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">]},</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nx">NOT</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">autorId</span><span class="o">:</span><span class="w"> </span><span class="mf">99</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Filtro por campo de relacionamento (JOIN implícito)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">postsDeAna</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">post</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">autor</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">contains</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Ana&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<h3 id="592-filtros-com-sequelize">5.9.2 Filtros com Sequelize<a class="headerlink" href="#592-filtros-com-sequelize" title="Permanent link">&para;</a></h3>
+<p>O Sequelize usa a chave <code>where</code> com operadores importados de <code>sequelize</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Op</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;sequelize&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Usuario</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../models/usuario.model.js&#39;</span><span class="p">;</span>
+
+<span class="c1">// Igualdade simples</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">ativos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ativo</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// Comparações</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">recentes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Post</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">createdAt</span><span class="o">:</span><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="nx">Op</span><span class="p">.</span><span class="nx">gte</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="s1">&#39;2025-01-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">visualizacoes</span><span class="o">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="nx">Op</span><span class="p">.</span><span class="nx">gt</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Busca textual (LIKE / ILIKE)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">resultado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="nx">Op</span><span class="p">.</span><span class="nx">iLike</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;%silva%&#39;</span><span class="w"> </span><span class="p">},</span><span class="w">  </span><span class="c1">// case-insensitive (PostgreSQL)</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Operadores lógicos</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">filtrado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Post</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">[</span><span class="nx">Op</span><span class="p">.</span><span class="nx">and</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">publicado</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="nx">Op</span><span class="p">.</span><span class="nx">or</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nx">titulo</span><span class="o">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="nx">Op</span><span class="p">.</span><span class="nx">like</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;%node%&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nx">conteudo</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="nx">Op</span><span class="p">.</span><span class="nx">like</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;%node%&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">]},</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nx">autorId</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="nx">Op</span><span class="p">.</span><span class="nx">ne</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="mf">99</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// != 99</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// IN — buscar por lista de valores</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">selecionados</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="nx">Op</span><span class="p">.</span><span class="ow">in</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<h3 id="593-ordenacao">5.9.3 Ordenação<a class="headerlink" href="#593-ordenacao" title="Permanent link">&para;</a></h3>
+<p><strong>Prisma:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Ordenação simples</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">posts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">post</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">orderBy</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">criadoEm</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;desc&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Múltiplos critérios de ordenação</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">usuarios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">orderBy</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w">     </span><span class="s1">&#39;asc&#39;</span><span class="w">  </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">criadoEm</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;desc&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">});</span>
+
+<span class="c1">// Ordenar por campo de relacionamento</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">posts2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">post</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">orderBy</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">autor</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;asc&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Sequelize:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Ordenação simples</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">posts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Post</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">order</span><span class="o">:</span><span class="w"> </span><span class="p">[[</span><span class="s1">&#39;createdAt&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DESC&#39;</span><span class="p">]],</span>
+<span class="p">});</span>
+
+<span class="c1">// Múltiplos critérios</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">usuarios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">order</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="s1">&#39;nome&#39;</span><span class="p">,</span><span class="w">      </span><span class="s1">&#39;ASC&#39;</span><span class="w"> </span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s1">&#39;createdAt&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DESC&#39;</span><span class="p">],</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">});</span>
+
+<span class="c1">// Ordenar por campo de relacionamento (com include)</span>
+<span class="k">import</span><span class="w"> </span><span class="s1">&#39;../models/associations.js&#39;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">posts2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Post</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">,</span><span class="w"> </span><span class="kr">as</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;autor&#39;</span><span class="w"> </span><span class="p">}],</span>
+<span class="w">  </span><span class="nx">order</span><span class="o">:</span><span class="w">   </span><span class="p">[[{</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">,</span><span class="w"> </span><span class="kr">as</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;autor&#39;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="s1">&#39;nome&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ASC&#39;</span><span class="p">]],</span>
+<span class="p">});</span>
+</code></pre></div>
+<h3 id="594-paginacao">5.9.4 Paginação<a class="headerlink" href="#594-paginacao" title="Permanent link">&para;</a></h3>
+<p>A paginação baseada em <strong>offset</strong> é a mais comum em APIs REST: o cliente envia <code>pagina</code> e <code>por_pagina</code>, e o servidor retorna a fatia correspondente.</p>
+<p><strong>Função utilitária para calcular offset:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/utils/paginacao.js</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">calcularPaginacao</span><span class="p">(</span><span class="nx">pagina</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">porPagina</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">paginaNum</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">pagina</span><span class="p">));</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">limite</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="mf">100</span><span class="p">,</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">porPagina</span><span class="p">)));</span><span class="w"> </span><span class="c1">// máx 100</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">offset</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">paginaNum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">limite</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">limite</span><span class="p">,</span><span class="w"> </span><span class="nx">offset</span><span class="p">,</span><span class="w"> </span><span class="nx">pagina</span><span class="o">:</span><span class="w"> </span><span class="nx">paginaNum</span><span class="w"> </span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Paginação com Prisma:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">calcularPaginacao</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../utils/paginacao.js&#39;</span><span class="p">;</span>
+
+<span class="c1">// No repositório</span>
+<span class="k">async</span><span class="w"> </span><span class="nx">listarTodos</span><span class="p">({</span><span class="w"> </span><span class="nx">pagina</span><span class="p">,</span><span class="w"> </span><span class="nx">porPagina</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">limite</span><span class="p">,</span><span class="w"> </span><span class="nx">offset</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">calcularPaginacao</span><span class="p">(</span><span class="nx">pagina</span><span class="p">,</span><span class="w"> </span><span class="nx">porPagina</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">dados</span><span class="p">,</span><span class="w"> </span><span class="nx">total</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+<span class="w">    </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">skip</span><span class="o">:</span><span class="w">    </span><span class="nx">offset</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">take</span><span class="o">:</span><span class="w">    </span><span class="nx">limite</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">orderBy</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">criadoEm</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;desc&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">}),</span>
+<span class="w">    </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">usuario</span><span class="p">.</span><span class="nx">count</span><span class="p">(),</span>
+<span class="w">  </span><span class="p">]);</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">dados</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">paginacao</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">total</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">pagina</span><span class="o">:</span><span class="w">    </span><span class="nx">calcularPaginacao</span><span class="p">(</span><span class="nx">pagina</span><span class="p">,</span><span class="w"> </span><span class="nx">porPagina</span><span class="p">).</span><span class="nx">pagina</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">porPagina</span><span class="o">:</span><span class="w"> </span><span class="nx">limite</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">paginas</span><span class="o">:</span><span class="w">   </span><span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">total</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nx">limite</span><span class="p">),</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Paginação com Sequelize:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">async</span><span class="w"> </span><span class="nx">listarTodos</span><span class="p">({</span><span class="w"> </span><span class="nx">pagina</span><span class="p">,</span><span class="w"> </span><span class="nx">porPagina</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">limite</span><span class="p">,</span><span class="w"> </span><span class="nx">offset</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">calcularPaginacao</span><span class="p">(</span><span class="nx">pagina</span><span class="p">,</span><span class="w"> </span><span class="nx">porPagina</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">count</span><span class="o">:</span><span class="w"> </span><span class="nx">total</span><span class="p">,</span><span class="w"> </span><span class="nx">rows</span><span class="o">:</span><span class="w"> </span><span class="nx">dados</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findAndCountAll</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">limit</span><span class="o">:</span><span class="w">  </span><span class="nx">limite</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">offset</span><span class="o">:</span><span class="w"> </span><span class="nx">offset</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">order</span><span class="o">:</span><span class="w">  </span><span class="p">[[</span><span class="s1">&#39;createdAt&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DESC&#39;</span><span class="p">]],</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">dados</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">paginacao</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">total</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">pagina</span><span class="o">:</span><span class="w">    </span><span class="nx">calcularPaginacao</span><span class="p">(</span><span class="nx">pagina</span><span class="p">,</span><span class="w"> </span><span class="nx">porPagina</span><span class="p">).</span><span class="nx">pagina</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">porPagina</span><span class="o">:</span><span class="w"> </span><span class="nx">limite</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">paginas</span><span class="o">:</span><span class="w">   </span><span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">total</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nx">limite</span><span class="p">),</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Controller e rota correspondente:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// No controller</span>
+<span class="k">async</span><span class="w"> </span><span class="nx">listarTodos</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pagina</span><span class="p">,</span><span class="w"> </span><span class="nx">por_pagina</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">resultado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">service</span><span class="p">.</span><span class="nx">listarTodos</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">pagina</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">porPagina</span><span class="o">:</span><span class="w"> </span><span class="nx">por_pagina</span><span class="p">,</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">resultado</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Exemplos de uso</span>
+GET<span class="w"> </span>/api/usuarios?pagina<span class="o">=</span><span class="m">1</span><span class="p">&amp;</span><span class="nv">por_pagina</span><span class="o">=</span><span class="m">10</span>
+GET<span class="w"> </span>/api/usuarios?pagina<span class="o">=</span><span class="m">2</span><span class="p">&amp;</span><span class="nv">por_pagina</span><span class="o">=</span><span class="m">20</span>
+</code></pre></div>
+<p>O objeto de resposta retornado inclui tanto os dados quanto os metadados de paginação, padrão amplamente adotado em APIs REST:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;dados&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;paginacao&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;pagina&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;porPagina&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;paginas&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="510-comparativo-final-prisma-vs-sequelize">5.10 Comparativo Final: Prisma vs. Sequelize<a class="headerlink" href="#510-comparativo-final-prisma-vs-sequelize" title="Permanent link">&para;</a></h2>
 <p>Após explorar ambos os ORMs em profundidade, é possível traçar um comparativo mais detalhado para orientar a escolha em projetos reais:</p>
 <p><strong>Schema e migrations:</strong> o Prisma adota uma abordagem <em>schema-first</em> — o arquivo <code>schema.prisma</code> é a única fonte de verdade, e as migrations são geradas automaticamente. O Sequelize adota uma abordagem <em>code-first</em> com migrations manuais, o que oferece mais controle mas exige mais disciplina.</p>
 <p><strong>Experiência de desenvolvimento:</strong> o Prisma Client oferece autocompletar rico e verificação de tipos em tempo de compilação, o que reduz erros e melhora a produtividade especialmente em editores como VS Code. O Sequelize também suporta TypeScript, mas a inferência de tipos é menos precisa para consultas complexas.</p>
@@ -1428,7 +1916,139 @@ npx<span class="w"> </span>sequelize-cli<span class="w"> </span>db:migrate:undo:
 <p><strong>Adoção em projetos existentes:</strong> o Sequelize é encontrado em projetos Node.js desde 2011 e tem presença massiva em bases de código legadas. Saber trabalhar com ele é uma habilidade profissional relevante. O Prisma, por ser mais recente, é encontrado em projetos modernos que valorizam produtividade e tipagem.</p>
 <p>A recomendação para este curso é usar <strong>Prisma</strong> como ORM principal nos exercícios e no projeto final, por sua menor curva de aprendizado e melhor experiência de desenvolvimento. O Sequelize é apresentado como referência para que o estudante esteja preparado para encontrá-lo em ambientes de trabalho reais.</p>
 <hr />
-<h2 id="58-exercicios-praticos">5.8 Exercícios Práticos<a class="headerlink" href="#58-exercicios-praticos" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="511-bancos-de-dados-nao-relacionais">5.11 Bancos de Dados Não Relacionais<a class="headerlink" href="#511-bancos-de-dados-nao-relacionais" title="Permanent link">&para;</a></h2>
+<p>Até este ponto, todo o material trabalhou exclusivamente com bancos relacionais. No entanto, o ecossistema de persistência de dados é mais amplo: os <strong>bancos de dados não relacionais</strong> (também chamados de <em>NoSQL</em>) representam uma família de sistemas de armazenamento que abandonam o modelo de tabelas e SQL em favor de outros paradigmas de organização dos dados. Conhecê-los é essencial para escolher a ferramenta certa para cada problema.</p>
+<h3 id="5111-por-que-existem-bancos-nosql">5.11.1 Por que existem bancos NoSQL?<a class="headerlink" href="#5111-por-que-existem-bancos-nosql" title="Permanent link">&para;</a></h3>
+<p>Os bancos relacionais foram concebidos em uma era em que a consistência e a integridade dos dados eram as prioridades absolutas. Com a explosão da Web nos anos 2000, surgiram requisitos novos: volumes de dados na ordem de petabytes, leituras e escritas em milhões por segundo, esquemas que mudam frequentemente e dados naturalmente hierárquicos (documentos JSON, grafos de amigos, séries temporais de sensores). Os bancos relacionais, otimizados para consistência e joins, mostram limitações de escala e flexibilidade nesses cenários — o que impulsionou o surgimento dos bancos NoSQL.</p>
+<p>O termo <em>NoSQL</em> não significa "sem SQL" mas sim "Not Only SQL": muitos desses bancos oferecem uma linguagem de consulta própria, e alguns até suportam um subconjunto de SQL.</p>
+<h3 id="5112-principais-categorias">5.11.2 Principais categorias<a class="headerlink" href="#5112-principais-categorias" title="Permanent link">&para;</a></h3>
+<p><strong>Bancos de documentos</strong> armazenam dados como documentos semi-estruturados, geralmente em formato JSON ou BSON. Cada documento pode ter um esquema diferente dos demais — não há necessidade de definir colunas com antecedência. O <strong>MongoDB</strong> é o representante mais popular desta categoria, amplamente utilizado com Node.js através do driver nativo ou do ODM <em>Mongoose</em>. São especialmente adequados para catálogos de produtos com atributos variáveis, perfis de usuário e conteúdo de CMS.</p>
+<p><strong>Bancos chave-valor</strong> armazenam pares chave → valor, análogos a um <code>Map</code> gigante e persistente. O <strong>Redis</strong> é o representante dominante: além de persistência, oferece estruturas de dados avançadas (listas, sets, hashes) e operações atômicas. É amplamente utilizado como <strong>cache</strong> (armazenar resultados de queries caras), <strong>sessões</strong> (armazenar tokens JWT ou dados de sessão) e <strong>filas</strong> (pub/sub para comunicação entre serviços).</p>
+<p><strong>Bancos de colunas largas</strong> (<em>wide column</em>) armazenam dados em famílias de colunas, otimizados para escritas massivas e leituras por chave em escala de petabytes. O <strong>Apache Cassandra</strong> e o <strong>Google Bigtable</strong> são os representantes mais conhecidos. São utilizados em sistemas de monitoramento, dados de IoT e histórico de eventos em larga escala.</p>
+<p><strong>Bancos de grafos</strong> modelam os dados como nós e arestas, tornando triviais consultas que envolvem múltiplos relacionamentos (como "amigos de amigos", recomendações ou detecção de fraude). O <strong>Neo4j</strong> é o banco de grafos mais utilizado. Consultas que exigiriam múltiplos JOINs em SQL são expressas naturalmente em <em>Cypher</em>, a linguagem de consulta do Neo4j.</p>
+<h3 id="5113-comparativo-sql-vs-nosql">5.11.3 Comparativo: SQL vs. NoSQL<a class="headerlink" href="#5113-comparativo-sql-vs-nosql" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>Bancos Relacionais</th>
+<th>Bancos NoSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estrutura</td>
+<td>Tabelas fixas com schema</td>
+<td>Flexível (documento, chave-valor, grafo…)</td>
+</tr>
+<tr>
+<td>Consistência</td>
+<td>ACID por padrão</td>
+<td>Eventual ou configurável (BASE)</td>
+</tr>
+<tr>
+<td>Escala</td>
+<td>Vertical (scale-up)</td>
+<td>Horizontal (scale-out) nativa</td>
+</tr>
+<tr>
+<td>Consultas</td>
+<td>SQL poderoso (JOINs, agregações)</td>
+<td>API específica de cada banco</td>
+</tr>
+<tr>
+<td>Relacionamentos</td>
+<td>Nativos (chaves estrangeiras)</td>
+<td>Embutidos no documento ou gerenciados na aplicação</td>
+</tr>
+<tr>
+<td>Casos de uso</td>
+<td>Sistemas financeiros, ERPs, APIs REST</td>
+<td>Redes sociais, IoT, cache, dados de log</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5114-mongodb-e-mongoose-com-nodejs">5.11.4 MongoDB e Mongoose com Node.js<a class="headerlink" href="#5114-mongodb-e-mongoose-com-nodejs" title="Permanent link">&para;</a></h3>
+<p>O MongoDB merece destaque por ser o banco NoSQL mais utilizado em conjunto com Node.js e Express. O <strong>Mongoose</strong> é o ODM (<em>Object Document Mapper</em>) que fornece uma camada de abstração semelhante ao que os ORMs oferecem para bancos relacionais.</p>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>mongoose
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/config/database.js (MongoDB)</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">mongoose</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;mongoose&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">conectarMongoDB</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">MONGODB_URL</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;MongoDB conectado&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Definição de schema e model no Mongoose:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/models/usuario.model.js</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">mongoose</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;mongoose&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">usuarioSchema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">Schema</span><span class="p">(</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">nome</span><span class="o">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">unique</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">lowercase</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">senha</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">ativo</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nb">Boolean</span><span class="p">,</span><span class="w"> </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">timestamps</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// createdAt e updatedAt automáticos</span>
+<span class="p">);</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">Usuario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mongoose</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="s1">&#39;Usuario&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">usuarioSchema</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>CRUD com Mongoose:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Usuario</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../models/usuario.model.js&#39;</span><span class="p">;</span>
+
+<span class="c1">// CREATE</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">novo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Ana&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ana@ex.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">senha</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;hash&#39;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// READ</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">todos</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">find</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">porEmail</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ana@ex.com&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">porId</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="s1">&#39;64a1f...&#39;</span><span class="p">);</span>
+
+<span class="c1">// UPDATE</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">atualizado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findByIdAndUpdate</span><span class="p">(</span>
+<span class="w">  </span><span class="s1">&#39;64a1f...&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Ana Lima&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="ow">new</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w">   </span><span class="c1">// retorna o documento já atualizado</span>
+<span class="p">);</span>
+
+<span class="c1">// DELETE</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">Usuario</span><span class="p">.</span><span class="nx">findByIdAndDelete</span><span class="p">(</span><span class="s1">&#39;64a1f...&#39;</span><span class="p">);</span>
+</code></pre></div>
+<p>O Repository Pattern funciona com Mongoose da mesma forma que com Prisma e Sequelize — basta implementar a mesma interface de contrato.</p>
+<h3 id="5115-redis-como-cache-em-apis-express">5.11.5 Redis como cache em APIs Express<a class="headerlink" href="#5115-redis-como-cache-em-apis-express" title="Permanent link">&para;</a></h3>
+<p>O <strong>Redis</strong> merece menção especial no contexto de APIs Express por ser uma ferramenta transversal: não substitui o banco principal, mas complementa-o atuando como camada de cache de alta velocidade.</p>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>ioredis
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/config/cache.js</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">Redis</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;ioredis&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">redis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Redis</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">REDIS_URL</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Padrão cache-aside em um service:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">async</span><span class="w"> </span><span class="nx">buscarPorId</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">chave</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`usuario:</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// 1. Tentar o cache primeiro</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">cached</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">redis</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">chave</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">cached</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">cached</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// 2. Cache miss — buscar no banco</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">usuario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">repository</span><span class="p">.</span><span class="nx">buscarPorId</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">usuario</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s1">&#39;Usuário não encontrado&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">404</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// 3. Salvar no cache por 5 minutos (TTL = 300 segundos)</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">redis</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">chave</span><span class="p">,</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">usuario</span><span class="p">),</span><span class="w"> </span><span class="s1">&#39;EX&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">300</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">usuario</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Esse padrão reduz drasticamente a carga sobre o banco de dados para recursos consultados com frequência (perfis de usuário, configurações, listas de categorias), sem sacrificar a consistência — a entrada do cache expira automaticamente após o TTL configurado.</p>
+<h3 id="5116-quando-usar-cada-paradigma">5.11.6 Quando usar cada paradigma<a class="headerlink" href="#5116-quando-usar-cada-paradigma" title="Permanent link">&para;</a></h3>
+<p>A escolha do banco de dados deve ser guiada pelos requisitos do domínio, não por tendências tecnológicas. Como regra geral: use bancos relacionais (PostgreSQL, SQLite) como padrão — eles resolvem bem 90% dos casos de uso em APIs REST. Complemente com Redis para cache, sessões ou filas. Avalie MongoDB quando os dados forem naturalmente hierárquicos, o esquema mudar frequentemente, ou a escala de escrita exigir flexibilidade. Reserve Cassandra e Neo4j para casos de uso muito específicos que justifiquem a complexidade operacional adicional.</p>
+<h2 id="512-exercicios-praticos">5.12 Exercícios Práticos<a class="headerlink" href="#512-exercicios-praticos" title="Permanent link">&para;</a></h2>
 <h3 id="exercicio-51-schema-prisma-com-relacionamento">Exercício 5.1 — Schema Prisma com relacionamento<a class="headerlink" href="#exercicio-51-schema-prisma-com-relacionamento" title="Permanent link">&para;</a></h3>
 <p>Crie um schema Prisma com três models: <code>Usuario</code>, <code>Post</code> e <code>Categoria</code>. Um usuário tem muitos posts; um post pertence a uma categoria. Defina os campos apropriados, execute <code>prisma migrate dev</code> e verifique o schema gerado no banco com <code>prisma studio</code>.</p>
 <h3 id="exercicio-52-crud-com-prisma">Exercício 5.2 — CRUD com Prisma<a class="headerlink" href="#exercicio-52-crud-com-prisma" title="Permanent link">&para;</a></h3>
@@ -1440,7 +2060,7 @@ npx<span class="w"> </span>sequelize-cli<span class="w"> </span>db:migrate:undo:
 <h3 id="exercicio-55-paginacao">Exercício 5.5 — Paginação<a class="headerlink" href="#exercicio-55-paginacao" title="Permanent link">&para;</a></h3>
 <p>Implemente paginação no endpoint <code>GET /usuarios</code>, aceitando os query params <code>pagina</code> (número da página, padrão 1) e <code>por_pagina</code> (itens por página, padrão 10). Use <code>skip</code>/<code>take</code> no Prisma ou <code>offset</code>/<code>limit</code> no Sequelize para implementar a lógica no repositório.</p>
 <hr />
-<h2 id="59-referencias-e-leituras-complementares">5.9 Referências e Leituras Complementares<a class="headerlink" href="#59-referencias-e-leituras-complementares" title="Permanent link">&para;</a></h2>
+<h2 id="513-referencias-e-leituras-complementares">5.13 Referências e Leituras Complementares<a class="headerlink" href="#513-referencias-e-leituras-complementares" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.prisma.io/docs">Documentação oficial do Prisma</a></li>
 <li><a href="https://sequelize.org/docs/v6/">Documentação oficial do Sequelize</a></li>
