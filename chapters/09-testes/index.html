@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://leofernandesmo.github.io/pweb2-book/chapters/09-testes/">
       
       
+        <link rel="prev" href="../08-aut/">
+      
+      
+        <link rel="next" href="../10-seguranca/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +24,7 @@
     
     
       
-        <title>Capítulo 9 — Testes Automatizados: Jest, Supertest e Playwright - Programação Web 2 - Uma abordagem usando Node/Express</title>
+        <title>9. Testes Automatizados: Jest, Supertest e Playwright - Programação Web 2 - Uma abordagem usando Node/Express</title>
       
     
     
@@ -126,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Capítulo 9 — Testes Automatizados: Jest, Supertest e Playwright
+              9. Testes Automatizados: Jest, Supertest e Playwright
             
           </span>
         </div>
@@ -299,10 +303,12 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../00-how-to-use/" class="md-tabs__link">
           
   
@@ -481,8 +487,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -506,22 +514,31 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -532,7 +549,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Chapters
@@ -698,6 +715,673 @@
   
   <span class="md-ellipsis">
     7. Integração com Frontend Moderno: Vue.js e React
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-aut/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8. Autenticação e Autorização
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    9. Testes Automatizados: Jest, Supertest e Playwright
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    9. Testes Automatizados: Jest, Supertest e Playwright
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#91-introducao" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.1 Introdução
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#92-a-piramide-de-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2 A Pirâmide de Testes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.2 A Pirâmide de Testes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#921-fundamentos-conceituais" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2.1 Fundamentos conceituais
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#922-testes-unitarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2.2 Testes unitários
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#923-testes-de-integracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2.3 Testes de integração
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#924-testes-end-to-end" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2.4 Testes end-to-end
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#925-o-antipadrao-do-cone-de-sorvete" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2.5 O antipadrão do cone de sorvete
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#93-configurando-o-jest" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.3 Configurando o Jest
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.3 Configurando o Jest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#931-o-jest-como-framework-de-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.3.1 O Jest como framework de testes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#932-instalacao-e-configuracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.3.2 Instalação e configuração
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#933-estrutura-de-diretorios-de-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.3.3 Estrutura de diretórios de testes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#934-anatomia-de-um-teste-jest" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.3.4 Anatomia de um teste Jest
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#94-testes-unitarios-de-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.4 Testes Unitários de Services
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.4 Testes Unitários de Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#941-a-testabilidade-como-propriedade-arquitetural" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.4.1 A testabilidade como propriedade arquitetural
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#942-suite-completa-para-usuariosservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.4.2 Suíte completa para UsuariosService
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#943-boas-praticas-em-testes-unitarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.4.3 Boas práticas em testes unitários
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#95-mocks-stubs-e-spies" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.5 Mocks, Stubs e Spies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.5 Mocks, Stubs e Spies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#951-taxonomia-dos-dubles-de-teste" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.5.1 Taxonomia dos dublês de teste
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#952-uso-pratico-no-jest" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.5.2 Uso prático no Jest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#953-simulacao-de-modulos-inteiros" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.5.3 Simulação de módulos inteiros
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#954-quando-nao-usar-mocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.5.4 Quando não usar mocks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#96-testes-de-integracao-com-supertest" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.6 Testes de Integração com Supertest
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.6 Testes de Integração com Supertest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#961-o-papel-dos-testes-de-integracao-em-apis-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.6.1 O papel dos testes de integração em APIs REST
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#962-instalacao-e-configuracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.6.2 Instalação e configuração
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#963-suite-de-integracao-para-endpoints-de-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.6.3 Suíte de integração para endpoints de usuários
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#97-testando-autenticacao-e-autorizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.7 Testando Autenticação e Autorização
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.7 Testando Autenticação e Autorização">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#971-a-importancia-de-testar-os-mecanismos-de-seguranca" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.7.1 A importância de testar os mecanismos de segurança
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#972-testes-unitarios-do-authservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.7.2 Testes unitários do AuthService
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#973-testes-de-integracao-para-autenticacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.7.3 Testes de integração para autenticação
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#98-tdd-test-driven-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.8 TDD — Test-Driven Development
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.8 TDD — Test-Driven Development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#981-fundamentos-e-ciclo-red-green-refactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.8.1 Fundamentos e ciclo Red-Green-Refactor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#982-tdd-como-instrumento-de-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.8.2 TDD como instrumento de design
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#983-exemplo-pratico-desenvolvendo-uma-nova-regra-de-negocio-com-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.8.3 Exemplo prático: desenvolvendo uma nova regra de negócio com TDD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#984-quando-tdd-ajuda-e-quando-nao-ajuda" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.8.4 Quando TDD ajuda — e quando não ajuda
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#99-testes-end-to-end-com-playwright" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.9 Testes End-to-End com Playwright
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.9 Testes End-to-End com Playwright">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#991-fundamentos-dos-testes-e2e" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.9.1 Fundamentos dos testes E2E
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#992-por-que-playwright" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.9.2 Por que Playwright
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#993-instalacao-e-configuracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.9.3 Instalação e configuração
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#994-anatomia-de-um-teste-playwright" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.9.4 Anatomia de um teste Playwright
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#995-seletores-e-estrategias-de-localizacao-de-elementos" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.9.5 Seletores e estratégias de localização de elementos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#996-suite-e2e-para-o-crud-de-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.9.6 Suíte E2E para o CRUD de usuários
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#997-page-object-model-pom" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.9.7 Page Object Model (POM)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#998-execucao-relatorios-e-depuracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.9.8 Execução, relatórios e depuração
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#910-cobertura-de-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.10 Cobertura de Código
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.10 Cobertura de Código">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#9101-o-que-e-cobertura-de-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.10.1 O que é cobertura de código
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9102-limitacoes-da-cobertura-como-metrica-de-qualidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.10.2 Limitações da cobertura como métrica de qualidade
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9103-metas-razoaveis-de-cobertura" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.10.3 Metas razoáveis de cobertura
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9104-cobertura-de-codigo-como-instrumento-de-descoberta" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.10.4 Cobertura de código como instrumento de descoberta
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#911-exercicios-praticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.11 Exercícios Práticos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.11 Exercícios Práticos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-91-suite-unitaria-para-authservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 9.1 — Suíte unitária para AuthService
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-92-mocks-avancados-com-jest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 9.2 — Mocks avançados com Jest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-93-testes-de-integracao-com-supertest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 9.3 — Testes de integração com Supertest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-94-tdd-para-uma-nova-regra-de-negocio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 9.4 — TDD para uma nova regra de negócio
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-95-testes-e2e-com-playwright" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 9.5 — Testes E2E com Playwright
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-96-cobertura-e-analise-critica" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 9.6 — Cobertura e análise crítica
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#912-referencias-e-leituras-complementares" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.12 Referências e Leituras Complementares
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-seguranca/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    10. Segurança
   </span>
   
 

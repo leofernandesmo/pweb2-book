@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://leofernandesmo.github.io/pweb2-book/chapters/08-aut/">
       
       
+        <link rel="prev" href="../07-frontend/">
+      
+      
+        <link rel="next" href="../09-testes/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +24,7 @@
     
     
       
-        <title>Capítulo 8 — Autenticação e Autorização - Programação Web 2 - Uma abordagem usando Node/Express</title>
+        <title>8. Autenticação e Autorização - Programação Web 2 - Uma abordagem usando Node/Express</title>
       
     
     
@@ -126,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Capítulo 8 — Autenticação e Autorização
+              8. Autenticação e Autorização
             
           </span>
         </div>
@@ -299,10 +303,12 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../00-how-to-use/" class="md-tabs__link">
           
   
@@ -481,8 +487,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -506,22 +514,31 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -532,7 +549,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Chapters
@@ -698,6 +715,766 @@
   
   <span class="md-ellipsis">
     7. Integração com Frontend Moderno: Vue.js e React
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    8. Autenticação e Autorização
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    8. Autenticação e Autorização
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#81-introducao" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1 Introdução
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#82-gerenciamento-de-estado-em-http-cookies-sessoes-e-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2 Gerenciamento de Estado em HTTP: Cookies, Sessões e Tokens
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.2 Gerenciamento de Estado em HTTP: Cookies, Sessões e Tokens">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#821-o-problema-http-e-stateless" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2.1 O problema: HTTP é stateless
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#822-cookies" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2.2 Cookies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#823-sessoes-baseadas-em-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2.3 Sessões baseadas em servidor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#824-armazenamento-no-cliente-localstorage-e-sessionstorage" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2.4 Armazenamento no cliente: localStorage e sessionStorage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#825-tokens-jwt-motivacao-e-posicionamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2.5 Tokens JWT — motivação e posicionamento
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#826-comparativo-das-abordagens" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2.6 Comparativo das abordagens
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#83-hash-de-senha-com-bcrypt" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3 Hash de Senha com bcrypt
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.3 Hash de Senha com bcrypt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#831-por-que-nunca-armazenar-senhas-em-texto-puro" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3.1 Por que nunca armazenar senhas em texto puro
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#832-o-bcrypt-e-seu-custo-computacional" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3.2 O bcrypt e seu custo computacional
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#833-protegendo-o-campo-senha-nas-respostas-da-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3.3 Protegendo o campo senha nas respostas da API
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#84-json-web-tokens-jwt" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4 JSON Web Tokens (JWT)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.4 JSON Web Tokens (JWT)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#841-anatomia-de-um-jwt" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4.1 Anatomia de um JWT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#842-fluxo-de-autenticacao-com-jwt" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4.2 Fluxo de autenticação com JWT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#843-claims-padrao-registered-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4.3 Claims padrão (Registered Claims)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#844-tempo-de-expiracao-e-seguranca" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4.4 Tempo de expiração e segurança
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#85-implementando-cadastro-e-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.5 Implementando Cadastro e Login
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.5 Implementando Cadastro e Login">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#851-instalacao-das-dependencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.5.1 Instalação das dependências
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#852-configuracao-das-variaveis-de-ambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.5.2 Configuração das variáveis de ambiente
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#853-utilitarios-de-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.5.3 Utilitários de token
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#854-schema-prisma-atualizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.5.4 Schema Prisma atualizado
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#855-authservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.5.5 AuthService
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#856-authrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.5.6 AuthRepository
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#857-authcontroller-e-rotas" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.5.7 AuthController e rotas
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#86-middleware-de-autenticacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.6 Middleware de Autenticação
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.6 Middleware de Autenticação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#861-extraindo-e-validando-o-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.6.1 Extraindo e validando o token
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#862-middleware-de-autenticacao-opcional" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.6.2 Middleware de autenticação opcional
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#87-protegendo-rotas" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.7 Protegendo Rotas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.7 Protegendo Rotas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#871-aplicacao-seletiva-do-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.7.1 Aplicação seletiva do middleware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#872-acessando-o-usuario-autenticado-no-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.7.2 Acessando o usuário autenticado no controller
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#88-autorizacao-e-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.8 Autorização e RBAC
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.8 Autorização e RBAC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#881-autenticacao-vs-autorizacao-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.8.1 Autenticação vs. autorização — revisão
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#882-middleware-de-autorizacao-por-papel" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.8.2 Middleware de autorização por papel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#883-autorizacao-baseada-em-propriedade-do-recurso" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.8.3 Autorização baseada em propriedade do recurso
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#89-refresh-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.9 Refresh Token
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.9 Refresh Token">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#891-o-problema-da-expiracao-do-accesstoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.9.1 O problema da expiração do accessToken
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#892-fluxo-completo-com-refresh-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.9.2 Fluxo completo com Refresh Token
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#893-implementacao-do-endpoint-de-refresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.9.3 Implementação do endpoint de refresh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#894-rotacao-de-refresh-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.9.4 Rotação de Refresh Tokens
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#810-social-login-com-passportjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.10 Social Login com Passport.js
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.10 Social Login com Passport.js">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#8101-oauth-20-e-openid-connect-conceitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.10.1 OAuth 2.0 e OpenID Connect — conceitos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8102-passportjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.10.2 Passport.js
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8103-configurando-as-credenciais-oauth" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.10.3 Configurando as credenciais OAuth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8104-configuracao-do-passport" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.10.4 Configuração do Passport
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8105-rotas-de-social-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.10.5 Rotas de Social Login
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8106-tratamento-no-frontend-vuereact" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.10.6 Tratamento no frontend (Vue/React)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#811-seguranca-adicional" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.11 Segurança Adicional
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.11 Segurança Adicional">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#8111-rate-limiting-em-rotas-de-autenticacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.11.1 Rate limiting em rotas de autenticação
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8112-protecao-contra-timing-attacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.11.2 Proteção contra timing attacks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8113-boas-praticas-de-armazenamento-do-token-no-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.11.3 Boas práticas de armazenamento do token no cliente
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#812-integracao-com-o-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.12 Integração com o Frontend
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.12 Integração com o Frontend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#8121-fluxo-completo-no-frontend-vuereact" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.12.1 Fluxo completo no frontend (Vue/React)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8122-servico-de-autenticacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.12.2 Serviço de autenticação
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8123-interceptors-do-axios-para-refresh-automatico" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.12.3 Interceptors do Axios para refresh automático
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8124-rotas-protegidas-no-vue-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.12.4 Rotas protegidas no Vue Router
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8125-rotas-protegidas-no-react-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.12.5 Rotas protegidas no React Router
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#813-exercicios-praticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.13 Exercícios Práticos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.13 Exercícios Práticos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-81-hash-e-verificacao-de-senha" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 8.1 — Hash e verificação de senha
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-82-registro-e-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 8.2 — Registro e login
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-83-middleware-de-autenticacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 8.3 — Middleware de autenticação
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-84-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 8.4 — RBAC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-85-refresh-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 8.5 — Refresh Token
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercicio-86-social-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercício 8.6 — Social Login
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#814-referencias-e-leituras-complementares" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.14 Referências e Leituras Complementares
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-testes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9. Testes Automatizados: Jest, Supertest e Playwright
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-seguranca/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    10. Segurança
   </span>
   
 
