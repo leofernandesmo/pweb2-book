@@ -76,6 +76,9 @@ nav:
       - "2. Fundamentos do Node.js": chapters/02-introducao.md
       - "3. Express: Rotas, Middlewares, Controllers e Estrutura de Projeto": chapters/03-express.md
       - "4. Arquitetura de Software: MVC, Services e Repository Pattern": chapters/04-arquitetura.md      
+      - "5. Banco de Dados e ORM: Prisma e Sequelize": chapters/05-persistencia.md
+      - "6. Renderização no Servidor com EJS": chapters/06-ejs.md
+      - "7. Integração com Frontend Moderno: Vue.js e React": chapters/07-frontend.md
       - "Apêndice A": chapters/apendice-cheatsheet.md
       - "Apêndice B": chapters/apendice-command-summaries.md
   - Back Cover: back-cover.md
