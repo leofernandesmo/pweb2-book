@@ -31,11 +31,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://leofernandesmo.github.io/pweb2-book/assignments/2026.1/atividade-14/</loc>
-         <lastmod>2026-03-22</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://leofernandesmo.github.io/pweb2-book/assignments/2026.1/atividade-15/</loc>
          <lastmod>2026-03-22</lastmod>
          <changefreq>daily</changefreq>
@@ -82,6 +77,11 @@
     </url>
     <url>
          <loc>https://leofernandesmo.github.io/pweb2-book/assignments/2026.1/cap10-seguranca/</loc>
+         <lastmod>2026-03-22</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://leofernandesmo.github.io/pweb2-book/assignments/2026.1/cap11-deploy/</loc>
          <lastmod>2026-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
