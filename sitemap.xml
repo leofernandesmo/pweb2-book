@@ -26,6 +26,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://leofernandesmo.github.io/pweb2-book/assignments/</loc>
+         <lastmod>2026-03-22</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://leofernandesmo.github.io/pweb2-book/chapters/00-how-to-use/</loc>
          <lastmod>2026-03-22</lastmod>
          <changefreq>daily</changefreq>
