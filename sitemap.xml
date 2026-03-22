@@ -31,11 +31,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://leofernandesmo.github.io/pweb2-book/assignments/2026.1/atividade-08/</loc>
-         <lastmod>2026-03-22</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://leofernandesmo.github.io/pweb2-book/assignments/2026.1/atividade-09/</loc>
          <lastmod>2026-03-22</lastmod>
          <changefreq>daily</changefreq>
@@ -77,6 +72,11 @@
     </url>
     <url>
          <loc>https://leofernandesmo.github.io/pweb2-book/assignments/2026.1/cap04-arquitetura-repository-di/</loc>
+         <lastmod>2026-03-22</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://leofernandesmo.github.io/pweb2-book/assignments/2026.1/cap05-banco-orm/</loc>
          <lastmod>2026-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
