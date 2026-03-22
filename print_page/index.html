@@ -10619,7 +10619,918 @@ const<span class="w"> </span><span class="nv">SECRET</span><span class="w"> </sp
 <div class="admonition note">
 <p class="admonition-title">Próximo Capítulo</p>
 <p>No <strong>Capítulo 11 — Deploy e Infraestrutura</strong>, colocaremos a aplicação em produção: configuração de variáveis de ambiente em plataformas de nuvem, pipelines de CI/CD com GitHub Actions, deploy no Railway e Render, monitoramento de logs e erros com ferramentas como Sentry, e estratégias de atualização sem downtime. As práticas de segurança estabelecidas neste capítulo — especialmente o checklist da seção 10.15 — serão verificadas como parte do processo de deploy.</p>
-</div></section><section class="print-page" id="chapters-11-deploy"><h1 id="chapters-11-deploy-em-construcao">Em construcao<a class="headerlink" href="#chapters-11-deploy-em-construcao" title="Permanent link">&para;</a></h1></section><section class="print-page" id="chapters-apendice-cheatsheet"><h1 id="chapters-apendice-cheatsheet-apendice-a-cheatsheet">Apêndice A — Cheatsheet<a class="headerlink" href="#chapters-apendice-cheatsheet-apendice-a-cheatsheet" title="Permanent link">&para;</a></h1>
+</div></section><section class="print-page" id="chapters-11-deploy"><h1 id="chapters-11-deploy-capitulo-11-deploy-e-infraestrutura">Capítulo 11 — Deploy e Infraestrutura<a class="headerlink" href="#chapters-11-deploy-capitulo-11-deploy-e-infraestrutura" title="Permanent link">&para;</a></h1>
+<hr />
+<h2 id="chapters-11-deploy-111-introducao">11.1 Introdução<a class="headerlink" href="#chapters-11-deploy-111-introducao" title="Permanent link">&para;</a></h2>
+<p>Ao longo dos dez capítulos anteriores, a API construída neste curso evoluiu de um servidor Express elementar para um sistema completo: arquitetura em camadas, persistência com ORM, autenticação JWT, testes automatizados e uma postura de segurança consistente. Todo esse trabalho, no entanto, só adquire valor real quando a aplicação é colocada em produção — quando deixa de existir apenas em <code>localhost:3000</code> e passa a ser acessível por usuários reais, em qualquer lugar do mundo, de forma confiável e segura.</p>
+<p>O processo de tornar uma aplicação operacional em produção — denominado <strong>deploy</strong> ou <strong>implantação</strong> — envolve um conjunto de decisões e práticas que vão muito além de copiar arquivos para um servidor. Envolve preparar a aplicação para um ambiente radicalmente diferente do desenvolvimento: sem hot reload, sem mensagens de erro detalhadas expostas ao cliente, com recursos de hardware compartilhados, com a necessidade de persistir entre reinicializações e de se recuperar automaticamente de falhas. Envolve também automatizar o processo de forma que cada alteração no código possa ser verificada e implantada de forma reproduzível, sem intervenção manual.</p>
+<p>Este capítulo percorre o caminho completo do deploy: da preparação da aplicação Express para produção, passando pela configuração do banco de dados gerenciado, pelo deploy em plataformas de nuvem acessíveis (Railway e Render), pela containerização com Docker, pela automação com GitHub Actions, pela configuração de proxy reverso com Nginx, pelo monitoramento e logging estruturado, até as estratégias de deploy sem downtime e escalabilidade com PM2. O foco é em práticas diretamente aplicáveis ao projeto desenvolvido ao longo do curso, com ênfase nas ferramentas mais adotadas pelo mercado brasileiro.</p>
+<blockquote>
+<p>💡 <strong>Pré-requisito:</strong> Este capítulo pressupõe familiaridade com o Capítulo 3 (estrutura do projeto Express, separação entre <code>app.js</code> e <code>server.js</code>), o Capítulo 5 (Prisma e migrations) e o Capítulo 10 (variáveis de ambiente obrigatórias, Dockerfile seguro). Uma conta no GitHub é necessária para as seções de CI/CD.</p>
+</blockquote>
+<hr />
+<h2 id="chapters-11-deploy-112-preparando-a-aplicacao-para-producao">11.2 Preparando a Aplicação para Produção<a class="headerlink" href="#chapters-11-deploy-112-preparando-a-aplicacao-para-producao" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-1121-as-diferencas-entre-desenvolvimento-e-producao">11.2.1 As diferenças entre desenvolvimento e produção<a class="headerlink" href="#chapters-11-deploy-1121-as-diferencas-entre-desenvolvimento-e-producao" title="Permanent link">&para;</a></h3>
+<p>O ambiente de desenvolvimento é projetado para a produtividade do desenvolvedor: hot reload, mensagens de erro detalhadas com stack traces, logs verbosos, banco de dados local. O ambiente de produção é projetado para o usuário final: desempenho, confiabilidade, segurança e observabilidade. A variável <code>NODE_ENV</code> é o mecanismo convencional para distinguir os dois contextos, e muitas bibliotecas — Express, Prisma, Helmet — alteram seu comportamento com base nela.</p>
+<p>Em produção, o Express desabilita o cache de views (irrelevante para APIs JSON), habilita o cache de respostas de erro e ativa otimizações de performance. O Prisma desabilita os logs de query. O Helmet aplica configurações mais restritivas de CSP. O <code>NODE_ENV=production</code> não é apenas uma convenção — é um sinal que afeta o comportamento de dezenas de dependências.</p>
+<h3 id="chapters-11-deploy-1122-script-de-inicializacao-de-producao">11.2.2 Script de inicialização de produção<a class="headerlink" href="#chapters-11-deploy-1122-script-de-inicializacao-de-producao" title="Permanent link">&para;</a></h3>
+<p>A separação entre <code>app.js</code> e <code>server.js</code> estabelecida no Capítulo 3 é precisamente o que permite ter scripts de inicialização diferentes para cada ambiente:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// package.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;dev&quot;</span><span class="p">:</span><span class="w">     </span><span class="s2">&quot;node --watch src/server.js&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w">   </span><span class="s2">&quot;NODE_ENV=production node src/server.js&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;build&quot;</span><span class="p">:</span><span class="w">   </span><span class="s2">&quot;npx prisma generate&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;migrate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npx prisma migrate deploy&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;postinstall&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npx prisma generate&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>O script <code>postinstall</code> garante que o Prisma Client seja gerado automaticamente após <code>npm install</code> — necessário em plataformas de nuvem que executam <code>npm install</code> como parte do processo de build.</p>
+<h3 id="chapters-11-deploy-1123-tratamento-de-erros-em-producao">11.2.3 Tratamento de erros em produção<a class="headerlink" href="#chapters-11-deploy-1123-tratamento-de-erros-em-producao" title="Permanent link">&para;</a></h3>
+<p>Em desenvolvimento, stack traces completos no terminal são úteis. Em produção, expô-los nas respostas HTTP é um vetor de informação para atacantes — revelam a estrutura interna do código, as versões de bibliotecas e os caminhos do sistema de arquivos. O middleware de erros do Capítulo 3 deve ser adaptado:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/middlewares/erros.middleware.js</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AppError</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../utils/AppError.js&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">middlewareDeErros</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">ehProducao</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;production&#39;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Loga o erro internamente em qualquer ambiente</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w">    </span><span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">stack</span><span class="o">:</span><span class="w">      </span><span class="nx">err</span><span class="p">.</span><span class="nx">stack</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">statusCode</span><span class="o">:</span><span class="w"> </span><span class="nx">err</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w">        </span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">method</span><span class="o">:</span><span class="w">     </span><span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="ow">instanceof</span><span class="w"> </span><span class="nx">AppError</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Erro inesperado — não vaza detalhes em produção</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">erro</span><span class="o">:</span><span class="w"> </span><span class="nx">ehProducao</span>
+<span class="w">      </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;Ocorreu um erro interno. Nossa equipe foi notificada.&#39;</span>
+<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+<span class="w">    </span><span class="p">...(</span><span class="nx">ehProducao</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">stack</span><span class="o">:</span><span class="w"> </span><span class="nx">err</span><span class="p">.</span><span class="nx">stack</span><span class="w"> </span><span class="p">}),</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">};</span>
+</code></pre></div>
+<h3 id="chapters-11-deploy-1124-graceful-shutdown">11.2.4 Graceful shutdown<a class="headerlink" href="#chapters-11-deploy-1124-graceful-shutdown" title="Permanent link">&para;</a></h3>
+<p>Em produção, o processo Node.js pode ser interrompido a qualquer momento — por um deploy, por uma reinicialização do servidor ou por um sinal do sistema operacional. Um encerramento abrupto pode deixar requisições em andamento sem resposta e conexões com o banco de dados abertas. O <strong>graceful shutdown</strong> garante que o servidor pare de aceitar novas requisições, aguarde as requisições em andamento terminarem e feche as conexões ordenadamente:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/server.js</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">app</span><span class="w">     </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./app.js&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prisma</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./config/database.js&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">PORTA</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">3000</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORTA</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Servidor iniciado na porta </span><span class="si">${</span><span class="nx">PORTA</span><span class="si">}</span><span class="sb"> [</span><span class="si">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="si">}</span><span class="sb">]`</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Tempo máximo para encerramento gracioso</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">TIMEOUT_SHUTDOWN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10</span><span class="nx">_000</span><span class="p">;</span><span class="w"> </span><span class="c1">// 10 segundos</span>
+
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">encerrar</span><span class="p">(</span><span class="nx">sinal</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Sinal </span><span class="si">${</span><span class="nx">sinal</span><span class="si">}</span><span class="sb"> recebido. Encerrando graciosamente...`</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Para de aceitar novas conexões</span>
+<span class="w">  </span><span class="nx">server</span><span class="p">.</span><span class="nx">close</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Servidor HTTP fechado.&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">$disconnect</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Conexão com banco encerrada.&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="c1">// Força encerramento se demorar mais que o timeout</span>
+<span class="w">  </span><span class="nx">setTimeout</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Encerramento forçado por timeout.&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+<span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="nx">TIMEOUT_SHUTDOWN</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// SIGTERM: enviado por orquestradores (Docker, Kubernetes, Railway) ao parar o container</span>
+<span class="c1">// SIGINT:  enviado pelo Ctrl+C no terminal</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;SIGTERM&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">encerrar</span><span class="p">(</span><span class="s1">&#39;SIGTERM&#39;</span><span class="p">));</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;SIGINT&#39;</span><span class="p">,</span><span class="w">  </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">encerrar</span><span class="p">(</span><span class="s1">&#39;SIGINT&#39;</span><span class="p">));</span>
+
+<span class="c1">// Captura exceções não tratadas — evita crash silencioso</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;uncaughtException&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Exceção não capturada:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">encerrar</span><span class="p">(</span><span class="s1">&#39;uncaughtException&#39;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;unhandledRejection&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">reason</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Promise rejeitada sem tratamento:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">reason</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">encerrar</span><span class="p">(</span><span class="s1">&#39;unhandledRejection&#39;</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<h3 id="chapters-11-deploy-1125-health-check-endpoint">11.2.5 Health check endpoint<a class="headerlink" href="#chapters-11-deploy-1125-health-check-endpoint" title="Permanent link">&para;</a></h3>
+<p>Plataformas de nuvem, load balancers e orquestradores de containers precisam verificar periodicamente se a aplicação está saudável e pronta para receber tráfego. O endpoint de <strong>health check</strong> fornece essa informação:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/routes/health.routes.js</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prisma</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../config/database.js&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">router</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Router</span><span class="p">();</span>
+
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/health&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Verifica conectividade com o banco de dados</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">$queryRaw</span><span class="sb">`SELECT 1`</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">status</span><span class="o">:</span><span class="w">    </span><span class="s1">&#39;ok&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">(),</span>
+<span class="w">      </span><span class="nx">uptime</span><span class="o">:</span><span class="w">    </span><span class="nx">process</span><span class="p">.</span><span class="nx">uptime</span><span class="p">(),</span>
+<span class="w">      </span><span class="nx">env</span><span class="o">:</span><span class="w">       </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="p">,</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">503</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">status</span><span class="o">:</span><span class="w">  </span><span class="s1">&#39;degraded&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">erro</span><span class="o">:</span><span class="w">    </span><span class="s1">&#39;Banco de dados indisponível&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">});</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">router</span><span class="p">;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/app.js — registrado fora do prefixo /api para acesso simples</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">healthRouter</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./routes/health.routes.js&#39;</span><span class="p">;</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">healthRouter</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="chapters-11-deploy-113-variaveis-de-ambiente-e-configuracao">11.3 Variáveis de Ambiente e Configuração<a class="headerlink" href="#chapters-11-deploy-113-variaveis-de-ambiente-e-configuracao" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-1131-centralizacao-da-configuracao">11.3.1 Centralização da configuração<a class="headerlink" href="#chapters-11-deploy-1131-centralizacao-da-configuracao" title="Permanent link">&para;</a></h3>
+<p>À medida que a aplicação cresce em ambientes (desenvolvimento, staging, produção), gerenciar variáveis de ambiente espalhadas pelo código torna-se problemático. A solução é centralizar toda a configuração em um único módulo, que valida as variáveis obrigatórias na inicialização e exporta os valores tipados para o restante da aplicação:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/config/env.js</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">obrigatorio</span><span class="p">(</span><span class="nx">nome</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">valor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">nome</span><span class="p">];</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">valor</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span>
+<span class="w">      </span><span class="sb">`[Config] Variável de ambiente obrigatória não definida: </span><span class="si">${</span><span class="nx">nome</span><span class="si">}</span><span class="sb">\n`</span><span class="w"> </span><span class="o">+</span>
+<span class="w">      </span><span class="sb">`Copie o arquivo .env.example para .env e preencha os valores.`</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">valor</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">opcional</span><span class="p">(</span><span class="nx">nome</span><span class="p">,</span><span class="w"> </span><span class="nx">padrao</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">nome</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">padrao</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">env</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">node</span><span class="o">:</span><span class="w">        </span><span class="nx">opcional</span><span class="p">(</span><span class="s1">&#39;NODE_ENV&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;development&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">porta</span><span class="o">:</span><span class="w">       </span><span class="nb">Number</span><span class="p">(</span><span class="nx">opcional</span><span class="p">(</span><span class="s1">&#39;PORT&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;3000&#39;</span><span class="p">)),</span>
+<span class="w">  </span><span class="nx">database</span><span class="o">:</span><span class="w">    </span><span class="nx">obrigatorio</span><span class="p">(</span><span class="s1">&#39;DATABASE_URL&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">jwtSecret</span><span class="o">:</span><span class="w">         </span><span class="nx">obrigatorio</span><span class="p">(</span><span class="s1">&#39;JWT_SECRET&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">jwtExpiresIn</span><span class="o">:</span><span class="w">      </span><span class="nx">opcional</span><span class="p">(</span><span class="s1">&#39;JWT_EXPIRES_IN&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;15m&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">jwtRefreshSecret</span><span class="o">:</span><span class="w">  </span><span class="nx">obrigatorio</span><span class="p">(</span><span class="s1">&#39;JWT_REFRESH_SECRET&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">jwtRefreshExpires</span><span class="o">:</span><span class="w"> </span><span class="nx">opcional</span><span class="p">(</span><span class="s1">&#39;JWT_REFRESH_EXPIRES_IN&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;7d&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">frontendUrl</span><span class="o">:</span><span class="w">       </span><span class="nx">opcional</span><span class="p">(</span><span class="s1">&#39;FRONTEND_URL&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;http://localhost:5173&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">encryptionKey</span><span class="o">:</span><span class="w">     </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ENCRYPTION_KEY</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+
+<span class="w">  </span><span class="nx">get</span><span class="w"> </span><span class="nx">ehProducao</span><span class="p">()</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">node</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;production&#39;</span><span class="p">;</span><span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">get</span><span class="w"> </span><span class="nx">ehTeste</span><span class="p">()</span><span class="w">     </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">node</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;test&#39;</span><span class="p">;</span><span class="w">        </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">get</span><span class="w"> </span><span class="nx">ehDesenv</span><span class="p">()</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">node</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;development&#39;</span><span class="p">;</span><span class="w"> </span><span class="p">},</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Uso em qualquer módulo</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">env</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../config/env.js&#39;</span><span class="p">;</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">env</span><span class="p">.</span><span class="nx">porta</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">env</span><span class="p">.</span><span class="nx">ehProducao</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* configurações específicas de produção */</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<h3 id="chapters-11-deploy-1132-arquivo-envexample">11.3.2 Arquivo <code>.env.example</code><a class="headerlink" href="#chapters-11-deploy-1132-arquivo-envexample" title="Permanent link">&para;</a></h3>
+<p>O arquivo <code>.env.example</code> documenta todas as variáveis necessárias com valores de exemplo ou placeholders, sem revelar segredos reais. Deve ser versionado no Git; o <code>.env</code> real nunca deve ser:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># .env.example — versionar este arquivo</span>
+<span class="nv">NODE_ENV</span><span class="o">=</span>development
+<span class="nv">PORT</span><span class="o">=</span><span class="m">3000</span>
+
+<span class="c1"># Banco de dados</span>
+<span class="nv">DATABASE_URL</span><span class="o">=</span><span class="s2">&quot;postgresql://usuario:senha@localhost:5432/minha_api&quot;</span>
+
+<span class="c1"># JWT — gerar com: node -e &quot;console.log(require(&#39;crypto&#39;).randomBytes(64).toString(&#39;hex&#39;))&quot;</span>
+<span class="nv">JWT_SECRET</span><span class="o">=</span>GERAR_VALOR_ALEATORIO_AQUI
+<span class="nv">JWT_EXPIRES_IN</span><span class="o">=</span>15m
+<span class="nv">JWT_REFRESH_SECRET</span><span class="o">=</span>GERAR_OUTRO_VALOR_ALEATORIO_AQUI
+<span class="nv">JWT_REFRESH_EXPIRES_IN</span><span class="o">=</span>7d
+
+<span class="c1"># Frontend</span>
+<span class="nv">FRONTEND_URL</span><span class="o">=</span>http://localhost:5173
+
+<span class="c1"># Criptografia (opcional — necessário apenas se usar criptografia de campos)</span>
+<span class="c1"># ENCRYPTION_KEY=GERAR_32_BYTES_HEX_AQUI</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># .gitignore — garantir que segredos nunca sejam versionados</span>
+.env
+.env.local
+.env.production
+*.env
+</code></pre></div>
+<h3 id="chapters-11-deploy-1133-ambientes-multiplos">11.3.3 Ambientes múltiplos<a class="headerlink" href="#chapters-11-deploy-1133-ambientes-multiplos" title="Permanent link">&para;</a></h3>
+<p>Para projetos com ambientes distintos (desenvolvimento, staging, produção), a convenção é ter arquivos <code>.env</code> específicos por ambiente — carregados explicitamente, não automaticamente:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/config/env.js — carregamento explícito por ambiente</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">dotenv</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;dotenv&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">arquivoEnv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">test</span><span class="o">:</span><span class="w">        </span><span class="s1">&#39;.env.test&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">staging</span><span class="o">:</span><span class="w">     </span><span class="s1">&#39;.env.staging&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">development</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;.env&#39;</span><span class="p">,</span>
+<span class="p">}[</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;.env&#39;</span><span class="p">;</span>
+
+<span class="nx">dotenv</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="nx">arquivoEnv</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div>
+<p>Em plataformas de nuvem (Railway, Render, Vercel), as variáveis de ambiente são configuradas diretamente na interface da plataforma — não há arquivo <code>.env</code> em produção, e isso é intencional.</p>
+<hr />
+<h2 id="chapters-11-deploy-114-banco-de-dados-em-producao">11.4 Banco de Dados em Produção<a class="headerlink" href="#chapters-11-deploy-114-banco-de-dados-em-producao" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-1141-postgresql-gerenciado">11.4.1 PostgreSQL gerenciado<a class="headerlink" href="#chapters-11-deploy-1141-postgresql-gerenciado" title="Permanent link">&para;</a></h3>
+<p>O SQLite, utilizado nos exercícios ao longo do curso por sua simplicidade de configuração, não é adequado para produção em aplicações multiusuário: suporta apenas uma escrita simultânea, não tem servidor dedicado e não oferece os mecanismos de backup, replicação e monitoramento necessários em ambientes reais. Em produção, o banco de dados relacional recomendado é o <strong>PostgreSQL</strong>.</p>
+<p>Gerenciar um servidor PostgreSQL próprio exige conhecimento de administração de sistemas — instalação, configuração de autenticação, backups, atualizações de segurança. Para a maioria dos projetos, a alternativa mais prática é utilizar um <strong>PostgreSQL gerenciado</strong> — um serviço de banco de dados como serviço (<em>Database as a Service</em>, DBaaS) que delega toda essa responsabilidade operacional ao provedor.</p>
+<p>As opções mais relevantes para o contexto do curso são:</p>
+<p><strong>Railway</strong> — o mesmo provedor utilizado para o backend; oferece PostgreSQL com provisionamento em um clique, dashboard visual e a <code>DATABASE_URL</code> já formatada para o Prisma. Indicado para projetos do curso por manter tudo em uma única plataforma.</p>
+<p><strong>Neon</strong> — PostgreSQL serverless com free tier generoso, branching de banco de dados (ideal para testar migrations), e integração nativa com Vercel. Recomendado para projetos que usam Next.js ou Vercel.</p>
+<p><strong>Supabase</strong> — PostgreSQL com APIs REST e realtime geradas automaticamente, autenticação integrada e storage. Adequado quando o projeto necessita de funcionalidades além do banco relacional puro.</p>
+<p><strong>PlanetScale</strong> — MySQL gerenciado com branching e deploy sem downtime nativo. Adequado para projetos que preferem MySQL ao PostgreSQL.</p>
+<h3 id="chapters-11-deploy-1142-migrations-em-producao">11.4.2 Migrations em produção<a class="headerlink" href="#chapters-11-deploy-1142-migrations-em-producao" title="Permanent link">&para;</a></h3>
+<p>A estratégia de execução de migrations difere entre desenvolvimento e produção. Em desenvolvimento, <code>prisma migrate dev</code> cria e aplica migrations interativamente, podendo resetar o banco. Em produção, apenas <code>prisma migrate deploy</code> deve ser utilizado — ele aplica as migrations pendentes sem resetar dados e sem criar novas migrations:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Fluxo de deploy com migrations</span>
+npx<span class="w"> </span>prisma<span class="w"> </span>migrate<span class="w"> </span>deploy<span class="w">   </span><span class="c1"># aplica migrations pendentes</span>
+node<span class="w"> </span>src/server.js<span class="w">           </span><span class="c1"># inicia o servidor</span>
+</code></pre></div>
+<p>O momento correto para executar as migrations é <strong>antes</strong> de iniciar a nova versão do servidor — especialmente em deploys que adicionam colunas <code>NOT NULL</code> sem valor padrão, que causariam falhas se o servidor novo tentasse inserir registros antes da migration. Plataformas como Railway permitem configurar um <code>startCommand</code> que executa migrations automaticamente:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// package.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npx prisma migrate deploy &amp;&amp; node src/server.js&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="chapters-11-deploy-1143-backups-e-recuperacao">11.4.3 Backups e recuperação<a class="headerlink" href="#chapters-11-deploy-1143-backups-e-recuperacao" title="Permanent link">&para;</a></h3>
+<p>Provedores de banco de dados gerenciado oferecem backups automáticos com diferentes políticas de retenção. Em Railway e Neon, o free tier inclui backups diários com retenção de 7 dias. Para projetos em produção real, backups manuais periódicos são uma camada adicional de segurança:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Backup manual com pg_dump (PostgreSQL)</span>
+pg_dump<span class="w"> </span><span class="nv">$DATABASE_URL</span><span class="w"> </span>&gt;<span class="w"> </span>backup_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>.sql
+
+<span class="c1"># Restauração</span>
+psql<span class="w"> </span><span class="nv">$DATABASE_URL</span><span class="w"> </span>&lt;<span class="w"> </span>backup_20250101_120000.sql
+</code></pre></div>
+<p>Uma prática importante frequentemente negligenciada é o <strong>teste de restauração</strong>: um backup que nunca foi restaurado com sucesso não é um backup confiável. A restauração deve ser testada periodicamente em um ambiente de staging para validar a integridade dos dados.</p>
+<hr />
+<h2 id="chapters-11-deploy-115-deploy-no-railway">11.5 Deploy no Railway<a class="headerlink" href="#chapters-11-deploy-115-deploy-no-railway" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-1151-visao-geral-da-plataforma">11.5.1 Visão geral da plataforma<a class="headerlink" href="#chapters-11-deploy-1151-visao-geral-da-plataforma" title="Permanent link">&para;</a></h3>
+<p>O <strong>Railway</strong> é uma plataforma de infraestrutura como serviço (<em>Platform as a Service</em>, PaaS) que simplifica radicalmente o processo de deploy de aplicações Node.js. Diferentemente de provedores de nuvem como AWS ou GCP, que exigem configuração extensiva de servidores, redes e permissões, o Railway detecta automaticamente o tipo de projeto, instala as dependências, executa o build e expõe a aplicação em uma URL pública — tudo a partir de um push no Git.</p>
+<h3 id="chapters-11-deploy-1152-configuracao-inicial">11.5.2 Configuração inicial<a class="headerlink" href="#chapters-11-deploy-1152-configuracao-inicial" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Instalar a CLI do Railway</span>
+npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>@railway/cli
+
+<span class="c1"># Autenticar</span>
+railway<span class="w"> </span>login
+
+<span class="c1"># Inicializar o projeto Railway na pasta do backend</span>
+railway<span class="w"> </span>init
+</code></pre></div>
+<p>Alternativamente, pelo dashboard web em <code>railway.app</code>:</p>
+<ol>
+<li>Criar novo projeto → Deploy from GitHub repo</li>
+<li>Selecionar o repositório e a branch (<code>main</code>)</li>
+<li>Railway detecta automaticamente o Node.js e executa <code>npm install &amp;&amp; npm start</code></li>
+</ol>
+<h3 id="chapters-11-deploy-1153-configuracao-de-variaveis-de-ambiente">11.5.3 Configuração de variáveis de ambiente<a class="headerlink" href="#chapters-11-deploy-1153-configuracao-de-variaveis-de-ambiente" title="Permanent link">&para;</a></h3>
+<p>No dashboard do Railway: projeto → Variables → adicionar cada variável:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">NODE_ENV</span><span class="o">=</span>production
+<span class="nv">JWT_SECRET</span><span class="o">=</span>&lt;valor<span class="w"> </span>gerado&gt;
+<span class="nv">JWT_REFRESH_SECRET</span><span class="o">=</span>&lt;valor<span class="w"> </span>gerado&gt;
+<span class="nv">JWT_EXPIRES_IN</span><span class="o">=</span>15m
+<span class="nv">JWT_REFRESH_EXPIRES_IN</span><span class="o">=</span>7d
+<span class="nv">FRONTEND_URL</span><span class="o">=</span>https://meu-frontend.vercel.app
+</code></pre></div>
+<p>A <code>DATABASE_URL</code> é gerada automaticamente pelo Railway ao adicionar um serviço PostgreSQL ao projeto e vinculá-lo à aplicação — ela aparece como variável de referência que pode ser adicionada ao serviço Node.js com um clique.</p>
+<h3 id="chapters-11-deploy-1154-arquivo-de-configuracao-railway">11.5.4 Arquivo de configuração Railway<a class="headerlink" href="#chapters-11-deploy-1154-arquivo-de-configuracao-railway" title="Permanent link">&para;</a></h3>
+<p>O arquivo <code>railway.json</code> (ou <code>nixpacks.toml</code>) permite personalizar o processo de build e start:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// railway.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://railway.app/railway.schema.json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;build&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;builder&quot;</span><span class="p">:</span><span class="w">      </span><span class="s2">&quot;NIXPACKS&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;buildCommand&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npm ci &amp;&amp; npm run build&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;deploy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;startCommand&quot;</span><span class="p">:</span><span class="w">  </span><span class="s2">&quot;npm run migrate &amp;&amp; npm start&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;healthcheckPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/health&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;healthcheckTimeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;restartPolicyType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ON_FAILURE&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;restartPolicyMaxRetries&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="chapters-11-deploy-1155-dominio-customizado">11.5.5 Domínio customizado<a class="headerlink" href="#chapters-11-deploy-1155-dominio-customizado" title="Permanent link">&para;</a></h3>
+<p>O Railway fornece automaticamente um subdomínio em <code>railway.app</code>. Para usar um domínio próprio:</p>
+<ol>
+<li>Dashboard → projeto → Settings → Domains → Add Custom Domain</li>
+<li>Adicionar registro CNAME no DNS do domínio apontando para o endereço fornecido pelo Railway</li>
+<li>Railway provisiona automaticamente o certificado TLS via Let's Encrypt</li>
+</ol>
+<hr />
+<h2 id="chapters-11-deploy-116-deploy-no-render">11.6 Deploy no Render<a class="headerlink" href="#chapters-11-deploy-116-deploy-no-render" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-1161-visao-geral-e-diferencas-em-relacao-ao-railway">11.6.1 Visão geral e diferenças em relação ao Railway<a class="headerlink" href="#chapters-11-deploy-1161-visao-geral-e-diferencas-em-relacao-ao-railway" title="Permanent link">&para;</a></h3>
+<p>O <strong>Render</strong> é outra plataforma PaaS com proposta similar ao Railway, com algumas diferenças relevantes: oferece um free tier com serviços web que adormecem após 15 minutos de inatividade (o que introduz latência na primeira requisição após o período de inatividade), tem suporte nativo a deploy de imagens Docker e oferece serviços de background (<em>Background Workers</em>) e <em>Cron Jobs</em> nativamente na interface.</p>
+<h3 id="chapters-11-deploy-1162-configuracao-via-renderyaml">11.6.2 Configuração via <code>render.yaml</code><a class="headerlink" href="#chapters-11-deploy-1162-configuracao-via-renderyaml" title="Permanent link">&para;</a></h3>
+<p>O Render suporta Infrastructure as Code através do arquivo <code>render.yaml</code>, que descreve todos os serviços do projeto:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># render.yaml — na raiz do repositório</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minha-api</span>
+<span class="w">    </span><span class="nt">env</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">node</span>
+<span class="w">    </span><span class="nt">plan</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">free</span>
+<span class="w">    </span><span class="nt">buildCommand</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci &amp;&amp; npx prisma generate</span>
+<span class="w">    </span><span class="nt">startCommand</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npx prisma migrate deploy &amp;&amp; node src/server.js</span>
+<span class="w">    </span><span class="nt">healthCheckPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">    </span><span class="nt">envVars</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">NODE_ENV</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">PORT</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">DATABASE_URL</span>
+<span class="w">        </span><span class="nt">fromDatabase</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minha-api-db</span>
+<span class="w">          </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">connectionString</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">JWT_SECRET</span>
+<span class="w">        </span><span class="nt">generateValue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># Render gera automaticamente</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">JWT_REFRESH_SECRET</span>
+<span class="w">        </span><span class="nt">generateValue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">FRONTEND_URL</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://meu-frontend.vercel.app</span>
+
+<span class="nt">databases</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">minha-api-db</span>
+<span class="w">    </span><span class="nt">databaseName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minha_api</span>
+<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">minha_api_user</span>
+<span class="w">    </span><span class="nt">plan</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">free</span>
+</code></pre></div>
+<p>Com esse arquivo no repositório, o Render provisiona toda a infraestrutura automaticamente ao criar o projeto — incluindo o banco PostgreSQL e as variáveis de ambiente geradas.</p>
+<h3 id="chapters-11-deploy-1163-deploy-de-imagem-docker-no-render">11.6.3 Deploy de imagem Docker no Render<a class="headerlink" href="#chapters-11-deploy-1163-deploy-de-imagem-docker-no-render" title="Permanent link">&para;</a></h3>
+<p>Para projetos que utilizam Docker, o Render pode fazer o build e deploy da imagem diretamente:</p>
+<ol>
+<li>Dashboard → New → Web Service → Connect a repository</li>
+<li>Environment: Docker</li>
+<li>Render usa o <code>Dockerfile</code> na raiz do repositório para build e deploy</li>
+</ol>
+<hr />
+<h2 id="chapters-11-deploy-117-containerizacao-com-docker">11.7 Containerização com Docker<a class="headerlink" href="#chapters-11-deploy-117-containerizacao-com-docker" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-1171-docker-como-padrao-de-portabilidade">11.7.1 Docker como padrão de portabilidade<a class="headerlink" href="#chapters-11-deploy-1171-docker-como-padrao-de-portabilidade" title="Permanent link">&para;</a></h3>
+<p>O Dockerfile de produção seguro foi apresentado na seção 10.13.3 do Capítulo 10. Esta seção complementa esse conhecimento com a configuração do <code>docker-compose</code> para desenvolvimento local e com o processo de publicação no Docker Hub.</p>
+<h3 id="chapters-11-deploy-1172-docker-compose-para-desenvolvimento-local">11.7.2 Docker Compose para desenvolvimento local<a class="headerlink" href="#chapters-11-deploy-1172-docker-compose-para-desenvolvimento-local" title="Permanent link">&para;</a></h3>
+<p>O <code>docker-compose</code> permite definir e executar múltiplos containers em conjunto — ideal para replicar localmente o ambiente de produção com banco de dados PostgreSQL:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.yml — para desenvolvimento local</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">api</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">builder</span><span class="w">          </span><span class="c1"># usa o estágio de build, não de produção</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3000:3000&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">NODE_ENV</span><span class="p">:</span><span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">development</span>
+<span class="w">      </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">postgresql://postgres:postgres@db:5432/minha_api</span>
+<span class="w">      </span><span class="nt">JWT_SECRET</span><span class="p">:</span><span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">segredo_dev_nao_usar_em_producao</span>
+<span class="w">      </span><span class="nt">JWT_REFRESH_SECRET</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">refresh_dev_nao_usar_em_producao</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./src:/app/src</span><span class="w">           </span><span class="c1"># hot reload via bind mount</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node --watch src/server.js</span>
+
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">minha_api</span>
+<span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
+<span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5432:5432&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres_data:/var/lib/postgresql/data</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w">     </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">postgres&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">postgres_data</span><span class="p">:</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Iniciar o ambiente completo</span>
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+
+<span class="c1"># Executar migrations no container</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>api<span class="w"> </span>npx<span class="w"> </span>prisma<span class="w"> </span>migrate<span class="w"> </span>dev
+
+<span class="c1"># Ver logs da API</span>
+docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>api
+
+<span class="c1"># Parar tudo</span>
+docker<span class="w"> </span>compose<span class="w"> </span>down
+
+<span class="c1"># Parar e remover volumes (reseta o banco)</span>
+docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>-v
+</code></pre></div>
+<h3 id="chapters-11-deploy-1173-publicando-no-docker-hub">11.7.3 Publicando no Docker Hub<a class="headerlink" href="#chapters-11-deploy-1173-publicando-no-docker-hub" title="Permanent link">&para;</a></h3>
+<p>O Docker Hub é o registro de imagens Docker público mais utilizado. Publicar a imagem permite que qualquer servidor a baixe e execute sem precisar do código-fonte:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Fazer login</span>
+docker<span class="w"> </span>login
+
+<span class="c1"># Build da imagem de produção com tag versionada</span>
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>meuusuario/minha-api:1.0.0<span class="w"> </span>-t<span class="w"> </span>meuusuario/minha-api:latest<span class="w"> </span>.
+
+<span class="c1"># Publicar</span>
+docker<span class="w"> </span>push<span class="w"> </span>meuusuario/minha-api:1.0.0
+docker<span class="w"> </span>push<span class="w"> </span>meuusuario/minha-api:latest
+</code></pre></div>
+<p>Em ambientes de produção, é recomendável usar o <strong>GitHub Container Registry</strong> (<code>ghcr.io</code>) em vez do Docker Hub para manter a imagem no mesmo ecossistema do repositório, com controle de acesso integrado ao GitHub.</p>
+<hr />
+<h2 id="chapters-11-deploy-118-cicd-com-github-actions">11.8 CI/CD com GitHub Actions<a class="headerlink" href="#chapters-11-deploy-118-cicd-com-github-actions" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-1181-o-que-e-cicd-e-por-que-automatizar">11.8.1 O que é CI/CD e por que automatizar<a class="headerlink" href="#chapters-11-deploy-1181-o-que-e-cicd-e-por-que-automatizar" title="Permanent link">&para;</a></h3>
+<p><strong>CI</strong> (<em>Continuous Integration</em>) é a prática de integrar e verificar automaticamente cada alteração no código assim que ela é enviada ao repositório. <strong>CD</strong> (<em>Continuous Deployment</em> ou <em>Continuous Delivery</em>) é a extensão dessa prática ao processo de implantação — cada alteração verificada com sucesso é automaticamente implantada em produção (Deployment) ou disponibilizada para deploy manual (Delivery).</p>
+<p>A automação desse ciclo elimina a inconsistência dos processos manuais, garante que nenhum deploy seja feito sem que os testes passem, e fornece um registro auditável de quando cada versão foi implantada e por quem.</p>
+<p>O <strong>GitHub Actions</strong> é o serviço de CI/CD integrado ao GitHub. Pipelines são definidos como arquivos YAML em <code>.github/workflows/</code>, versionados junto ao código e executados em resposta a eventos do repositório (push, pull request, tag).</p>
+<h3 id="chapters-11-deploy-1182-pipeline-completo-testes-build-deploy">11.8.2 Pipeline completo: testes → build → deploy<a class="headerlink" href="#chapters-11-deploy-1182-pipeline-completo-testes-build-deploy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/deploy.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI/CD Pipeline</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># ── JOB 1: Testes ────────────────────────────────────────────────────</span>
+<span class="w">  </span><span class="nt">testes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Executar testes</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">services</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">postgres</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">test_db</span>
+<span class="w">          </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
+<span class="w">          </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
+<span class="w">        </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">          </span><span class="no">--health-cmd pg_isready</span>
+<span class="w">          </span><span class="no">--health-interval 10s</span>
+<span class="w">          </span><span class="no">--health-timeout 5s</span>
+<span class="w">          </span><span class="no">--health-retries 5</span>
+<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432:5432</span>
+
+<span class="w">    </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">NODE_ENV</span><span class="p">:</span><span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">      </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">postgresql://postgres:postgres@localhost:5432/test_db</span>
+<span class="w">      </span><span class="nt">JWT_SECRET</span><span class="p">:</span><span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">segredo_ci_apenas</span>
+<span class="w">      </span><span class="nt">JWT_REFRESH_SECRET</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">refresh_ci_apenas</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout do código</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configurar Node.js</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;20&#39;</span>
+<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;npm&#39;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Instalar dependências</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gerar Prisma Client</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npx prisma generate</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Executar migrations de teste</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npx prisma migrate deploy</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Executar testes unitários e de integração</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test -- --coverage</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verificar vulnerabilidades</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm audit --audit-level=high</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Fazer upload do relatório de cobertura</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always()</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage-report</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage/</span>
+
+<span class="w">  </span><span class="c1"># ── JOB 2: Build da imagem Docker ────────────────────────────────────</span>
+<span class="w">  </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build e push da imagem</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testes</span><span class="w">                    </span><span class="c1"># só executa se os testes passarem</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.ref == &#39;refs/heads/main&#39;</span><span class="w">  </span><span class="c1"># apenas na branch main</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Login no GitHub Container Registry</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker/login-action@v3</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">registry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io</span>
+<span class="w">          </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.actor }}</span>
+<span class="w">          </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Extrair metadados (tag da imagem)</span>
+<span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">meta</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker/metadata-action@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">images</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/${{ github.repository }}</span>
+<span class="w">          </span><span class="nt">tags</span><span class="p">:</span><span class="w">   </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">type=sha,prefix=sha-</span>
+<span class="w">            </span><span class="no">type=raw,value=latest</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build e push</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker/build-push-action@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">          </span><span class="nt">push</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">tags</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.meta.outputs.tags }}</span>
+<span class="w">          </span><span class="nt">labels</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.meta.outputs.labels }}</span>
+<span class="w">          </span><span class="nt">cache-from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type=gha</span>
+<span class="w">          </span><span class="nt">cache-to</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">type=gha,mode=max</span>
+
+<span class="w">  </span><span class="c1"># ── JOB 3: Deploy no Railway ─────────────────────────────────────────</span>
+<span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy em produção</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span><span class="w">          </span><span class="c1"># requer aprovação manual (configurável)</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Instalar Railway CLI</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm install -g @railway/cli</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy no Railway</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">railway up --service minha-api</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">RAILWAY_TOKEN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.RAILWAY_TOKEN }}</span>
+</code></pre></div>
+<h3 id="chapters-11-deploy-1183-configurando-secrets-no-github">11.8.3 Configurando secrets no GitHub<a class="headerlink" href="#chapters-11-deploy-1183-configurando-secrets-no-github" title="Permanent link">&para;</a></h3>
+<p>Os secrets do GitHub Actions são variáveis criptografadas acessíveis nos workflows sem expô-las no código:</p>
+<ol>
+<li>Repositório → Settings → Secrets and variables → Actions → New repository secret</li>
+<li>Adicionar <code>RAILWAY_TOKEN</code> com o token gerado em <code>railway.app/account/tokens</code></li>
+</ol>
+<h3 id="chapters-11-deploy-1184-ambientes-com-aprovacao-manual">11.8.4 Ambientes com aprovação manual<a class="headerlink" href="#chapters-11-deploy-1184-ambientes-com-aprovacao-manual" title="Permanent link">&para;</a></h3>
+<p>Para deploys em produção que exigem revisão humana antes de prosseguir, o GitHub Actions oferece o conceito de <strong>environments</strong> com regras de proteção:</p>
+<ol>
+<li>Repositório → Settings → Environments → New environment → <code>production</code></li>
+<li>Adicionar <em>Required reviewers</em> (revisores obrigatórios)</li>
+<li>O job de deploy ficará pausado até que um revisor aprove</li>
+</ol>
+<p>Essa configuração é especialmente importante em projetos com múltiplos colaboradores — evita que um push acidental em <code>main</code> seja imediatamente implantado em produção.</p>
+<h3 id="chapters-11-deploy-1185-estrategia-de-branches-e-pipeline">11.8.5 Estratégia de branches e pipeline<a class="headerlink" href="#chapters-11-deploy-1185-estrategia-de-branches-e-pipeline" title="Permanent link">&para;</a></h3>
+<p>Uma estratégia de branches comum para projetos web é o <strong>GitHub Flow</strong>:</p>
+<div class="highlight"><pre><span></span><code>feature/* → (pull request) → main → (deploy automático) → produção
+</code></pre></div>
+<p>Cada feature é desenvolvida em uma branch separada. A criação de um pull request dispara o job de testes. O merge para <code>main</code> dispara o pipeline completo (testes + build + deploy). Essa estratégia é simples, adequada para equipes pequenas e garante que <code>main</code> sempre contenha código testado e implantável.</p>
+<hr />
+<h2 id="chapters-11-deploy-119-proxy-reverso-com-nginx">11.9 Proxy Reverso com Nginx<a class="headerlink" href="#chapters-11-deploy-119-proxy-reverso-com-nginx" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-1191-o-papel-do-proxy-reverso">11.9.1 O papel do proxy reverso<a class="headerlink" href="#chapters-11-deploy-1191-o-papel-do-proxy-reverso" title="Permanent link">&para;</a></h3>
+<p>Quando uma aplicação Node.js é hospedada em um servidor próprio (VPS na DigitalOcean, Linode ou AWS EC2), o <strong>proxy reverso</strong> é um componente essencial da arquitetura. Um proxy reverso recebe as requisições dos clientes e as encaminha para a aplicação backend, adicionando uma camada de funcionalidades: terminação TLS, compressão gzip, cache de arquivos estáticos, rate limiting no nível de rede, e balanceamento de carga entre múltiplas instâncias.</p>
+<p>O <strong>Nginx</strong> é o proxy reverso mais utilizado no ecossistema web por sua performance, confiabilidade e flexibilidade de configuração.</p>
+<h3 id="chapters-11-deploy-1192-configuracao-basica-como-reverse-proxy">11.9.2 Configuração básica como reverse proxy<a class="headerlink" href="#chapters-11-deploy-1192-configuracao-basica-como-reverse-proxy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># /etc/nginx/sites-available/minha-api</span>
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">api.meudominio.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1"># Redireciona todo HTTP para HTTPS</span>
+<span class="w">    </span><span class="kn">return</span><span class="w"> </span><span class="mi">301</span><span class="w"> </span><span class="s">https://</span><span class="nv">$server_name$request_uri</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">api.meudominio.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1"># Certificado TLS gerenciado pelo Certbot</span>
+<span class="w">    </span><span class="kn">ssl_certificate</span><span class="w">     </span><span class="s">/etc/letsencrypt/live/api.meudominio.com/fullchain.pem</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/api.meudominio.com/privkey.pem</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1"># Configurações TLS seguras</span>
+<span class="w">    </span><span class="kn">ssl_protocols</span><span class="w">      </span><span class="s">TLSv1.2</span><span class="w"> </span><span class="s">TLSv1.3</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_ciphers</span><span class="w">        </span><span class="s">ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_session_cache</span><span class="w">  </span><span class="s">shared:SSL:10m</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_session_timeout</span><span class="w"> </span><span class="s">1d</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1"># HSTS — instrui browsers a usar HTTPS por 1 ano</span>
+<span class="w">    </span><span class="kn">add_header</span><span class="w"> </span><span class="s">Strict-Transport-Security</span><span class="w"> </span><span class="s">&quot;max-age=31536000</span><span class="p">;</span><span class="w"> </span><span class="kn">includeSubDomains&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1"># Compressão gzip</span>
+<span class="w">    </span><span class="kn">gzip</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">gzip_types</span><span class="w"> </span><span class="s">application/json</span><span class="w"> </span><span class="s">application/javascript</span><span class="w"> </span><span class="s">text/css</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">gzip_min_length</span><span class="w"> </span><span class="mi">1024</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1"># Tamanho máximo do corpo da requisição</span>
+<span class="w">    </span><span class="kn">client_max_body_size</span><span class="w"> </span><span class="s">10M</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1"># Proxy para a aplicação Node.js</span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w">         </span><span class="s">http://localhost:3000</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_http_version</span><span class="w"> </span><span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w">   </span><span class="s">Upgrade</span><span class="w">    </span><span class="nv">$http_upgrade</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w">   </span><span class="s">Connection</span><span class="w"> </span><span class="s">&#39;upgrade&#39;</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w">   </span><span class="s">Host</span><span class="w">       </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w">   </span><span class="s">X-Real-IP</span><span class="w">  </span><span class="nv">$remote_addr</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w">   </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w">   </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_cache_bypass</span><span class="w"> </span><span class="nv">$http_upgrade</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1"># Timeouts</span>
+<span class="w">        </span><span class="kn">proxy_connect_timeout</span><span class="w"> </span><span class="s">60s</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_send_timeout</span><span class="w">    </span><span class="s">60s</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_read_timeout</span><span class="w">    </span><span class="s">60s</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1"># Cache de arquivos estáticos (se servindo frontend)</span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="p">~</span><span class="sr">*</span><span class="w"> </span><span class="s">\.(js|css|png|jpg|jpeg|gif|ico|svg|woff2)</span>$<span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">expires</span><span class="w">    </span><span class="s">1y</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">add_header</span><span class="w"> </span><span class="s">Cache-Control</span><span class="w"> </span><span class="s">&quot;public,</span><span class="w"> </span><span class="s">immutable&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ativar a configuração</span>
+sudo<span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span>/etc/nginx/sites-available/minha-api<span class="w"> </span>/etc/nginx/sites-enabled/
+sudo<span class="w"> </span>nginx<span class="w"> </span>-t<span class="w">        </span><span class="c1"># verificar sintaxe</span>
+sudo<span class="w"> </span>nginx<span class="w"> </span>-s<span class="w"> </span>reload<span class="w"> </span><span class="c1"># recarregar sem downtime</span>
+</code></pre></div>
+<h3 id="chapters-11-deploy-1193-certificado-tls-com-certbot-e-lets-encrypt">11.9.3 Certificado TLS com Certbot e Let's Encrypt<a class="headerlink" href="#chapters-11-deploy-1193-certificado-tls-com-certbot-e-lets-encrypt" title="Permanent link">&para;</a></h3>
+<p>O <strong>Certbot</strong> automatiza a obtenção e renovação de certificados TLS gratuitos emitidos pela <strong>Let's Encrypt</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Instalar Certbot com plugin Nginx</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>certbot<span class="w"> </span>python3-certbot-nginx
+
+<span class="c1"># Obter certificado e configurar Nginx automaticamente</span>
+sudo<span class="w"> </span>certbot<span class="w"> </span>--nginx<span class="w"> </span>-d<span class="w"> </span>api.meudominio.com
+
+<span class="c1"># Verificar renovação automática</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>certbot.timer
+sudo<span class="w"> </span>certbot<span class="w"> </span>renew<span class="w"> </span>--dry-run
+</code></pre></div>
+<p>O Certbot configura automaticamente uma tarefa cron para renovar os certificados antes do vencimento (90 dias). Após a primeira configuração, o processo é inteiramente automático.</p>
+<hr />
+<h2 id="chapters-11-deploy-1110-monitoramento-logs-e-alertas">11.10 Monitoramento, Logs e Alertas<a class="headerlink" href="#chapters-11-deploy-1110-monitoramento-logs-e-alertas" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-11101-logging-estruturado-com-pino">11.10.1 Logging estruturado com Pino<a class="headerlink" href="#chapters-11-deploy-11101-logging-estruturado-com-pino" title="Permanent link">&para;</a></h3>
+<p>O <code>console.log</code> em texto livre não é adequado para produção: não é pesquisável, não tem níveis de severidade, não é parseável por ferramentas de análise e tem performance inferior a loggers dedicados. O <strong>Pino</strong> é o logger Node.js de maior performance, produzindo logs em formato JSON estruturado:</p>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>pino<span class="w"> </span>pino-pretty
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/config/logger.js</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">pino</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;pino&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">pino</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">level</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">LOG_LEVEL</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;production&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;info&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;debug&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="c1">// Em produção: JSON puro (processado por ferramentas)</span>
+<span class="w">  </span><span class="c1">// Em desenvolvimento: formatado e colorido via pino-pretty</span>
+<span class="w">  </span><span class="nx">transport</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;production&#39;</span>
+<span class="w">    </span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;pino-pretty&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">colorize</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">base</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">pid</span><span class="o">:</span><span class="w">     </span><span class="nx">process</span><span class="p">.</span><span class="nx">pid</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">env</span><span class="o">:</span><span class="w">     </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">npm_package_version</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">redact</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;req.headers.authorization&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;body.senha&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;body.token&#39;</span><span class="p">],</span>
+<span class="w">  </span><span class="c1">// redact: remove campos sensíveis dos logs automaticamente</span>
+<span class="p">});</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Middleware de logging de requisições</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">loggerMiddleware</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">inicio</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">reqId</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nx">crypto</span><span class="p">.</span><span class="nx">randomUUID</span><span class="p">();</span>
+<span class="w">  </span><span class="nx">req</span><span class="p">.</span><span class="nx">id</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nx">reqId</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">req</span><span class="p">.</span><span class="nx">log</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nx">logger</span><span class="p">.</span><span class="nx">child</span><span class="p">({</span><span class="w"> </span><span class="nx">reqId</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;finish&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">req</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w">     </span><span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">url</span><span class="o">:</span><span class="w">        </span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">statusCode</span><span class="o">:</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">duracaoMs</span><span class="o">:</span><span class="w">  </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">inicio</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">ip</span><span class="o">:</span><span class="w">         </span><span class="nx">req</span><span class="p">.</span><span class="nx">ip</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="s1">&#39;Requisição processada&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="nx">next</span><span class="p">();</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Exemplo de log em produção (JSON estruturado)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="w">  </span><span class="mi">1700000000000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;pid&quot;</span><span class="p">:</span><span class="w">   </span><span class="mi">12345</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w">   </span><span class="s2">&quot;production&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;reqId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1b2c3d4-...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w">    </span><span class="s2">&quot;/api/auth/login&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;duracaoMs&quot;</span><span class="p">:</span><span class="w">  </span><span class="mi">312</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="chapters-11-deploy-11102-rastreamento-de-erros-com-sentry">11.10.2 Rastreamento de erros com Sentry<a class="headerlink" href="#chapters-11-deploy-11102-rastreamento-de-erros-com-sentry" title="Permanent link">&para;</a></h3>
+<p>Logs de erro em arquivos ou stdout são úteis para debugging, mas não notificam a equipe quando um erro ocorre. O <strong>Sentry</strong> é uma plataforma de monitoramento de erros que captura exceções não tratadas, as agrupa por tipo, exibe o stack trace completo com contexto (usuário, request, variáveis locais) e envia notificações por e-mail ou Slack:</p>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>@sentry/node
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/config/sentry.js</span>
+<span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Sentry</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@sentry/node&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">inicializarSentry</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">SENTRY_DSN</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;development&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">  </span><span class="nx">Sentry</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">dsn</span><span class="o">:</span><span class="w">         </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">SENTRY_DSN</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">environment</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">release</span><span class="o">:</span><span class="w">     </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">npm_package_version</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// Captura 10% das transações para performance monitoring</span>
+<span class="w">    </span><span class="nx">tracesSampleRate</span><span class="o">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// Não captura dados pessoais</span>
+<span class="w">    </span><span class="nx">beforeSend</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="ow">delete</span><span class="w"> </span><span class="nx">event</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">;</span><span class="w">  </span><span class="c1">// remove e-mail do contexto do usuário</span>
+<span class="w">        </span><span class="ow">delete</span><span class="w"> </span><span class="nx">event</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">ip_address</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">event</span><span class="p">;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/app.js</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">inicializarSentry</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./config/sentry.js&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Sentry</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@sentry/node&#39;</span><span class="p">;</span>
+
+<span class="nx">inicializarSentry</span><span class="p">();</span>
+
+<span class="c1">// Middleware de rastreamento de requisições (antes das rotas)</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Sentry</span><span class="p">.</span><span class="nx">Handlers</span><span class="p">.</span><span class="nx">requestHandler</span><span class="p">());</span>
+
+<span class="c1">// ... rotas ...</span>
+
+<span class="c1">// Middleware de captura de erros (antes do middleware de erros customizado)</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Sentry</span><span class="p">.</span><span class="nx">Handlers</span><span class="p">.</span><span class="nx">errorHandler</span><span class="p">());</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">middlewareDeErros</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="chapters-11-deploy-11103-alertas-e-metricas-basicas">11.10.3 Alertas e métricas básicas<a class="headerlink" href="#chapters-11-deploy-11103-alertas-e-metricas-basicas" title="Permanent link">&para;</a></h3>
+<p>Para aplicações em produção, alguns alertas mínimos devem ser configurados:</p>
+<p><strong>Alertas de erro 5xx</strong> — um pico de erros 500 indica um bug ou falha de infraestrutura. Plataformas como Railway e Render exibem métricas de status HTTP no dashboard; o Sentry envia alertas automáticos para novos tipos de erro.</p>
+<p><strong>Alertas de disponibilidade (uptime)</strong> — serviços como <strong>UptimeRobot</strong> (gratuito) ou <strong>Better Uptime</strong> verificam o endpoint <code>/health</code> a cada minuto e enviam notificações por e-mail ou SMS quando a aplicação fica indisponível.</p>
+<p><strong>Métricas de performance</strong> — tempo de resposta médio, pico de uso de memória e CPU. Plataformas gerenciadas expõem essas métricas nativamente; para servidores próprios, ferramentas como <strong>Prometheus</strong> + <strong>Grafana</strong> ou o <strong>New Relic</strong> (tem free tier) são as opções padrão.</p>
+<hr />
+<h2 id="chapters-11-deploy-1111-estrategias-de-deploy-sem-downtime">11.11 Estratégias de Deploy sem Downtime<a class="headerlink" href="#chapters-11-deploy-1111-estrategias-de-deploy-sem-downtime" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-11111-o-problema-do-downtime-em-deploys">11.11.1 O problema do downtime em deploys<a class="headerlink" href="#chapters-11-deploy-11111-o-problema-do-downtime-em-deploys" title="Permanent link">&para;</a></h3>
+<p>No modelo mais simples de deploy — parar o servidor, atualizar o código, reiniciar — existe uma janela de indisponibilidade entre o stop e o start. Para APIs com usuários ativos, mesmo poucos segundos de downtime são perceptíveis e inaceitáveis em produção. As estratégias a seguir eliminam ou minimizam essa janela.</p>
+<h3 id="chapters-11-deploy-11112-rolling-deployment">11.11.2 Rolling deployment<a class="headerlink" href="#chapters-11-deploy-11112-rolling-deployment" title="Permanent link">&para;</a></h3>
+<p>No <strong>rolling deployment</strong>, as instâncias da aplicação são atualizadas progressivamente: uma instância por vez é parada, atualizada e reiniciada, enquanto as demais continuam servindo tráfego. O load balancer redireciona o tráfego apenas para as instâncias saudáveis.</p>
+<p>Plataformas como Railway e Render implementam rolling deployment automaticamente: ao detectar um novo deploy, sobem a nova versão da aplicação, aguardam o health check passar, e só então direcionam o tráfego para a nova instância e encerram a antiga. Do ponto de vista do desenvolvedor, nenhuma configuração adicional é necessária — basta que o endpoint <code>/health</code> funcione corretamente.</p>
+<h3 id="chapters-11-deploy-11113-blue-green-deployment">11.11.3 Blue-Green deployment<a class="headerlink" href="#chapters-11-deploy-11113-blue-green-deployment" title="Permanent link">&para;</a></h3>
+<p>No <strong>blue-green deployment</strong>, dois ambientes idênticos são mantidos em paralelo: o ambiente <strong>blue</strong> (produção atual) e o ambiente <strong>green</strong> (nova versão). O deploy ocorre no ambiente green; após verificação, o tráfego é redirecionado instantaneamente do blue para o green. O ambiente blue permanece disponível como fallback imediato em caso de problema.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Exemplo com Railway CLI</span>
+<span class="c1"># 1. Deploy da nova versão em um serviço separado (green)</span>
+railway<span class="w"> </span>up<span class="w"> </span>--service<span class="w"> </span>minha-api-green
+
+<span class="c1"># 2. Verificação manual ou automatizada</span>
+curl<span class="w"> </span>https://minha-api-green.railway.app/health
+
+<span class="c1"># 3. Redirecionamento do domínio customizado para o novo serviço</span>
+<span class="c1"># (feito via dashboard ou CLI do Railway)</span>
+
+<span class="c1"># 4. Manter o serviço blue disponível por 24h como rollback</span>
+</code></pre></div>
+<h3 id="chapters-11-deploy-11114-migrations-sem-downtime">11.11.4 Migrations sem downtime<a class="headerlink" href="#chapters-11-deploy-11114-migrations-sem-downtime" title="Permanent link">&para;</a></h3>
+<p>O maior desafio no deploy sem downtime não é a aplicação em si, mas o banco de dados. Migrations que adicionam colunas <code>NOT NULL</code> sem valor padrão, renomeiam colunas ou alteram tipos de dados são <strong>breaking changes</strong> que podem causar falhas se a nova versão da aplicação tentar usar o banco antes da migration completar, ou se a versão antiga ainda estiver rodando após a migration.</p>
+<p>A estratégia para migrations sem downtime segue o padrão <strong>expand-contract</strong>:</p>
+<p><strong>Fase 1 — Expand (deploy 1):</strong> adicionar a nova coluna como <code>NULL</code> (opcional), manter compatibilidade com a versão antiga:</p>
+<div class="highlight"><pre><span></span><code>// Migration segura: nova coluna nullable
+model Usuario {
+  telefone String? // NULL permitido — versão antiga funciona sem o campo
+}
+</code></pre></div>
+<p><strong>Fase 2 — Migrate data (script de migração):</strong> popular a nova coluna com dados existentes, se necessário.</p>
+<p><strong>Fase 3 — Contract (deploy 2):</strong> após confirmar que a versão nova está estável, aplicar as restrições finais (NOT NULL, índices, remoção de colunas antigas).</p>
+<div class="highlight"><pre><span></span><code>// Migration final: torna a coluna obrigatória
+model Usuario {
+  telefone String  // NOT NULL — versão antiga já não está em execução
+}
+</code></pre></div>
+<p>Essa abordagem garante que em nenhum momento uma versão em execução seja incompatível com o estado atual do banco de dados.</p>
+<hr />
+<h2 id="chapters-11-deploy-1112-escalabilidade-basica-com-pm2">11.12 Escalabilidade Básica com PM2<a class="headerlink" href="#chapters-11-deploy-1112-escalabilidade-basica-com-pm2" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-11121-o-event-loop-e-suas-limitacoes-em-producao">11.12.1 O event loop e suas limitações em produção<a class="headerlink" href="#chapters-11-deploy-11121-o-event-loop-e-suas-limitacoes-em-producao" title="Permanent link">&para;</a></h3>
+<p>Como estabelecido no Capítulo 2, o Node.js opera em um único thread — o event loop. Em um servidor com 8 núcleos de CPU, uma instância Node.js utiliza apenas 1 núcleo, deixando 7 ociosos. Para operações puramente assíncronas (I/O de rede, banco de dados), essa limitação raramente é o gargalo. Para operações com uso intensivo de CPU (processamento de imagem, criptografia pesada, relatórios complexos), o event loop pode bloquear e degradar a performance de todas as requisições concorrentes.</p>
+<p>O <strong>PM2</strong> (<em>Process Manager 2</em>) é o gerenciador de processos padrão do ecossistema Node.js para produção. Ele oferece reinicialização automática em caso de falha, modo cluster para utilizar todos os núcleos disponíveis, monitoramento de processos, logs centralizados e deploy com zero downtime.</p>
+<h3 id="chapters-11-deploy-11122-configuracao-do-pm2">11.12.2 Configuração do PM2<a class="headerlink" href="#chapters-11-deploy-11122-configuracao-do-pm2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>pm2
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// ecosystem.config.cjs</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">apps</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w">         </span><span class="s1">&#39;minha-api&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">script</span><span class="o">:</span><span class="w">       </span><span class="s1">&#39;src/server.js&#39;</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// Modo cluster: um worker por núcleo de CPU</span>
+<span class="w">    </span><span class="nx">instances</span><span class="o">:</span><span class="w">    </span><span class="s1">&#39;max&#39;</span><span class="p">,</span><span class="w">     </span><span class="c1">// ou um número específico: 4</span>
+<span class="w">    </span><span class="nx">exec_mode</span><span class="o">:</span><span class="w">    </span><span class="s1">&#39;cluster&#39;</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// Reinicialização automática</span>
+<span class="w">    </span><span class="nx">watch</span><span class="o">:</span><span class="w">        </span><span class="kc">false</span><span class="p">,</span><span class="w">     </span><span class="c1">// não usar watch em produção</span>
+<span class="w">    </span><span class="nx">max_memory_restart</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;500M&#39;</span><span class="p">,</span><span class="w"> </span><span class="c1">// reinicia se consumir mais de 500MB</span>
+
+<span class="w">    </span><span class="c1">// Variáveis de ambiente por ambiente</span>
+<span class="w">    </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">NODE_ENV</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;development&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">PORT</span><span class="o">:</span><span class="w">     </span><span class="mf">3000</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">env_production</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">NODE_ENV</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;production&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">PORT</span><span class="o">:</span><span class="w">     </span><span class="mf">3000</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+
+<span class="w">    </span><span class="c1">// Logs</span>
+<span class="w">    </span><span class="nx">log_date_format</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;YYYY-MM-DD HH:mm:ss&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">error_file</span><span class="o">:</span><span class="w">      </span><span class="s1">&#39;logs/pm2-erro.log&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">out_file</span><span class="o">:</span><span class="w">        </span><span class="s1">&#39;logs/pm2-saida.log&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">merge_logs</span><span class="o">:</span><span class="w">      </span><span class="kc">true</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// Graceful shutdown</span>
+<span class="w">    </span><span class="nx">kill_timeout</span><span class="o">:</span><span class="w">    </span><span class="mf">5000</span><span class="p">,</span><span class="w">   </span><span class="c1">// aguarda 5s antes de forçar encerramento</span>
+<span class="w">    </span><span class="nx">listen_timeout</span><span class="o">:</span><span class="w">  </span><span class="mf">3000</span><span class="p">,</span><span class="w">   </span><span class="c1">// aguarda 3s para a aplicação subir</span>
+<span class="w">  </span><span class="p">}],</span>
+<span class="p">};</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Iniciar em modo produção</span>
+pm2<span class="w"> </span>start<span class="w"> </span>ecosystem.config.cjs<span class="w"> </span>--env<span class="w"> </span>production
+
+<span class="c1"># Monitoramento em tempo real</span>
+pm2<span class="w"> </span>monit
+
+<span class="c1"># Status de todos os processos</span>
+pm2<span class="w"> </span>status
+
+<span class="c1"># Logs em tempo real</span>
+pm2<span class="w"> </span>logs<span class="w"> </span>minha-api
+
+<span class="c1"># Reiniciar sem downtime (reload gracioso)</span>
+pm2<span class="w"> </span>reload<span class="w"> </span>minha-api
+
+<span class="c1"># Salvar configuração para reinicialização automática no boot</span>
+pm2<span class="w"> </span>save
+pm2<span class="w"> </span>startup<span class="w">   </span><span class="c1"># gera o comando para configurar o systemd</span>
+
+<span class="c1"># Atualização com zero downtime</span>
+pm2<span class="w"> </span>reload<span class="w"> </span>ecosystem.config.cjs<span class="w"> </span>--env<span class="w"> </span>production
+</code></pre></div>
+<h3 id="chapters-11-deploy-11123-modo-cluster-e-sessoes-stateless">11.12.3 Modo cluster e sessões stateless<a class="headerlink" href="#chapters-11-deploy-11123-modo-cluster-e-sessoes-stateless" title="Permanent link">&para;</a></h3>
+<p>O modo cluster cria múltiplos processos Node.js, cada um com seu próprio event loop e memória. Requisições são distribuídas entre os workers pelo load balancer interno do Node.js. Esse modelo funciona corretamente apenas para aplicações <strong>stateless</strong> — que não mantêm estado em memória entre requisições.</p>
+<p>A arquitetura de autenticação baseada em JWT implementada no Capítulo 8 é naturalmente stateless: o token é verificado pela chave secreta em qualquer worker, sem necessidade de compartilhamento de estado. Se a aplicação utilizasse sessões baseadas em memória (não recomendado para produção), o modo cluster exigiria um armazenamento de sessão centralizado (Redis) para que todos os workers compartilhassem o estado de sessão.</p>
+<h3 id="chapters-11-deploy-11124-quando-escalar-horizontalmente">11.12.4 Quando escalar horizontalmente<a class="headerlink" href="#chapters-11-deploy-11124-quando-escalar-horizontalmente" title="Permanent link">&para;</a></h3>
+<p>O PM2 em modo cluster resolve o problema de subutilização de CPU em um único servidor. Quando o servidor atinge seus limites — CPU ou memória saturados, latência crescente sob carga — a próxima etapa é o <strong>scaling horizontal</strong>: adicionar mais servidores e distribuir o tráfego entre eles com um load balancer externo.</p>
+<p>Plataformas gerenciadas como Railway e Render oferecem scaling horizontal como um recurso de planos pagos — é possível aumentar o número de réplicas da aplicação com um clique ou com uma configuração no <code>railway.json</code>. Para servidores próprios, ferramentas como Nginx (já apresentado) ou HAProxy atuam como load balancers.</p>
+<p>O scaling horizontal pressupõe que a aplicação é completamente stateless e que todos os estados persistentes (sessões, uploads, jobs) estão em serviços externos (banco de dados, Redis, object storage). A arquitetura construída ao longo deste curso satisfaz esse requisito.</p>
+<hr />
+<h2 id="chapters-11-deploy-1113-exercicios-praticos">11.13 Exercícios Práticos<a class="headerlink" href="#chapters-11-deploy-1113-exercicios-praticos" title="Permanent link">&para;</a></h2>
+<h3 id="chapters-11-deploy-exercicio-111-preparacao-para-producao">Exercício 11.1 — Preparação para produção<a class="headerlink" href="#chapters-11-deploy-exercicio-111-preparacao-para-producao" title="Permanent link">&para;</a></h3>
+<p>Aplique as seguintes melhorias ao projeto desenvolvido no curso: (a) implemente o módulo <code>src/config/env.js</code> com validação de variáveis obrigatórias; (b) adapte o middleware de erros para não expor stack traces quando <code>NODE_ENV=production</code>; (c) adicione o endpoint <code>GET /health</code> com verificação de conectividade ao banco; (d) implemente o graceful shutdown no <code>server.js</code>. Verifique que a aplicação inicia corretamente com <code>NODE_ENV=production</code> e encerra graciosamente ao receber <code>SIGTERM</code>.</p>
+<h3 id="chapters-11-deploy-exercicio-112-docker-compose-para-desenvolvimento">Exercício 11.2 — Docker Compose para desenvolvimento<a class="headerlink" href="#chapters-11-deploy-exercicio-112-docker-compose-para-desenvolvimento" title="Permanent link">&para;</a></h3>
+<p>Crie um <code>docker-compose.yml</code> que suba a API Express e um container PostgreSQL em conjunto. O serviço da API deve depender do healthcheck do banco antes de iniciar. Verifique que <code>docker compose up</code> sobe o ambiente completo e que <code>docker compose exec api npx prisma migrate dev</code> executa as migrations corretamente.</p>
+<h3 id="chapters-11-deploy-exercicio-113-deploy-no-railway">Exercício 11.3 — Deploy no Railway<a class="headerlink" href="#chapters-11-deploy-exercicio-113-deploy-no-railway" title="Permanent link">&para;</a></h3>
+<p>Faça o deploy da API no Railway: (a) crie um novo projeto conectado ao repositório GitHub; (b) adicione um serviço PostgreSQL e vincule a <code>DATABASE_URL</code> à aplicação; (c) configure todas as variáveis de ambiente de produção; (d) verifique que o endpoint <code>/health</code> responde com status 200 na URL pública gerada pelo Railway; (e) faça uma alteração no código, faça push para <code>main</code> e observe o redeploy automático.</p>
+<h3 id="chapters-11-deploy-exercicio-114-pipeline-cicd-com-github-actions">Exercício 11.4 — Pipeline CI/CD com GitHub Actions<a class="headerlink" href="#chapters-11-deploy-exercicio-114-pipeline-cicd-com-github-actions" title="Permanent link">&para;</a></h3>
+<p>Implemente o workflow <code>.github/workflows/deploy.yml</code> com três jobs: testes (com banco PostgreSQL de serviço), build de imagem Docker (publicada no GitHub Container Registry) e deploy no Railway. Configure o secret <code>RAILWAY_TOKEN</code> no repositório. Verifique que: (a) um pull request dispara apenas os testes; (b) um push para <code>main</code> dispara o pipeline completo; (c) uma falha nos testes bloqueia o deploy.</p>
+<h3 id="chapters-11-deploy-exercicio-115-logging-estruturado-com-pino">Exercício 11.5 — Logging estruturado com Pino<a class="headerlink" href="#chapters-11-deploy-exercicio-115-logging-estruturado-com-pino" title="Permanent link">&para;</a></h3>
+<p>Substitua todos os <code>console.log</code> e <code>console.error</code> do projeto pelo logger Pino. Configure o middleware de logging de requisições e o <code>redact</code> para remover <code>authorization</code> e <code>senha</code> dos logs. Em desenvolvimento, use <code>pino-pretty</code> para output formatado. Verifique no terminal que as requisições são logadas em JSON com os campos <code>method</code>, <code>url</code>, <code>statusCode</code> e <code>duracaoMs</code>.</p>
+<h3 id="chapters-11-deploy-exercicio-116-pm2-em-modo-cluster">Exercício 11.6 — PM2 em modo cluster<a class="headerlink" href="#chapters-11-deploy-exercicio-116-pm2-em-modo-cluster" title="Permanent link">&para;</a></h3>
+<p>Em um servidor VPS ou na própria máquina, instale o PM2 e configure o <code>ecosystem.config.cjs</code> com modo cluster (<code>instances: 'max'</code>). Inicie a aplicação com <code>pm2 start ecosystem.config.cjs --env production</code>, verifique com <code>pm2 status</code> que múltiplos workers estão rodando e teste o reload sem downtime com <code>pm2 reload minha-api</code>. Observe no <code>pm2 monit</code> a distribuição de requisições entre os workers.</p>
+<hr />
+<h2 id="chapters-11-deploy-1114-referencias-e-leituras-complementares">11.14 Referências e Leituras Complementares<a class="headerlink" href="#chapters-11-deploy-1114-referencias-e-leituras-complementares" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://docs.railway.app/">Railway — documentação</a></li>
+<li><a href="https://render.com/docs">Render — documentação</a></li>
+<li><a href="https://docs.github.com/en/actions">GitHub Actions — documentação</a></li>
+<li><a href="https://docs.docker.com/">Docker — documentação oficial</a></li>
+<li><a href="https://pm2.keymetrics.io/docs/">PM2 — documentação oficial</a></li>
+<li><a href="https://nginx.org/en/docs/http/ngx_http_proxy_module.html">Nginx — guia de configuração como reverse proxy</a></li>
+<li><a href="https://certbot.eff.org/">Certbot — Let's Encrypt</a></li>
+<li><a href="https://getpino.io/">Pino — documentação</a></li>
+<li><a href="https://docs.sentry.io/platforms/node/">Sentry para Node.js — documentação</a></li>
+<li><a href="https://www.prisma.io/docs/guides/deployment">Prisma — deploy e migrations em produção</a></li>
+<li><a href="https://12factor.net/">The Twelve-Factor App</a> — metodologia para construção de aplicações SaaS portáteis e escaláveis</li>
+<li>HUMBLE, J.; FARLEY, D. <em>Continuous Delivery: Reliable Software Releases through Build, Test, and Deployment Automation</em>. Addison-Wesley, 2010.</li>
+<li>BURNS, B.; BEDA, J.; HIGHTOWER, K. <em>Kubernetes: Up and Running</em>. 3ª ed. O'Reilly Media, 2022. — Capítulos 1–3 (introdução à orquestração de containers, leitura complementar).</li>
+</ul></section><section class="print-page" id="chapters-apendice-cheatsheet"><h1 id="chapters-apendice-cheatsheet-apendice-a-cheatsheet">Apêndice A — Cheatsheet<a class="headerlink" href="#chapters-apendice-cheatsheet-apendice-a-cheatsheet" title="Permanent link">&para;</a></h1>
 <p>Referência rápida dos principais padrões, sintaxes e configurações abordados ao longo do semestre. Organizado por tema para consulta pontual durante o desenvolvimento.</p>
 <hr />
 <h2 id="chapters-apendice-cheatsheet-a1-nodejs-npm">A.1 Node.js &amp; NPM<a class="headerlink" href="#chapters-apendice-cheatsheet-a1-nodejs-npm" title="Permanent link">&para;</a></h2>
