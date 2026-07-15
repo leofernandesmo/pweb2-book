@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slides | Programação Web 2</title>
+  <style>
+    :root {
+      --forest:#14532D; --forest-dark:#0C3A1E; --forest-light:#1E6B3A;
+      --green:#3FA34D; --green-light:#86EFAC; --amber:#F2B84B; --paper:#F1F7F2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      font-family: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--forest-dark); color: var(--paper);
+      display: flex; flex-direction: column; align-items: center;
+      padding: 3rem 1.2rem;
+    }
+    header { text-align: center; max-width: 760px; margin-bottom: 2.5rem; }
+    header h1 { font-size: 2rem; margin: 0 0 .4rem; }
+    header p { color: var(--green-light); margin: .2rem 0; }
+    header .rodape { color:#A9C3B1; font-size:.85rem; margin-top:.8rem; }
+    .grade {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem; width: 100%; max-width: 960px;
+    }
+    a.card {
+      display: block; text-decoration: none; color: var(--paper);
+      background: var(--forest); border: 1px solid var(--forest-light);
+      border-left: 4px solid var(--amber);
+      border-radius: 10px; padding: 1.1rem 1.2rem; transition: .15s;
+    }
+    a.card:hover { border-color: var(--green-light); background: var(--forest-light); transform: translateY(-2px); }
+    a.card .num { font-family: "JetBrains Mono", monospace; color: var(--amber); font-size:.8rem; }
+    a.card h2 { font-size: 1.05rem; margin: .25rem 0 .3rem; }
+    a.card p { color:#A9C3B1; font-size:.82rem; margin:0; }
+    a.card.pendente { opacity:.45; border-left-color: var(--forest-light); pointer-events:none; }
+    a.card.pendente .num { color:#A9C3B1; }
+    footer { margin-top: 2.5rem; color:#A9C3B1; font-size:.8rem; text-align:center; }
+    footer a { color: var(--green-light); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Slides &mdash; Programação Web 2</h1>
+    <p>Uma abordagem usando Node/Express &middot; BSI</p>
+    <p class="rodape">IFAL &mdash; Campus Maceió &middot; Prof. Leo Fernandes, PhD</p>
+  </header>
+
+  <main class="grade">
+    <a class="card" href="01-revisao-web/index.html">
+      <span class="num">Capítulo 1</span>
+      <h2>Introdução à Web e Ferramentas</h2>
+      <p>Arquitetura cliente-servidor, HTTP, DNS/IP, ciclo de uma URL e o ferramental do dev.</p>
+    </a>
+    <a class="card pendente" href="#">
+      <span class="num">Capítulo 2</span>
+      <h2>Fundamentos do Node.js</h2>
+      <p>Em breve.</p>
+    </a>
+    <a class="card pendente" href="#">
+      <span class="num">Capítulo 3</span>
+      <h2>Express: rotas, middlewares e controllers</h2>
+      <p>Em breve.</p>
+    </a>
+    <a class="card pendente" href="#">
+      <span class="num">Capítulo 4</span>
+      <h2>Arquitetura: MVC, Services e Repository</h2>
+      <p>Em breve.</p>
+    </a>
+    <a class="card pendente" href="#">
+      <span class="num">Capítulo 5</span>
+      <h2>Banco de Dados e ORM: Prisma e Sequelize</h2>
+      <p>Em breve.</p>
+    </a>
+    <a class="card pendente" href="#">
+      <span class="num">Capítulo 6</span>
+      <h2>Renderização no Servidor com EJS</h2>
+      <p>Em breve.</p>
+    </a>
+    <a class="card pendente" href="#">
+      <span class="num">Capítulo 7</span>
+      <h2>Frontend Moderno: Vue.js e React</h2>
+      <p>Em breve.</p>
+    </a>
+    <a class="card pendente" href="#">
+      <span class="num">Capítulo 8</span>
+      <h2>Autenticação e Autorização</h2>
+      <p>Em breve.</p>
+    </a>
+    <a class="card pendente" href="#">
+      <span class="num">Capítulo 9</span>
+      <h2>Testes Automatizados</h2>
+      <p>Em breve.</p>
+    </a>
+    <a class="card pendente" href="#">
+      <span class="num">Capítulo 10</span>
+      <h2>Segurança</h2>
+      <p>Em breve.</p>
+    </a>
+    <a class="card pendente" href="#">
+      <span class="num">Capítulo 11</span>
+      <h2>Deploy e Infraestrutura</h2>
+      <p>Em breve.</p>
+    </a>
+  </main>
+
+  <footer>
+    Apresente com as setas do teclado &middot; <strong>S</strong> = modo apresentador &middot;
+    <strong>Esc</strong> = visão geral &middot; <strong>F</strong> = tela cheia<br>
+    Material do curso: veja o site MkDocs da disciplina.
+  </footer>
+</body>
+</html>

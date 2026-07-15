@@ -28,7 +28,7 @@ O ciclo de vida de uma interação na Web inicia-se quando um "agente de usuári
 O navegador, então, interpreta esses códigos recebidos para renderizar a interface gráfica final para o usuário, ocultando toda a complexidade da troca de dados subjacente.
 
 
-### **Por que entender a arquitetura da Web é importante para uma pessoa desenvolvedora?**
+### Por que entender a arquitetura da Web é importante para uma pessoa desenvolvedora?
 
 A Web é construída sobre uma série de camadas, protocolos e padrões que trabalham juntos para permitir que páginas, aplicações e serviços funcionem. Quando você entende essa arquitetura:
 
@@ -93,7 +93,7 @@ O protocolo HTTP (Hypertext Transfer Protocol) é o alicerce da comunicação en
 HTTP é um protocolo **baseado em texto**, **sem estado** (stateless) e **orientado a requisições**. Isso significa que cada interação entre cliente e servidor é independente, e o servidor não mantém memória das requisições anteriores, a menos que mecanismos adicionais sejam utilizados (cookies, tokens, sessões, etc.). Essa característica, embora simples, é fundamental para a escalabilidade da Web moderna. Cada troca de dados é tratada como uma transação independente e isolada, composta invariavelmente por dois elementos estruturais: uma **Requisição** (Request) enviada pelo cliente e uma **Resposta** (Response) devolvida pelo servidor.
 
 
-#### **A Estrutura de uma Requisição HTTP**
+#### A Estrutura de uma Requisição HTTP
 
 Quando o navegador precisa obter um recurso — seja uma página HTML, um arquivo CSS, um script JavaScript ou uma imagem — ele envia uma **requisição HTTP** ao servidor. Essa requisição é composta por três partes principais:
 
@@ -138,7 +138,7 @@ Métodos como **GET** não enviam corpo, enquanto **POST** e **PUT** frequenteme
 
 ---
 
-#### **A Estrutura de uma Resposta HTTP**
+#### A Estrutura de uma Resposta HTTP
 
 Após processar a requisição, o servidor devolve uma **resposta HTTP**, composta por:
 
@@ -169,7 +169,7 @@ Contém o recurso solicitado: HTML, JSON, imagem, vídeo, etc.
 
 ---
 
-#### **Códigos de Status HTTP**
+#### Códigos de Status HTTP
 
 Os códigos de status são fundamentais para diagnóstico e controle de fluxo. Eles são divididos em classes:
 
@@ -185,7 +185,7 @@ Para desenvolvedores, compreender essas classes é essencial para depuração (l
 
 ---
 
-#### **HTTP como Protocolo Stateless**
+#### HTTP como Protocolo Stateless
 
 A característica *stateless* significa que cada requisição é independente.  
 Isso traz vantagens:
@@ -256,146 +256,28 @@ O DNS atua como uma lista telefônica dinâmica e descentralizada da Internet.
 
 Quando um usuário digita um domínio mnemônico (como `www.exemplo.com.br`) na barra de endereços, o navegador inicia um processo denominado **Resolução de Nomes**. O sistema consulta servidores DNS recursivos e autoritativos em uma cadeia hierárquica até encontrar o Endereço IP correspondente àquele domínio. Somente após obter essa "tradução" do nome para o número IP é que o navegador consegue estabelecer a conexão TCP/IP real com o servidor e enviar a requisição HTTP. Todo esse processo complexo ocorre em milissegundos, tornando a experiência de navegação fluida e transparente.
 
+Falta ainda um detalhe de segurança. Na Web atual, o padrão é o **HTTPS**, em que a conexão TCP é encapsulada pelo **TLS** (*Transport Layer Security*), que cifra tudo o que trafega entre cliente e servidor. Por isso o HTTPS escuta a porta **443**, enquanto o HTTP puro usa a **80**: só depois do “aperto de mão” (*handshake*) do TLS é que a requisição HTTP segue — agora protegida contra leitura e adulteração no caminho.
+
 ---
 
-<div class="box-destaque">
-    <h3 class="box-titulo">O que acontece quando você digita uma URL no navegador?</h3>
-    <p> 
-        Imagine que o usuário digita:
-        
+???+ example "O que acontece quando você digita uma URL no navegador?"
+
+    Uma URL tem três partes — **protocolo** (`https://`), **domínio** (`www.exemplo.com`) e **caminho** (`/produtos`). Quando o usuário digita `https://www.exemplo.com/produtos` e aperta **Enter**, o navegador dispara uma sequência de etapas:
+
+    1. **Cache local** — antes de ir à rede, o navegador verifica se já tem uma cópia válida do recurso, consultando cabeçalhos como `Cache-Control`, `Expires` e `ETag`. Se houver versão válida, ele nem acessa o servidor.
+    2. **Resolução DNS** — traduz o domínio em um endereço IP (detalhado em 1.1.3). Normalmente via **UDP porta 53**, com a resposta guardada em cache por um tempo (**TTL**).
+    3. **Conexão** — de posse do IP, o navegador abre uma conexão **TCP** (ou **QUIC**, no HTTP/3). Em **HTTPS**, negocia o **TLS** antes de trafegar dados.
+    4. **Requisição HTTP** — envia o pedido, por exemplo:
+
+        ```http
+        GET /produtos HTTP/1.1
+        Host: www.exemplo.com
         ```
-        https://www.exemplo.com/produtos
-        ```
-        
-        O navegador inicia uma sequência complexa de operações. Vamos detalhar cada etapa.        
-          <ol>
-            
-            <li>
-              <h3>Verificação do Cache Local</h3>
-              <p>Antes de ir à web, o navegador tenta economizar tempo e banda verificando se já possui uma cópia recente do recurso solicitado.</p>
-              <p>Ele consulta cabeçalhos como:</p>
-              <ul>
-                <li><strong>Cache-Control</strong></li>
-                <li><strong>Expires</strong></li>
-                <li><strong>ETag</strong></li>
-              </ul>
-              <blockquote>
-                Se o navegador encontrar uma versão válida no cache, ele <strong>não precisa acessar o servidor</strong>. Se <strong>não</strong> encontrar, ele segue para a próxima etapa.
-              </blockquote>
-            </li>
-        
-            <hr>
-        
-            <li>
-              <h3>Resolução de nomes (DNS)</h3>
-              <p>O navegador precisa transformar o nome do domínio:</p>
-              <pre><code>www.exemplo.com</code></pre>
-              <p>Em um endereço IP, como:</p>
-              <ul>
-                <li>IPv4 → <code>192.0.2.1</code></li>
-                <li>IPv6 → <code>2001:db8::1</code></li>
-              </ul>
-              <p>Essa conversão é feita pelo <strong>DNS (Domain Name System)</strong>.</p>
-              
-              <div class="sub-secao">
-                <h4>Como funciona o DNS?</h4>
-                <ol>
-                  <li>O navegador pergunta ao SO: <em>“Você sabe o IP de www.exemplo.com?”</em></li>
-                  <li>Se o sistema não souber, consulta o <strong>servidor DNS configurado</strong> (provedor, Google, etc).</li>
-                  <li>O servidor DNS segue a cadeia hierárquica (Root → TLD → Authoritative).</li>
-                  <li>O servidor autoritativo responde com o IP correto.</li>
-                  <li>O navegador armazena a resposta (TTL).</li>
-                </ol>
-              </div>
-        
-              <div class="sub-secao">
-                <h4>DNS usa UDP ou TCP?</h4>
-                <ul>
-                  <li>Normalmente <strong>UDP porta 53</strong> (rápido e leve).</li>
-                  <li>Em casos específicos, <strong>TCP</strong> (respostas grandes, DNSSEC).</li>
-                </ul>
-              </div>
-            </li>
-        
-            <hr>
-        
-            <li>
-              <h3>Protocolo IP e suas versões</h3>
-              <p>O endereço IP identifica dispositivos na rede.</p>
-              
-              <h4>IPv4</h4>
-              <ul>
-                <li>32 bits</li>
-                <li>~4 bilhões de endereços</li>
-                <li>Exemplo: <code>192.168.0.1</code></li>
-              </ul>
-        
-              <h4>IPv6</h4>
-              <ul>
-                <li>128 bits</li>
-                <li>Quantidade praticamente infinita</li>
-                <li>Exemplo: <code>2001:0db8:85a3::8a2e...</code></li>
-              </ul>
-              <p>A Web moderna funciona com ambos, mas o IPv6 está crescendo rapidamente.</p>
-            </li>
-        
-            <hr>
-        
-            <li>
-              <h3>Estrutura da URL</h3>
-              <p>Uma URL possui três partes principais:</p>
-              <pre><code>https://www.exemplo.com/produtos</code></pre>
-        
-              <ul>
-                <li><strong>1. Protocolo:</strong> Define a comunicação (`http://` ou `https://`).</li>
-                <li><strong>2. Domínio:</strong> Nome registrado que aponta para um servidor (`www.exemplo.com`).</li>
-                <li><strong>3. Caminho:</strong> Indica o recurso solicitado (`/produtos`).</li>
-              </ul>
-            </li>
-        
-            <hr>
-        
-            <li>
-              <h3>Cliente envia requisição ao servidor</h3>
-              <p>Com o IP em mãos, o navegador abre uma conexão (TCP ou QUIC) e envia a requisição:</p>
-              <pre><code>GET /produtos HTTP/1.1
-        Host: www.exemplo.com</code></pre>
-            </li>
-        
-            <hr>
-        
-            <li>
-              <h3>Servidor responde</h3>
-              <p>O servidor processa a requisição e devolve:</p>
-              <ul>
-                <li>Código de status (200, 404, 500…)</li>
-                <li>Cabeçalhos</li>
-                <li>Corpo da resposta (HTML, JSON, imagem, etc.)</li>
-              </ul>
-            </li>
-        
-            <hr>
-        
-            <li>
-              <h3>Navegador renderiza a página</h3>
-              <p>O processo final de renderização:</p>
-              <ol>
-                <li>Lê o HTML.</li>
-                <li>Baixa recursos externos (CSS, JS, Imagens).</li>
-                <li>Monta a árvore DOM.</li>
-                <li>Aplica estilos e executa scripts.</li>
-                <li>Exibe a página ao usuário.</li>
-              </ol>
-            </li>
-        
-          </ol>
-        
-    </p>
-</div>
 
+    5. **Resposta** — o servidor processa e devolve o código de status (200, 404, 500…), os cabeçalhos e o corpo (HTML, JSON, imagem…).
+    6. **Renderização** — o navegador lê o HTML, baixa os recursos externos (CSS, JS, imagens), monta a árvore **DOM**, aplica estilos, executa scripts e exibe a página.
 
-
-#### **Atividade de Revisão — Seção 1.1**
+#### Atividade de Revisão — Seção 1.1
 
 <div class="quiz" data-answer="b">
   <p><strong>1.</strong> Qual é a diferença fundamental entre a Internet e a World Wide Web (WWW)?</p>
@@ -434,13 +316,13 @@ Quando um usuário digita um domínio mnemônico (como `www.exemplo.com.br`) na 
 
 
 
-### 1.2 — Ferramentas Essenciais para Desenvolvimento Web
+## 1.2 — Ferramentas Essenciais para Desenvolvimento Web
 
 O desenvolvimento Web moderno exige mais do que apenas conhecer linguagens como HTML, CSS e JavaScript. Ele demanda um conjunto de ferramentas que ampliam a produtividade, facilitam o diagnóstico de problemas, automatizam tarefas e permitem versionar e compartilhar código de forma profissional. Nesta seção, exploraremos as ferramentas fundamentais que todo desenvolvedor Web deve dominar desde o início da sua formação.
 
 ---
 
-#### 1.2.1 — Navegadores e DevTools
+### 1.2.1 — Navegadores e DevTools
 
 Os navegadores modernos — como **Google Chrome**, **Mozilla Firefox**, **Microsoft Edge** e **Safari** — são muito mais do que simples programas para acessar páginas. Eles são verdadeiros **ambientes de execução** para aplicações Web, contendo motores de renderização, interpretadores JavaScript, mecanismos de segurança e ferramentas avançadas de inspeção.
 
@@ -483,7 +365,7 @@ O DevTools é indispensável para qualquer desenvolvedor Web. Ele transforma o n
 
 ---
 
-#### 1.2.2 — Editor de Texto - Opção Atual: VS Code
+### 1.2.2 — Editor de Texto - Opção Atual: VS Code
 > **Vídeo: Como usar o VS CODE para programar? **  
 > <iframe width="100%" height="400"
     src="https://www.youtube-nocookie.com/embed/pkH6XxH57O8?rel=0&modestbranding=1"
@@ -507,7 +389,7 @@ O **Visual Studio Code (VS Code)** é hoje o editor de código mais utilizado no
 
 ---
 
-#### 1.2.3 — Git e GitHub (visão inicial)
+### 1.2.3 — Git e GitHub (visão inicial)
 > **Vídeo: O QUE É GIT E GITHUB? - definição e conceitos importantes**  
 > <iframe width="100%" height="400"
     src="https://www.youtube-nocookie.com/embed/DqTITcMq68k?rel=0&modestbranding=1"
@@ -550,7 +432,7 @@ O **GitHub** é um serviço baseado em Git que permite:
 
 ---
 
-#### 1.2.4 — Ambientes online (CodePen, JSFiddle)
+### 1.2.4 — Ambientes online (CodePen, JSFiddle)
 
 > **Vídeo: Por dentro da ferramenta de programação CodePen**  
 > <iframe width="100%" height="400"
@@ -573,10 +455,35 @@ Ambientes online como **CodePen**, **JSFiddle**, **JSBin** e **StackBlitz** perm
 
 ---
  
-##### **Atividades — Seção 1.2**
+#### Atividades — Seção 1.2
 
-- **Quiz:** Ferramentas e DevTools *(link será adicionado)*  
-- **GitHub Classroom:** Criar repositório inicial e enviar `hello.html` *(link será adicionado)*  
+Teste o que você aprendeu sobre o ferramental do desenvolvedor:
 
+<div class="quiz" data-answer="b">
+  <p><strong>1.</strong> Qual atalho abre o DevTools na maioria dos navegadores (Windows/Linux)?</p>
+  <button data-option="a">Ctrl + S</button>
+  <button data-option="b">F12 (ou Ctrl + Shift + I)</button>
+  <button data-option="c">Ctrl + P</button>
+  <button data-option="d">Alt + Tab</button>
+  <p class="feedback"></p>
+</div>
 
+<div class="quiz" data-answer="c">
+  <p><strong>2.</strong> Qual aba do DevTools você usaria para inspecionar as requisições HTTP e seus códigos de status?</p>
+  <button data-option="a">Elements</button>
+  <button data-option="b">Console</button>
+  <button data-option="c">Network</button>
+  <button data-option="d">Sources</button>
+  <p class="feedback"></p>
+</div>
 
+<div class="quiz" data-answer="b">
+  <p><strong>3.</strong> Sendo um sistema de controle de versão distribuído, o que o Git permite?</p>
+  <button data-option="a">Hospedar sites estáticos automaticamente.</button>
+  <button data-option="b">Acompanhar mudanças, criar branches e reverter alterações com segurança.</button>
+  <button data-option="c">Compilar JavaScript para código de máquina.</button>
+  <button data-option="d">Substituir o navegador durante os testes.</button>
+  <p class="feedback"></p>
+</div>
+
+> **Prática (GitHub Classroom):** aceite o convite da turma, crie o repositório inicial e envie um arquivo `hello.html`. O link do convite é disponibilizado no ambiente da disciplina.

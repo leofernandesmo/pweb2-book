@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítulo 1 — Web e Ferramentas | Programação Web 2</title>
+
+  <link rel="stylesheet" href="../assets/reveal/dist/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="../assets/reveal/plugin/highlight/monokai.css">
+  <!-- Tema do curso (sobrescreve o tema base) -->
+  <link rel="stylesheet" href="../assets/css/course-theme.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Capa -->
+      <section class="titulo" data-background-color="#0C3A1E">
+        <h1>Programação Web 2</h1>
+        <p class="subtitulo">Capítulo 1 &mdash; Introdução à Web e Ferramentas</p>
+        <p class="rodape">
+          Node/Express &middot; Bacharelado em Desenvolvimento de Sistemas<br>
+          IFAL &mdash; Campus Maceió &middot; Prof. Leo Fernandes, PhD
+        </p>
+        <aside class="notes">
+          Abertura do curso. Situar: já sabem HTML/CSS/JS e um pouco de back-end (PWeb1);
+          agora vamos entender a Web "por dentro" antes de construir servidores com Node/Express.
+        </aside>
+      </section>
+
+      <!-- Gancho / pergunta central -->
+      <section data-background-color="#14532D">
+        <h2>Uma pergunta simples</h2>
+        <p style="font-size:1.3em; margin-top:.6em">
+          Você digita <strong>um endereço</strong> e aperta Enter.<br>
+          O que acontece <em>de verdade</em> até a página aparecer?
+        </p>
+        <aside class="notes">
+          Pergunta-gancho. Deixe a turma arriscar respostas por 1 min. Voltamos a ela no fim.
+        </aside>
+      </section>
+
+      <!-- Objetivos -->
+      <section data-background-color="#14532D">
+        <h2>Onde queremos chegar</h2>
+        <ul>
+          <li>Distinguir <strong>Internet</strong> de <strong>Web</strong>.</li>
+          <li>Entender a arquitetura <strong>cliente-servidor</strong> e o papel do navegador.</li>
+          <li>Ler uma troca <strong>HTTP</strong>: requisição, resposta e status.</li>
+          <li>Seguir o caminho de uma <strong>URL</strong>: DNS, IP, conexão, render.</li>
+          <li>Conhecer o <strong>ferramental</strong> do dev: DevTools, VS Code, Git/GitHub.</li>
+        </ul>
+        <aside class="notes">Estes são os 5 blocos do capítulo. Cada um vira uma seção horizontal.</aside>
+      </section>
+
+      <!-- ===================== BLOCO 1: Internet x Web ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Internet &ne; Web</h2>
+          <div class="colunas">
+            <div>
+              <h3>Internet</h3>
+              <p>A <strong>infraestrutura física</strong>: cabos, roteadores, e os protocolos
+                 de transporte (<strong>TCP/IP</strong>).</p>
+            </div>
+            <div>
+              <h3>Web</h3>
+              <p>Um <strong>sistema de informação</strong> de hipermídia que <em>roda sobre</em>
+                 a Internet: recursos identificados por <strong>URIs</strong> e ligados por hiperlinks.</p>
+            </div>
+          </div>
+          <div class="caixa ambar">
+            A Web é <strong>uma</strong> das aplicações da Internet — não são sinônimos.
+          </div>
+          <aside class="notes">
+            Analogia: Internet = malha rodoviária; Web = um dos serviços que trafega nela
+            (e-mail, streaming e jogos também usam a Internet, mas não são "a Web").
+          </aside>
+        </section>
+
+        <section>
+          <h3>As 3 tecnologias fundadoras (1989–91, CERN)</h3>
+          <div class="pipeline">
+            <span class="etapa">HTML</span>
+            <span class="etapa">HTTP</span>
+            <span class="etapa">URL</span>
+          </div>
+          <p style="margin-top:.8em"><strong>Tim Berners-Lee</strong>, no CERN, uniu marcação +
+             protocolo + endereçamento. Continuam sendo a base da Web moderna.</p>
+          <div class="caixa">
+            Depois vieram CSS (1996), JavaScript (1995), AJAX (2005), HTML5 (2014),
+            WebAssembly (2017) — camadas sobre a mesma fundação.
+          </div>
+          <aside class="notes">
+            Slide de aprofundamento (seta para baixo). Curiosidade: o 1º site ainda está no ar
+            em info.cern.ch — explicava o próprio projeto.
+          </aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 2: Cliente-Servidor ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Cliente &harr; Servidor</h2>
+          <div class="colunas">
+            <div>
+              <h3>Cliente (User Agent)</h3>
+              <p>Quem <strong>inicia</strong> a conversa e faz a <strong>requisição</strong>.
+                 Navegador, app móvel, <code>curl</code>, um bot.</p>
+            </div>
+            <div>
+              <h3>Servidor</h3>
+              <p>Quem <strong>escuta</strong> uma porta (80/443), processa e devolve a
+                 <strong>resposta</strong>. Nginx, Apache, seu app Node.</p>
+            </div>
+          </div>
+          <div class="caixa">
+            Papéis <strong>funcionais</strong>, não hardware: um mesmo computador pode ser
+            cliente e servidor ao mesmo tempo.
+          </div>
+          <aside class="notes">
+            Reforçar: "servidor" tem dupla acepção — a máquina e o software. Aqui interessa o software.
+          </aside>
+        </section>
+
+        <section>
+          <h3>O navegador é um cliente especial</h3>
+          <p>Seu núcleo é o <strong>motor de renderização</strong>: recebe HTML/CSS/JS e constrói
+             a árvore <strong>DOM</strong> para exibir e interagir.</p>
+          <table>
+            <thead><tr><th>Motor</th><th>Navegadores</th></tr></thead>
+            <tbody>
+              <tr><td>Blink</td><td>Chrome, Edge, Opera</td></tr>
+              <tr><td>Gecko</td><td>Firefox</td></tr>
+              <tr><td>WebKit</td><td>Safari</td></tr>
+            </tbody>
+          </table>
+          <aside class="notes">Voltaremos ao DOM na parte de frontend (Cap. 7).</aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 3: HTTP ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>HTTP: a língua da Web</h2>
+          <p>Baseado em <strong>texto</strong>, <strong>sem estado</strong> (stateless),
+             orientado a <strong>requisição → resposta</strong>.</p>
+          <div class="pipeline" style="font-size:.8em">
+            <span class="etapa">Cliente</span><span class="seta">— requisição →</span>
+            <span class="etapa">Servidor</span><span class="seta">← resposta —</span>
+            <span class="etapa">Cliente</span>
+          </div>
+          <div class="caixa ambar">
+            <strong>Stateless</strong>: cada requisição é independente — o servidor não "lembra"
+            da anterior sem ajuda (cookies, tokens, sessão).
+          </div>
+          <aside class="notes">
+            Stateless é o que permite escalar horizontalmente. O preço: reenviar identidade a cada
+            requisição — gancho para o Cap. 8 (auth).
+          </aside>
+        </section>
+
+        <section>
+          <h3>Anatomia da requisição</h3>
+          <pre><code class="language-http" data-trim data-noescape>GET /produtos HTTP/1.1
+Host: www.exemplo.com
+User-Agent: Mozilla/5.0
+Accept: text/html</code></pre>
+          <p style="font-size:.8em">
+            <strong>Linha</strong> (método + caminho + versão) &middot;
+            <strong>Cabeçalhos</strong> (metadados) &middot;
+            <strong>Corpo</strong> (opcional — POST/PUT enviam, GET não).
+          </p>
+          <aside class="notes">Mostrar ao vivo no DevTools → aba Network → Headers.</aside>
+        </section>
+
+        <section>
+          <h3>Anatomia da resposta</h3>
+          <pre><code class="language-http" data-trim data-noescape>HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1256
+Cache-Control: max-age=3600</code></pre>
+          <p style="font-size:.8em">
+            <strong>Linha de status</strong> &middot; <strong>Cabeçalhos</strong> &middot;
+            <strong>Corpo</strong> (HTML, JSON, imagem…).
+          </p>
+        </section>
+
+        <section>
+          <h3>Códigos de status</h3>
+          <table>
+            <thead><tr><th>Classe</th><th>Significado</th><th>Exemplos</th></tr></thead>
+            <tbody>
+              <tr><td><strong>1xx</strong></td><td>Informacional</td><td>100</td></tr>
+              <tr><td><strong>2xx</strong></td><td>Sucesso</td><td>200, 201</td></tr>
+              <tr><td><strong>3xx</strong></td><td>Redirecionamento</td><td>301, 302</td></tr>
+              <tr><td><strong>4xx</strong></td><td>Erro do <em>cliente</em></td><td>400, 404</td></tr>
+              <tr><td><strong>5xx</strong></td><td>Erro do <em>servidor</em></td><td>500, 503</td></tr>
+            </tbody>
+          </table>
+          <div class="caixa">Regra de ouro: <strong>4xx é culpa do pedido</strong>;
+            <strong>5xx é culpa do servidor</strong>.</div>
+          <aside class="notes">
+            Pergunta rápida à turma: 404 é 4xx ou 5xx? E quando a API cai com exceção não tratada?
+          </aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 4: URL, DNS, IP ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>O caminho de uma URL</h2>
+          <p style="font-size:.85em">
+            <code>https://www.exemplo.com/produtos</code>
+          </p>
+          <div class="pipeline" style="font-size:.62em">
+            <span class="etapa">Cache local</span><span class="seta">→</span>
+            <span class="etapa">DNS resolve nome</span><span class="seta">→</span>
+            <span class="etapa">Conexão TCP/QUIC</span><span class="seta">→</span>
+            <span class="etapa">Requisição HTTP</span><span class="seta">→</span>
+            <span class="etapa">Resposta</span><span class="seta">→</span>
+            <span class="etapa">Render (DOM)</span>
+          </div>
+          <p style="font-size:.75em; margin-top:1em">Tudo isso em <strong>milissegundos</strong>.</p>
+          <aside class="notes">
+            Esta é a resposta à pergunta-gancho do começo. Andar chip por chip.
+          </aside>
+        </section>
+
+        <section>
+          <h3>DNS: a lista telefônica da Internet</h3>
+          <div class="colunas">
+            <div>
+              <p>Humanos leem <strong>nomes</strong>; a rede roteia por <strong>números</strong>.
+                 O DNS traduz um pelo outro.</p>
+              <div class="pipeline" style="flex-direction:column; align-items:flex-start; font-size:.62em">
+                <span class="etapa">Root</span>
+                <span class="seta">↓</span>
+                <span class="etapa">TLD (.com)</span>
+                <span class="seta">↓</span>
+                <span class="etapa">Autoritativo</span>
+              </div>
+            </div>
+            <div>
+              <div class="caixa">
+                Normalmente <strong>UDP porta 53</strong> (rápido). A resposta é cacheada por um
+                <strong>TTL</strong>. TCP entra em respostas grandes / DNSSEC.
+              </div>
+            </div>
+          </div>
+          <aside class="notes">Demonstrar: <code>nslookup</code> ou <code>dig exemplo.com</code>.</aside>
+        </section>
+
+        <section>
+          <h3>IPv4 e IPv6</h3>
+          <div class="colunas">
+            <div>
+              <p class="numerao">2³²</p>
+              <p><strong>IPv4</strong> — 32 bits, ~4 bi de endereços. <code>192.0.2.1</code></p>
+            </div>
+            <div>
+              <p class="numerao">2¹²⁸</p>
+              <p><strong>IPv6</strong> — 128 bits, praticamente infinito. <code>2001:db8::1</code></p>
+            </div>
+          </div>
+          <div class="caixa ambar">O esgotamento do IPv4 motivou o IPv6 — hoje convivem.</div>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 5: Ferramentas ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>O ferramental do dev</h2>
+          <div class="colunas">
+            <div>
+              <h3>DevTools</h3>
+              <p>O laboratório dentro do navegador: DOM, CSS ao vivo, Network, Performance,
+                 debug de JS, storage. <code>F12</code>.</p>
+            </div>
+            <div>
+              <h3>VS Code</h3>
+              <p>Editor leve e extensível: terminal e Git integrados, IntelliSense, depurador.</p>
+            </div>
+          </div>
+          <aside class="notes">
+            DevTools é a ferramenta que mais usaremos para "ver" o HTTP do capítulo. Abrir e passear.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Git &amp; GitHub</h3>
+          <div class="colunas">
+            <div>
+              <p><strong>Git</strong> — controle de versão distribuído: histórico, branches,
+                 reverter, colaborar sem perder código.</p>
+            </div>
+            <div>
+              <p><strong>GitHub</strong> — hospeda repositórios, issues, pull requests, Actions
+                 e o <strong>GitHub Classroom</strong> da disciplina.</p>
+            </div>
+          </div>
+          <div class="caixa">Ambientes online (CodePen, JSFiddle, StackBlitz) servem para
+            experimentar sem instalar nada.</div>
+          <aside class="notes">
+            Amarrar com a avaliação: entregas via GitHub Classroom. Primeira atividade: enviar hello.html.
+          </aside>
+        </section>
+      </section>
+
+      <!-- Resumo -->
+      <section class="titulo" data-background-color="#0C3A1E">
+        <h2 style="border:none">Resumo</h2>
+        <ul style="display:inline-block; text-align:left">
+          <li><strong>Internet</strong> é a infraestrutura; a <strong>Web</strong> roda sobre ela.</li>
+          <li>Tudo é <strong>cliente-servidor</strong> falando <strong>HTTP</strong>.</li>
+          <li>HTTP é <strong>stateless</strong>: requisição → resposta, com status.</li>
+          <li>Uma URL vira página via <strong>DNS → IP → conexão → render</strong>.</li>
+          <li>DevTools, VS Code e Git/GitHub são o ferramental base.</li>
+        </ul>
+        <p class="rodape">Próximo: Capítulo 2 — Fundamentos do Node.js</p>
+        <aside class="notes">Retomar a pergunta-gancho: agora eles conseguem descrever o caminho todo.</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../assets/reveal/dist/reveal.js"></script>
+  <script src="../assets/reveal/plugin/notes/notes.js"></script>
+  <script src="../assets/reveal/plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: "c/t",
+      transition: "slide",
+      controls: true,
+      progress: true,
+      plugins: [ RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+/*
+ * Tema dos slides - Programação Web 2 (PWeb2, IFAL-Maceió)
+ * Identidade visual: verde institucional / verde-claro / âmbar, alinhada ao site MkDocs.
+ * Aplicar depois do reveal.css e do theme/white.css (sobrescreve o tema base).
+ */
+
+:root {
+  --forest:       #14532D;  /* verde escuro (fundo)   */
+  --forest-dark:  #0C3A1E;  /* verde mais escuro      */
+  --forest-light: #1E6B3A;  /* verde claro (cartões)  */
+  --green:        #3FA34D;  /* verde institucional    */
+  --green-light:  #86EFAC;  /* verde-menta (acento)   */
+  --amber:        #F2B84B;  /* destaque âmbar         */
+  --paper:        #F1F7F2;  /* texto claro            */
+  --code-bg:      #10321F;
+  --code-fg:      #BEE7C4;
+}
+
+.reveal-viewport {
+  background: var(--forest-dark);
+}
+
+.reveal {
+  font-family: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--paper);
+  font-size: 34px;
+}
+
+.reveal .slides section {
+  text-align: left;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  font-family: "Schibsted Grotesk", system-ui, sans-serif;
+  color: var(--paper);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.reveal h1 { font-size: 2.1em; }
+.reveal h2 { font-size: 1.5em; }
+.reveal h3 { font-size: 1.15em; color: var(--green-light); }
+
+/* Barra âmbar sob os títulos de seção */
+.reveal h2 {
+  border-bottom: 3px solid var(--amber);
+  padding-bottom: 0.2em;
+  margin-bottom: 0.6em;
+}
+
+.reveal a { color: var(--green-light); }
+.reveal strong { color: var(--amber); }
+.reveal em { color: var(--green-light); font-style: normal; }
+
+/* Slide de título */
+.reveal section.titulo { text-align: center; }
+.reveal section.titulo h1 { color: var(--paper); margin-bottom: 0.2em; }
+.reveal section.titulo .subtitulo { color: var(--green-light); font-size: 1.1em; }
+.reveal section.titulo .rodape {
+  color: #A9C3B1; font-size: 0.7em; margin-top: 1.4em;
+}
+
+/* Código */
+.reveal pre {
+  width: 100%;
+  box-shadow: none;
+  font-size: 0.62em;
+}
+.reveal pre code {
+  font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border-radius: 8px;
+  padding: 1em 1.2em;
+  max-height: 520px;
+}
+.reveal code:not(pre code) {
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color: var(--amber);
+  background: rgba(255,255,255,0.06);
+  padding: 0.06em 0.35em;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+
+/* Tabelas */
+.reveal table { font-size: 0.8em; }
+.reveal table th {
+  color: var(--amber);
+  border-bottom: 2px solid var(--amber);
+}
+.reveal table td { border-color: var(--forest-light); }
+
+/* Listas com marcador âmbar */
+.reveal ul li::marker { color: var(--amber); }
+.reveal ol li::marker { color: var(--green-light); }
+.reveal li { margin: 0.25em 0; }
+
+/* Caixa de destaque (admonition-like) */
+.reveal .caixa {
+  background: rgba(63,163,77,0.14);
+  border-left: 4px solid var(--green);
+  border-radius: 6px;
+  padding: 0.7em 1em;
+  font-size: 0.85em;
+}
+.reveal .caixa.ambar {
+  background: rgba(242,184,75,0.13);
+  border-left-color: var(--amber);
+}
+
+/* Fluxo simples (chips) — requisição/resposta, pipeline etc. */
+.reveal .pipeline {
+  display: flex; flex-wrap: wrap; gap: 0.5em; align-items: center;
+  font-family: "JetBrains Mono", monospace; font-size: 0.7em;
+}
+.reveal .pipeline .etapa {
+  background: var(--forest-light); color: var(--paper);
+  padding: 0.4em 0.7em; border-radius: 6px; border: 1px solid var(--green);
+}
+.reveal .pipeline .seta { color: var(--amber); font-weight: bold; }
+
+/* Rodapé com progresso/créditos */
+.reveal .slide-number { color: var(--paper); background: transparent; }
+.reveal .progress { color: var(--amber); }
+
+/* Duas colunas */
+.reveal .colunas { display: flex; gap: 1.2em; }
+.reveal .colunas > div { flex: 1; }
+
+/* Número grande / estatística de destaque (Presentation Zen) */
+.reveal .numerao {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 2.6em; color: var(--amber); line-height: 1;
+}

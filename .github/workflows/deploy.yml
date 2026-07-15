@@ -1,4 +1,4 @@
-name: Deploy MkDocs site
+name: Deploy MkDocs + Slides para GitHub Pages
 
 on:
   push:
@@ -7,12 +7,18 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+# Evita deploys concorrentes; não cancela um deploy em andamento.
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,18 +27,29 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      
-      - name: Install dependencies
-        run: |
-          pip install mkdocs==1.5.3 \
-                      mkdocs-material==9.5.18 \
-                      mkdocs-print-site-plugin==2.3.6
+          cache: pip
 
-      - name: Build site
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build site (strict)
         run: mkdocs build --strict
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Include slides in the published site
+        run: cp -r slides site/slides
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
