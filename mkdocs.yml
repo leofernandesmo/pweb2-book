@@ -85,4 +85,18 @@ nav:
       - "11. Deploy e Infraestrutura": chapters/11-deploy.md
       - "Apêndice A": chapters/apendice-cheatsheet.md
       - "Apêndice B": chapters/apendice-command-summaries.md
+  - Atividades:
+      - "Sobre as Atividades": assignments/README.md
+      - "2026.1":
+          - "Atividade 05 — Rastreamento de Entregas (Cap. 4)": assignments/2026.1/cap04-arquitetura-inicial-delivery-track.md
+          - "Atividade 06 — Repository e DI (Cap. 4)": assignments/2026.1/cap04-arquitetura-repository-di.md
+          - "Atividade 07 — Persistência com SQL Puro (Cap. 5)": assignments/2026.1/cap05-banco-sql.md
+          - "Atividade 08 — Migração para Prisma ORM (Cap. 5)": assignments/2026.1/cap05-banco-orm.md
+          - "Atividade 09 — Painel Administrativo com EJS (Cap. 6)": assignments/2026.1/cap06-renderizacao-ejs.md
+          - "Atividade 10 — Dashboard com Vue.js (Cap. 7)": assignments/2026.1/cap07-vue.md
+          - "Atividade 11 — Autenticação e Autorização com JWT (Cap. 8)": assignments/2026.1/cap08-auth.md
+          - "Atividade 12 — Testes Automatizados (Cap. 9)": assignments/2026.1/cap09-testes1.md
+          - "Atividade 13 — Hardening e Segurança (Cap. 10)": assignments/2026.1/cap10-seguranca.md
+          - "Atividade 14 — Deploy em Produção (Cap. 11)": assignments/2026.1/cap11-deploy.md
+          - "Atividade 15 — Projeto Final": assignments/2026.1/cap99-integracao.md
   - Back Cover: back-cover.md

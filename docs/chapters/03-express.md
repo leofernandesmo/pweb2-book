@@ -371,7 +371,7 @@ app.use(
 );
 ```
 
-> Para mais informações sobre CORS acesse: [https://aws.amazon.com/pt/what-is/cross-origin-resource-sharing/](url)
+> Para mais informações sobre CORS acesse: [https://aws.amazon.com/pt/what-is/cross-origin-resource-sharing/](https://aws.amazon.com/pt/what-is/cross-origin-resource-sharing/)
 
 #### morgan
 
