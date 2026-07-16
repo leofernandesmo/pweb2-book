@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítulo 4 — Arquitetura | Programação Web 2</title>
+
+  <link rel="stylesheet" href="../assets/reveal/dist/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="../assets/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/course-theme.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Capa -->
+      <section class="titulo" data-background-color="#0C3A1E">
+        <h1>Programação Web 2</h1>
+        <p class="subtitulo">Capítulo 4 &mdash; Arquitetura: MVC, Services e Repository</p>
+        <p class="rodape">
+          Node/Express &middot; Bacharelado em Desenvolvimento de Sistemas<br>
+          IFAL &mdash; Campus Maceió &middot; Prof. Leo Fernandes, PhD
+        </p>
+        <aside class="notes">
+          No Cap. 3 a API já funciona. Mas funcionar não é ter boa arquitetura. Aqui separamos camadas.
+        </aside>
+      </section>
+
+      <!-- Gancho: fat controller -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>O controller gordo</h2>
+          <pre style="font-size:.5em"><code class="language-javascript" data-trim>export const criarUsuario = async (req, res) => {
+  if (!email.includes("@")) return res.status(400)...   // validação
+  const existe = await db.query("SELECT ...");           // banco
+  const hash = await bcrypt.hash(senha, 10);             // regra
+  await db.query("INSERT ...");                          // banco
+  res.status(201).json(...);                             // resposta
+};</code></pre>
+          <div class="caixa ambar">Validação + regra de negócio + SQL + resposta, tudo numa função só.</div>
+          <aside class="notes">Fat controller: o antipadrão. Deixe a turma apontar os problemas.</aside>
+        </section>
+
+        <section>
+          <h3>Por que isso dói?</h3>
+          <ul>
+            <li>Impossível de <strong>testar</strong> sem um banco real.</li>
+            <li>Não dá para <strong>reutilizar</strong> (ex.: um job em background).</li>
+            <li>Toda mudança de regra <strong>mexe no controller</strong>.</li>
+          </ul>
+          <div class="caixa">A cura: distribuir responsabilidades entre <strong>camadas</strong>.</div>
+          <aside class="notes">Isso motiva todo o capítulo.</aside>
+        </section>
+      </section>
+
+      <!-- Objetivos -->
+      <section data-background-color="#14532D">
+        <h2>O caminho</h2>
+        <div class="pipeline" style="font-size:.72em">
+          <span class="etapa">MVC em REST</span><span class="seta">→</span>
+          <span class="etapa">Service</span><span class="seta">→</span>
+          <span class="etapa">Repository</span><span class="seta">→</span>
+          <span class="etapa">Injeção de Dependência</span>
+        </div>
+        <p style="margin-top:1em">Quatro peças que transformam o controller gordo em uma base
+           testável e fácil de evoluir.</p>
+        <aside class="notes">Fecha com a refatoração do projeto do Cap. 3.</aside>
+      </section>
+
+      <!-- ===================== BLOCO 1: MVC ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>MVC em APIs REST</h2>
+          <table>
+            <thead><tr><th>Camada</th><th>Na API REST</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Model</strong></td><td>estrutura do recurso + acesso a dados</td></tr>
+              <tr><td><strong>View</strong></td><td>a resposta <code>res.json()</code> (não há HTML)</td></tr>
+              <tr><td><strong>Controller</strong></td><td>coordena; nunca faz regra de negócio</td></tr>
+            </tbody>
+          </table>
+          <div class="caixa">Sem interface visual, a <strong>View vira JSON</strong> — o resto do
+             padrão continua valendo.</div>
+          <aside class="notes">
+            MVC nasceu no Xerox PARC (Smalltalk, anos 70). Adaptado: View = serialização JSON.
+          </aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 2: Service ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Service: a guardiã da regra</h2>
+          <p>Expressa <strong>o que</strong> a aplicação faz — sem saber <em>como</em> os dados chegam
+             nem <em>onde</em> ficam.</p>
+          <div class="caixa ambar">Regra de ouro: o service <strong>não conhece</strong>
+             <code>req</code> nem <code>res</code>.</div>
+          <div class="colunas">
+            <div>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>// ❌ acoplado ao Express
+criar(req) {
+  const { nome } = req.body;
+}</code></pre>
+            </div>
+            <div>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>// ✅ dados puros
+criar({ nome, email, senha }) {
+  // reutilizável em qualquer contexto
+}</code></pre>
+            </div>
+          </div>
+          <aside class="notes">
+            Se o service toca req/res, está preso ao HTTP. Controller extrai do req e monta o res.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Duas validações diferentes</h3>
+          <div class="colunas">
+            <div>
+              <h3>Entrada</h3>
+              <p>formato de e-mail, tamanho de senha, campo obrigatório.</p>
+              <div class="caixa">→ middleware de validação (contrato da API)</div>
+            </div>
+            <div>
+              <h3>Domínio</h3>
+              <p>"e-mail não pode repetir", "produto sem estoque não vende".</p>
+              <div class="caixa ambar">→ service (regra de negócio)</div>
+            </div>
+          </div>
+          <aside class="notes">
+            Distinção importante: entrada = forma; domínio = regra. Lugares diferentes.
+          </aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 3: Repository ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Repository: onde os dados vivem</h2>
+          <p>Uma camada entre o service e a persistência, com interface <strong>orientada ao
+             domínio</strong>: <code>buscarPorId</code>, <code>criar</code>, <code>listarTodos</code>.</p>
+          <div class="pipeline" style="font-size:.72em">
+            <span class="etapa">Service</span><span class="seta">→ contrato →</span>
+            <span class="etapa">Repository</span><span class="seta">→</span>
+            <span class="etapa">memória / SQL / ORM</span>
+          </div>
+          <div class="caixa ambar">O repositório <strong>não</strong> tem regra de negócio — só
+             persiste, recupera e consulta.</div>
+          <aside class="notes">
+            O service não sabe se é Postgres, Mongo ou memória. Só chama métodos do contrato.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Mesmo contrato, implementações diferentes</h3>
+          <div class="colunas">
+            <div>
+              <pre style="font-size:.46em"><code class="language-javascript" data-trim>// em memória (agora)
+class UsuariosRepository {
+  async buscarPorId(id) {
+    return this.usuarios
+      .find(u => u.id === id) ?? null;
+  }
+}</code></pre>
+            </div>
+            <div>
+              <pre style="font-size:.46em"><code class="language-javascript" data-trim>// Prisma (Cap. 5)
+class UsuariosRepositoryPrisma {
+  async buscarPorId(id) {
+    return prisma.usuario
+      .findUnique({ where: { id } });
+  }
+}</code></pre>
+            </div>
+          </div>
+          <div class="caixa">Mesmos métodos → trocar a implementação <strong>não muda o service</strong>.</div>
+          <aside class="notes">Essa identidade de interface é proposital. É o gancho para DI.</aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 4: DI ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Inversão de Dependência</h2>
+          <div class="colunas">
+            <div>
+              <p style="font-size:.8em">❌ cria a própria dependência:</p>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>class UsuariosService {
+  constructor() {
+    this.repo =
+      new UsuariosRepository();
+  }
+}</code></pre>
+            </div>
+            <div>
+              <p style="font-size:.8em">✅ recebe pelo construtor:</p>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>class UsuariosService {
+  constructor(repo) {
+    this.repo = repo;
+  }
+}</code></pre>
+            </div>
+          </div>
+          <div class="caixa ambar">Injetar a dependência desacopla: o service aceita
+             <strong>qualquer</strong> repositório que cumpra o contrato.</div>
+          <aside class="notes">new dentro da classe = acoplamento estático. Injeção via construtor resolve.</aside>
+        </section>
+
+        <section>
+          <h3>Composition root</h3>
+          <pre style="font-size:.52em"><code class="language-javascript" data-trim>// usuarios.routes.js — um único lugar monta as peças
+const repository = new UsuariosRepository();
+const service    = new UsuariosService(repository);
+const controller = new UsuariosController(service);</code></pre>
+          <div class="caixa">As dependências são compostas <strong>uma vez</strong>, no ponto de
+             entrada. Cada camada conhece só a interface da vizinha.</div>
+          <aside class="notes">DI (técnica) implementa o DIP (princípio). Não são a mesma coisa.</aside>
+        </section>
+
+        <section>
+          <h3>O prêmio: testabilidade</h3>
+          <pre style="font-size:.5em"><code class="language-javascript" data-trim>it("lança 409 se e-mail já existir", async () => {
+  const repoFalso = {
+    buscarPorEmail: async () => ({ id: 1 }),
+  };
+  const service = new UsuariosService(repoFalso);
+  await expect(service.criar({ email: "ana@x.com", ... }))
+    .rejects.toThrow("E-mail já cadastrado");
+});</code></pre>
+          <div class="caixa ambar">Testa a regra de negócio <strong>sem banco</strong> — rápido,
+             determinístico, isolado.</div>
+          <aside class="notes">Injetar um mock no lugar do repositório real. Amarra com o Cap. 9.</aside>
+        </section>
+      </section>
+
+      <!-- Resumo -->
+      <section class="titulo" data-background-color="#0C3A1E">
+        <h2 style="border:none">Resumo</h2>
+        <div class="pipeline" style="justify-content:center; font-size:.8em; margin-bottom:1em">
+          <span class="etapa">Controller</span><span class="seta">→</span>
+          <span class="etapa">Service</span><span class="seta">→</span>
+          <span class="etapa">Repository</span><span class="seta">→</span>
+          <span class="etapa">dados</span>
+        </div>
+        <ul style="display:inline-block; text-align:left">
+          <li><strong>Controller</strong> coordena; <strong>View</strong> = JSON.</li>
+          <li><strong>Service</strong> tem a regra e não conhece <code>req</code>/<code>res</code>.</li>
+          <li><strong>Repository</strong> abstrai onde os dados vivem (contrato).</li>
+          <li><strong>Injeção</strong> desacopla e torna tudo testável.</li>
+        </ul>
+        <p class="rodape">Próximo: Capítulo 5 — Banco de Dados e ORM: Prisma e Sequelize</p>
+        <aside class="notes">Ponte: o repositório em memória vira repositório Prisma no Cap. 5.</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../assets/reveal/dist/reveal.js"></script>
+  <script src="../assets/reveal/plugin/notes/notes.js"></script>
+  <script src="../assets/reveal/plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: "c/t",
+      transition: "slide",
+      controls: true,
+      progress: true,
+      plugins: [ RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>

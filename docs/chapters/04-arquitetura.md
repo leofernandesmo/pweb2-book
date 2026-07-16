@@ -4,11 +4,11 @@
 
 ## 4.1 Introdução
 
-O Capítulo 2 estabeleceu os fundamentos operacionais do Express: como definir rotas, encadear middlewares e organizar handlers em controllers. O código resultante já é funcional — mas funcionalidade não é sinônimo de boa arquitetura. À medida que uma aplicação cresce, a ausência de uma separação clara entre camadas se manifesta em problemas concretos: controllers que acumulam lógica de negócio, services que constroem queries SQL diretamente, testes que dependem de banco de dados real para verificar regras simples.
+O Capítulo 3 estabeleceu os fundamentos operacionais do Express: como definir rotas, encadear middlewares e organizar handlers em controllers. O código resultante já é funcional — mas funcionalidade não é sinônimo de boa arquitetura. À medida que uma aplicação cresce, a ausência de uma separação clara entre camadas se manifesta em problemas concretos: controllers que acumulam lógica de negócio, services que constroem queries SQL diretamente, testes que dependem de banco de dados real para verificar regras simples.
 
-Este capítulo aborda os padrões arquiteturais que resolvem esses problemas de forma sistemática. O ponto de partida é o padrão **MVC** adaptado ao contexto de APIs REST; em seguida, aprofunda-se o papel da camada de **Service** como guardiã da lógica de negócio; depois, introduz-se o **Repository Pattern** como mecanismo de abstração do acesso a dados; e, por fim, apresenta-se o princípio de **Inversão de Dependência** em sua forma mais elementar. O capítulo encerra com a refatoração completa do projeto construído no Capítulo 2, consolidando todos esses conceitos em uma base sólida para a introdução do ORM no Capítulo 5.
+Este capítulo aborda os padrões arquiteturais que resolvem esses problemas de forma sistemática. O ponto de partida é o padrão **MVC** adaptado ao contexto de APIs REST; em seguida, aprofunda-se o papel da camada de **Service** como guardiã da lógica de negócio; depois, introduz-se o **Repository Pattern** como mecanismo de abstração do acesso a dados; e, por fim, apresenta-se o princípio de **Inversão de Dependência** em sua forma mais elementar. O capítulo encerra com a refatoração completa do projeto construído no Capítulo 3, consolidando todos esses conceitos em uma base sólida para a introdução do ORM no Capítulo 5.
 
-> 💡 **Pré-requisito:** Este capítulo pressupõe familiaridade com o conteúdo do Capítulo 2, especialmente controllers, a estrutura de projeto proposta e a classe `AppError`.
+> 💡 **Pré-requisito:** Este capítulo pressupõe familiaridade com o conteúdo do Capítulo 3, especialmente controllers, a estrutura de projeto proposta e a classe `AppError`.
 
 ---
 
@@ -82,9 +82,9 @@ export const criarUsuario = async (req, res) => {
 };
 ```
 
-Este controller é impossível de testar sem um banco de dados real, não pode ser reutilizado em outros contextos (como um job em background) e qualquer alteração na regra de negócio exige modificar o controller — violando o princípio da separação de responsabilidades estudado no Capítulo 2. A solução passa pela distribuição dessas responsabilidades entre camadas bem definidas, como será detalhado nas seções seguintes.
+Este controller é impossível de testar sem um banco de dados real, não pode ser reutilizado em outros contextos (como um job em background) e qualquer alteração na regra de negócio exige modificar o controller — violando o princípio da separação de responsabilidades estudado no Capítulo 3. A solução passa pela distribuição dessas responsabilidades entre camadas bem definidas, como será detalhado nas seções seguintes.
 
-📖 Leitura de referência: [Engenharia de Software Moderna - Cap.6 Princípios](https://engsoftmoderna.info/cap5.html#coes%C3%A3o)
+📖 Leitura de referência: [Engenharia de Software Moderna - Cap.5 Princípios de Projeto](https://engsoftmoderna.info/cap5.html#coes%C3%A3o)
 
 ---
 
@@ -182,7 +182,7 @@ Do ponto de vista do service, um repositório é simplesmente um colaborador que
 
 ### 4.4.3 Implementação de um repositório em memória
 
-O repositório a seguir é funcionalmente equivalente ao array em memória utilizado no Capítulo 2, mas agora encapsulado em uma classe com interface bem definida:
+O repositório a seguir é funcionalmente equivalente ao array em memória utilizado no Capítulo 3, mas agora encapsulado em uma classe com interface bem definida:
 
 ```javascript
 // src/repositories/usuarios.repository.js
@@ -588,6 +588,46 @@ router.delete('/:id', controller.remover);
 
 export default router;
 ```
+
+---
+
+## Atividade de Revisão
+
+<div class="quiz" data-answer="c">
+  <p><strong>1.</strong> No MVC adaptado a APIs REST, qual é o papel da camada View?</p>
+  <button data-option="a">Renderizar templates HTML no servidor.</button>
+  <button data-option="b">Validar os dados de entrada da requisição.</button>
+  <button data-option="c">A resposta JSON produzida por <code>res.json()</code>.</button>
+  <button data-option="d">Persistir os dados no banco.</button>
+  <p class="feedback"></p>
+</div>
+
+<div class="quiz" data-answer="b">
+  <p><strong>2.</strong> Por que um service não deve conhecer os objetos <code>req</code> e <code>res</code>?</p>
+  <button data-option="a">Porque isso deixaria o service mais lento.</button>
+  <button data-option="b">Porque o acoplaria ao HTTP, impedindo reúso e dificultando testes.</button>
+  <button data-option="c">Porque o Express não permite passá-los adiante.</button>
+  <button data-option="d">Porque <code>req</code> e <code>res</code> só existem em produção.</button>
+  <p class="feedback"></p>
+</div>
+
+<div class="quiz" data-answer="a">
+  <p><strong>3.</strong> Qual afirmação sobre o Repository Pattern está correta?</p>
+  <button data-option="a">O repositório persiste e recupera dados, mas não contém regra de negócio.</button>
+  <button data-option="b">O repositório é o lugar ideal para as regras de negócio.</button>
+  <button data-option="c">O repositório deve conhecer os objetos <code>req</code> e <code>res</code>.</button>
+  <button data-option="d">Cada service deve criar seu repositório com <code>new</code> internamente.</button>
+  <p class="feedback"></p>
+</div>
+
+<div class="quiz" data-answer="d">
+  <p><strong>4.</strong> Qual a diferença entre Dependency Injection (DI) e Dependency Inversion Principle (DIP)?</p>
+  <button data-option="a">São exatamente a mesma coisa, apenas nomes diferentes.</button>
+  <button data-option="b">DI é um princípio de design; DIP é uma técnica de implementação.</button>
+  <button data-option="c">DIP só se aplica a bancos de dados relacionais.</button>
+  <button data-option="d">DI é a técnica de fornecer dependências; DIP é o princípio de depender de abstrações.</button>
+  <p class="feedback"></p>
+</div>
 
 ---
 
