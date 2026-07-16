@@ -1,8 +1,5 @@
 # Capítulo 2 — Fundamentos do Node.js
 
-> **Vídeo curto explicativo**  
-> *(link será adicionado posteriormente)*
-
 ## 2.1 O Node.js como Ambiente de Execução para APIs
 
 O Node.js deve ser compreendido como um ambiente de execução orientado a eventos, cujo modelo de concorrência é baseado em I/O não bloqueante. Essa característica o torna particularmente adequado para sistemas cuja principal carga está na comunicação com bancos de dados, serviços externos e sistemas distribuídos — cenário típico de APIs REST institucionais.
@@ -10,6 +7,24 @@ O Node.js deve ser compreendido como um ambiente de execução orientado a event
 Em um contexto como o de uma API acadêmica do IFAL — responsável por autenticar usuários, consultar dados em banco relacional e devolver respostas estruturadas em JSON — o tempo de espera por operações externas é significativamente maior que o tempo de processamento local. O Node.js explora exatamente esse padrão de carga.
 
 O entendimento técnico do runtime é pré-requisito para decisões arquiteturais corretas nos capítulos seguintes.
+
+Para tornar isso concreto, pense em um **garçom** que não fica parado ao lado da mesa esperando a cozinha terminar o prato: ele anota o pedido, atende outras mesas e volta quando a cozinha o avisa. O Node.js trabalha assim — em vez de **bloquear** a execução enquanto espera uma operação de I/O (banco, rede, arquivo), ele registra o que fazer quando o resultado chegar e segue atendendo outras requisições.
+
+Compare as duas formas de ler um arquivo:
+
+```javascript
+// ❌ Bloqueante: trava a única thread até o arquivo chegar
+const dados = lerArquivoSync("aluno.json");
+console.log("continua");   // só roda depois da leitura
+```
+
+```javascript
+// ✅ Não bloqueante: libera a thread enquanto o arquivo é lido
+const dados = await lerArquivo("aluno.json");
+console.log("continua");   // enquanto lê, o Node atende outras requisições
+```
+
+Com uma **única thread**, o Node mantém **muitas requisições em andamento** ao mesmo tempo — porque ninguém fica parado esperando I/O. É concorrência, não paralelismo.
 
 ---
 
@@ -20,7 +35,7 @@ O entendimento técnico do runtime é pré-requisito para decisões arquiteturai
 > O vídeo abaixo explica o NodeJS de uma perspectiva histórica. Use o suporte a tradução automática das legendas para assistir em Português:
 > **Vídeo: Node.js: The Documentary | An origin story**  
 > <iframe width="100%" height="400"
-    src="https://youtu.be/LB8KwiiUGy0?si=m21ll1J43aRYFKnt"
+    src="https://www.youtube-nocookie.com/embed/LB8KwiiUGy0?rel=0&modestbranding=1"
     title="Node.js: The Documentary | An origin story"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen
@@ -82,7 +97,7 @@ Ou de forma abreviada:
 npm i express
 ```
 
-Isso gera duas modificações:
+Isso gera três modificações:
 
 1. Adiciona a dependência em `"dependencies"` no `package.json`.
 2. Cria o diretório `node_modules/`.
@@ -241,7 +256,7 @@ Um servidor HTTP básico pode ser construído da seguinte forma:
 Arquivo `server.js`:
 
 ```javascript
-import http from 'http';
+import http from 'http'; // 1. Importa o módulo HTTP nativo
 
 // 2. Define o endereço e a porta
 const hostname = '127.0.0.1'; // localhost
@@ -263,9 +278,7 @@ server.listen(port, hostname, () => {
 });
 ```
 
-O método createServer instancia um servidor TCP capaz de processar requisições HTTP. 
-O objeto req representa a requisição recebida, enquanto res encapsula os mecanismos de resposta ao cliente. 
-A chamada a res.end() encerra o fluxo da resposta e envia os dados ao consumidor.
+O método `createServer` instancia um servidor TCP capaz de processar requisições HTTP. O objeto `req` representa a requisição recebida, enquanto `res` encapsula os mecanismos de resposta ao cliente. A chamada a `res.end()` encerra o fluxo da resposta e envia os dados ao consumidor.
 
 Para executar o servidor, utilize o comando abaixo no terminal:
 
@@ -275,46 +288,7 @@ node server.js
 
 Abra o seu navegador e acesse: http://localhost:3000 
 
-Vamos ver agora um segundo exemplo:
-
-```javascript
-import http from 'http'; // Importa o módulo HTTP nativo do Node.js
-
-const server = http.createServer((req, res) => { // Cria o servidor e define o callback para cada requisição
-
-  if (req.url === '/health') { // Verifica se a rota solicitada é "/health"
-
-    res.writeHead(200, { 'Content-Type': 'application/json' }); // Define status 200 e cabeçalho JSON
-
-    res.end(JSON.stringify({ status: 'ok' })); // Envia resposta JSON e encerra a requisição
-
-    return; // Interrompe a execução para evitar cair no 404
-
-  }
-
-  res.writeHead(404); // Define status 404 para rota não encontrada
-
-  res.end(); // Finaliza a resposta sem corpo
-
-});
-
-server.listen(3000); // Inicia o servidor na porta 3000
-```
-
-Aqui, vemos alguns elementos centrais:
-
-O servidor é orientado a eventos.
-
-Cada requisição gera um objeto req e res.
-
-O roteamento é manual.
-
-O protocolo HTTP é manipulado explicitamente.
-
-Em aplicações reais, esse modelo rapidamente se torna complexo. A ausência de abstrações para roteamento estruturado, middlewares e tratamento centralizado de erros motiva o uso de frameworks como Express, que serão abordados posteriormente.
-
-Veja um terceiro exemplo abaixo.
-
+Agora um exemplo mais realista, com **roteamento manual** de várias rotas e métodos:
 
 ```javascript
 import http from "http"; // Importa o módulo HTTP nativo
@@ -348,7 +322,14 @@ server.listen(3000, () => { // Inicia o servidor na porta 3000
 });
 ```
 
-Observa-se que, à medida que novas rotas e métodos HTTP são adicionados, o código tende a se tornar progressivamente menos coeso e mais difícil de manter. Esse fenômeno evidencia a necessidade de abstrações arquiteturais adequadas, como roteadores e middlewares, que serão explorados no capítulo seguinte.
+Aqui, vemos alguns elementos centrais:
+
+- O servidor é **orientado a eventos**.
+- Cada requisição gera um objeto `req` e um `res`.
+- O roteamento é **manual** — um `if` para cada método e caminho.
+- O protocolo HTTP é manipulado explicitamente (status, cabeçalhos, corpo).
+
+Observa-se que, à medida que novas rotas e métodos HTTP são adicionados, o código tende a se tornar progressivamente **menos coeso e mais difícil de manter**. A ausência de abstrações para roteamento estruturado, middlewares e tratamento centralizado de erros é justamente o que motiva o uso de frameworks como o **Express**, explorado no próximo capítulo.
 
 
 ---
@@ -417,7 +398,40 @@ Compreender essa base evita que o desenvolvedor trate frameworks como “caixas-
 
 ---
 
+## 2.7 Atividade de Revisão
 
+<div class="quiz" data-answer="b">
+  <p><strong>1.</strong> Por que o modelo do Node.js é adequado para APIs que fazem muita I/O (banco, rede)?</p>
+  <button data-option="a">Porque executa cada requisição em uma thread paralela dedicada.</button>
+  <button data-option="b">Porque não bloqueia a thread enquanto espera operações de I/O.</button>
+  <button data-option="c">Porque compila o JavaScript para código de máquina antes de rodar.</button>
+  <button data-option="d">Porque roda dentro do navegador do cliente.</button>
+  <p class="feedback"></p>
+</div>
 
+<div class="quiz" data-answer="b">
+  <p><strong>2.</strong> Qual comando instala uma dependência apenas de desenvolvimento?</p>
+  <button data-option="a">npm install jest</button>
+  <button data-option="b">npm i -D jest</button>
+  <button data-option="c">npm start jest</button>
+  <button data-option="d">npm audit jest</button>
+  <p class="feedback"></p>
+</div>
 
+<div class="quiz" data-answer="b">
+  <p><strong>3.</strong> No <code>package.json</code>, o que <code>"type": "module"</code> habilita?</p>
+  <button data-option="a">O modo estrito do JavaScript.</button>
+  <button data-option="b">Os ECMAScript Modules (import/export).</button>
+  <button data-option="c">A instalação automática de dependências.</button>
+  <button data-option="d">O servidor HTTP nativo.</button>
+  <p class="feedback"></p>
+</div>
 
+<div class="quiz" data-answer="b">
+  <p><strong>4.</strong> Qual limitação do servidor HTTP nativo motiva o uso do Express?</p>
+  <button data-option="a">Ele não consegue retornar JSON.</button>
+  <button data-option="b">Roteamento, middlewares e tratamento de erros são todos manuais.</button>
+  <button data-option="c">Ele não suporta o método POST.</button>
+  <button data-option="d">Ele funciona apenas em localhost.</button>
+  <p class="feedback"></p>
+</div>

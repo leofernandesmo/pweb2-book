@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítulo 2 — Fundamentos do Node.js | Programação Web 2</title>
+
+  <link rel="stylesheet" href="../assets/reveal/dist/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="../assets/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/course-theme.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Capa -->
+      <section class="titulo" data-background-color="#0C3A1E">
+        <h1>Programação Web 2</h1>
+        <p class="subtitulo">Capítulo 2 &mdash; Fundamentos do Node.js</p>
+        <p class="rodape">
+          Node/Express &middot; Bacharelado em Desenvolvimento de Sistemas<br>
+          IFAL &mdash; Campus Maceió &middot; Prof. Leo Fernandes, PhD
+        </p>
+        <aside class="notes">
+          Já entendemos a Web e o HTTP (Cap. 1). Agora: com o que vamos construir o
+          servidor? Node.js. Antes do Express, entender o runtime por baixo.
+        </aside>
+      </section>
+
+      <!-- Gancho -->
+      <section data-background-color="#14532D">
+        <h2>Um garçom, muitas mesas</h2>
+        <p style="font-size:1.15em">Um bom garçom <strong>não fica parado</strong> ao lado da mesa
+           esperando a cozinha ficar pronta.</p>
+        <p>Ele anota o pedido, atende <em>outras</em> mesas e volta quando a cozinha <strong>avisa</strong>.</p>
+        <div class="caixa ambar">É exatamente assim que o Node.js lida com muitas requisições ao
+           mesmo tempo: <strong>sem travar</strong> à espera de I/O.</div>
+        <aside class="notes">
+          Analogia do event loop. Cozinha = banco de dados / serviço externo (I/O lento).
+          O garçom (a thread) não bloqueia esperando.
+        </aside>
+      </section>
+
+      <!-- Objetivos -->
+      <section data-background-color="#14532D">
+        <h2>Onde queremos chegar</h2>
+        <ul>
+          <li>Entender o Node.js como <strong>runtime orientado a eventos</strong> e I/O não bloqueante.</li>
+          <li>Gerenciar um projeto com <strong>npm</strong>: <code>package.json</code>, dependências e scripts.</li>
+          <li>Organizar código em <strong>módulos</strong> (ESM: <code>import</code>/<code>export</code>).</li>
+          <li>Construir um servidor HTTP com o <strong>módulo nativo</strong> — e sentir sua dor.</li>
+          <li>Testar a API pelo terminal com <strong>cURL</strong>.</li>
+        </ul>
+      </section>
+
+      <!-- ===================== BLOCO 1: Runtime ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>O que é o Node.js?</h2>
+          <p>Um <strong>ambiente de execução</strong> de JavaScript fora do navegador, sobre o
+             motor <strong>V8</strong> (o mesmo do Chrome).</p>
+          <div class="colunas">
+            <div><div class="caixa">Modelo <strong>orientado a eventos</strong></div></div>
+            <div><div class="caixa">I/O <strong>não bloqueante</strong></div></div>
+            <div><div class="caixa ambar"><strong>Single-thread</strong> + event loop</div></div>
+          </div>
+          <p style="font-size:.8em; margin-top:.8em">Ideal quando o gargalo é <strong>esperar</strong>
+             (banco, rede, arquivos) — o caso típico de uma API REST.</p>
+          <aside class="notes">
+            V8 compila JS para código nativo. Node adiciona APIs de sistema (fs, http, net…)
+            e o event loop (libuv).
+          </aside>
+        </section>
+
+        <section>
+          <h3>Bloqueante &times; não bloqueante</h3>
+          <div class="colunas">
+            <div>
+              <p style="font-size:.8em">❌ <strong>Bloqueante</strong> — trava a thread:</p>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>const d = lerSync("aluno.json");
+console.log("segue");
+// nada roda até o arquivo chegar</code></pre>
+            </div>
+            <div>
+              <p style="font-size:.8em">✅ <strong>Não bloqueante</strong> — libera a thread:</p>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>const d = await ler("aluno.json");
+console.log("segue");
+// o Node segue atendendo</code></pre>
+            </div>
+          </div>
+          <div class="caixa">Uma thread só, mas <strong>muitas requisições</strong> em voo — porque
+             ninguém fica parado esperando I/O.</div>
+          <aside class="notes">
+            Reforçar: não-bloqueante não é "mais rápido para uma tarefa", é "não desperdiça a
+            thread esperando". Concorrência, não paralelismo.
+          </aside>
+        </section>
+
+        <section>
+          <h3>De onde veio</h3>
+          <ul>
+            <li><strong>2009</strong> — Ryan Dahl cria o Node para escalar sob alta concorrência
+                sem uma thread por conexão.</li>
+            <li><strong>npm</strong> consolida um ecossistema gigante de bibliotecas.</li>
+            <li>Hoje: governança da <strong>OpenJS Foundation</strong>, versões <strong>LTS</strong>,
+                <code>async/await</code> e ES Modules.</li>
+          </ul>
+          <aside class="notes">
+            Há um documentário ("Node.js: The Documentary") — bom para passar como material extra.
+          </aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 2: npm ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>npm: o projeto em um arquivo</h2>
+          <pre><code class="language-bash" data-trim>npm init -y      # cria o package.json com padrões</code></pre>
+          <pre><code class="language-json" data-trim>{
+  "name": "api-academica",
+  "type": "module",
+  "scripts": { "start": "node src/server.js" },
+  "dependencies": { }
+}</code></pre>
+          <div class="caixa ambar"><code>"type": "module"</code> ativa os <strong>ES Modules</strong>
+             (<code>import</code>/<code>export</code>).</div>
+          <aside class="notes">
+            package.json = manifesto do projeto: nome, dependências, scripts, tipo de módulo.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Dependências</h3>
+          <pre><code class="language-bash" data-trim>npm install express     # produção  (dependencies)
+npm i -D jest           # desenvolvimento (devDependencies)</code></pre>
+          <p style="font-size:.85em">Instalar gera <strong>três</strong> efeitos:</p>
+          <div class="pipeline" style="font-size:.62em">
+            <span class="etapa">entrada no package.json</span><span class="seta">+</span>
+            <span class="etapa">node_modules/</span><span class="seta">+</span>
+            <span class="etapa">package-lock.json</span>
+          </div>
+          <div class="caixa">Só as de <strong>produção</strong> vão para o deploy; as de
+             <strong>dev</strong> (testes, linters) ficam de fora.</div>
+          <aside class="notes">
+            package-lock trava as versões exatas — builds reprodutíveis. node_modules nunca vai
+            para o Git (.gitignore).
+          </aside>
+        </section>
+
+        <section>
+          <h3>Scripts padronizam a equipe</h3>
+          <pre><code class="language-json" data-trim>"scripts": {
+  "start": "node src/server.js",
+  "dev":   "node --watch src/server.js",
+  "test":  "jest"
+}</code></pre>
+          <pre><code class="language-bash" data-trim>npm run dev     # ou: npm start / npm test</code></pre>
+          <div class="caixa">Todo mundo roda o projeto do <strong>mesmo jeito</strong> — sem
+             "na minha máquina funciona".</div>
+          <aside class="notes"><code>--watch</code> (Node 18+) reinicia ao salvar — sem nodemon.</aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 3: Módulos ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Modularização</h2>
+          <p>Uma app real <strong>não</strong> cabe num arquivo só. Separe por responsabilidade:</p>
+          <pre><code class="language-text" data-trim>src/
+├── server.js
+├── routes/       studentRoutes.js
+├── controllers/  studentController.js
+└── services/     studentService.js</code></pre>
+          <div class="caixa ambar">Já é o embrião do <strong>MVC</strong> — formalizado no Cap. 4.</div>
+          <aside class="notes">Rota → Controller → Service: cada camada com um papel.</aside>
+        </section>
+
+        <section>
+          <h3>export &rarr; import (ESM)</h3>
+          <div class="colunas">
+            <div>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>// studentService.js
+export function findStudentById(id) {
+  return { id, name: "Maria" };
+}</code></pre>
+            </div>
+            <div>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>// studentController.js
+import { findStudentById }
+  from "../services/studentService.js";
+
+export function getStudent(req, res) {
+  res.json(findStudentById(req.params.id));
+}</code></pre>
+            </div>
+          </div>
+          <div class="caixa">Cada módulo <strong>expõe</strong> o que outros podem usar — e nada mais.</div>
+          <aside class="notes">
+            Em ESM, o caminho relativo precisa da extensão <code>.js</code>. Nomeado vs default export.
+          </aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 4: HTTP nativo ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Servidor HTTP nativo</h2>
+          <p>Antes do Express, veja o que ele abstrai. O módulo <code>http</code> puro:</p>
+          <pre><code class="language-javascript" data-trim data-line-numbers>import http from "http";
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "text/html");
+  res.end("&lt;h1&gt;Olá, Mundo!&lt;/h1&gt;");
+});
+
+server.listen(3000, () => console.log("http://localhost:3000"));</code></pre>
+          <aside class="notes">
+            createServer recebe um callback (req, res) por requisição. req = pedido, res = resposta.
+            res.end() fecha o fluxo.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Roteamento... na mão</h3>
+          <pre><code class="language-javascript" data-trim data-line-numbers>const server = http.createServer((req, res) => {
+  if (req.method === "GET" && req.url === "/health") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ status: "ok" }));
+  }
+  if (req.method === "GET" && req.url.startsWith("/student")) {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ id: 1, name: "João" }));
+  }
+  res.writeHead(404);
+  res.end();
+});</code></pre>
+          <aside class="notes">
+            Cada rota é um if. Método + URL checados à mão. Repare como cresce.
+          </aside>
+        </section>
+
+        <section>
+          <h3>A dor que motiva o Express</h3>
+          <p>Com o módulo nativo, tudo é <strong>manual</strong>:</p>
+          <ul>
+            <li>roteamento é uma cadeia de <code>if</code>;</li>
+            <li>não há <strong>middlewares</strong> nem parsing de corpo pronto;</li>
+            <li>o tratamento de erros é espalhado.</li>
+          </ul>
+          <div class="caixa ambar">A cada rota nova, o código fica <strong>menos coeso</strong>.
+             É isso que o <strong>Express</strong> (Cap. 3) vem resolver.</div>
+          <aside class="notes">
+            Não é que o módulo nativo seja ruim — entender ele evita tratar o Express como caixa-preta.
+          </aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 5: cURL ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Testando com cURL</h2>
+          <pre><code class="language-bash" data-trim>curl http://localhost:3000/health
+# {"status":"ok"}
+
+curl -X POST http://localhost:3000/student \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Maria"}'
+
+curl -i http://localhost:3000/health   # -i mostra os cabeçalhos</code></pre>
+          <div class="caixa">O terminal é seu cliente HTTP: método, corpo, cabeçalhos e status,
+             tudo à vista.</div>
+          <aside class="notes">
+            -X método, -H cabeçalho, -d corpo, -i inclui headers. Amarra com o HTTP do Cap. 1.
+          </aside>
+        </section>
+      </section>
+
+      <!-- Resumo -->
+      <section class="titulo" data-background-color="#0C3A1E">
+        <h2 style="border:none">Resumo</h2>
+        <ul style="display:inline-block; text-align:left">
+          <li>Node = <strong>runtime</strong> de JS, orientado a eventos e <strong>não bloqueante</strong>.</li>
+          <li><strong>npm</strong> gerencia dependências e scripts via <code>package.json</code>.</li>
+          <li><strong>Módulos ESM</strong> separam responsabilidades (embrião do MVC).</li>
+          <li>O HTTP <strong>nativo</strong> funciona, mas vira bagunça — daí o Express.</li>
+          <li><strong>cURL</strong> testa a API direto do terminal.</li>
+        </ul>
+        <p class="rodape">Próximo: Capítulo 3 — Express: rotas, middlewares e controllers</p>
+        <aside class="notes">Ponte para o Cap. 3: o Express resolve a dor do roteamento manual.</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../assets/reveal/dist/reveal.js"></script>
+  <script src="../assets/reveal/plugin/notes/notes.js"></script>
+  <script src="../assets/reveal/plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: "c/t",
+      transition: "slide",
+      controls: true,
+      progress: true,
+      plugins: [ RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>
