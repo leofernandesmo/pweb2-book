@@ -1,4 +1,4 @@
-# Capítulo 3 – Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
+# Capítulo 3 — Express: Rotas, Middlewares, Controllers e Estrutura de Projeto
 
 ---
 
@@ -8,7 +8,7 @@ O Express é, até o momento presente, o framework web mais amplamente adotado n
 
 Este capítulo explora quatro desses conceitos de forma aprofundada: o sistema de **rotas**, o mecanismo de **middlewares**, o padrão de **controllers** e a **estrutura de projeto** que emerge da composição desses elementos. Compreendê-los de maneira integrada é condição necessária para o desenvolvimento de APIs REST robustas, legíveis e de fácil manutenção.
 
-> 💡 **Pré-requisito:** Este capítulo pressupõe que o leitor já possui familiaridade com os fundamentos do Node.js (Capítulo 1), incluindo o modelo de módulos CommonJS/ESM, o gerenciador de pacotes npm e a criação de um servidor HTTP básico com o módulo nativo `http`.
+> 💡 **Pré-requisito:** Este capítulo pressupõe que o leitor já possui familiaridade com os fundamentos do Node.js (Capítulo 2), incluindo o modelo de módulos CommonJS/ESM, o gerenciador de pacotes npm e a criação de um servidor HTTP básico com o módulo nativo `http`.
 
 ---
 
@@ -88,7 +88,7 @@ app.delete('/produtos/:id', (req, res) => {
 
 Veja alguns comentários abaixo sobre o código.
 
-A semântica em relação as respostas de status segue a especificação HTTP:
+A semântica em relação às respostas de status segue a especificação HTTP:
 
 - **POST** cria um recurso que ainda não existia → **201 Created** — um novo estado surgiu no servidor, portanto o código deve comunicar algo além do simples "deu certo".
 - **PUT** substitui um recurso que já existia → **200 OK** — o recurso já estava lá, foi atualizado, e a resposta devolve sua representação atual. Nada de novo foi criado.
@@ -123,7 +123,7 @@ Vale observar um detalhe importante de ordem: se `req.body` contiver uma proprie
 res.json({ ...req.body, id }); // id de req.params nunca será sobrescrito
 ```
 
-O código anterior pode dar erro, porque ainda não foi feito o registro do midleware _express.json_. 
+O código anterior pode dar erro, porque ainda não foi feito o registro do middleware _express.json_. 
 Para que `req.body` esteja disponível nas rotas, é necessário registrar o middleware de parsing de JSON **antes** das definições de rota, por meio de `app.use(express.json())`:
 Veja na próxima seção para entender melhor.
 
@@ -141,18 +141,6 @@ Os **parâmetros de rota** (*route params*) são segmentos dinâmicos da URL, de
 app.get('/usuarios/:id', (req, res) => {
   const { id } = req.params; // "42"
   res.json({ usuarioId: id });
-});
-```
-
-
-```javascript
-const app = express();
-
-app.use(express.json()); // Habilita a leitura do corpo da requisição em formato JSON
-
-app.post('/produtos', (req, res) => {
-  console.log(req.body); // Agora acessível. Sem a linha acima, seria undefined.
-  res.status(201).json(req.body);
 });
 ```
 
@@ -559,7 +547,7 @@ export const verificarToken = (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    // Supondo verificação com JWT (detalhado no Capítulo 5)
+    // Supondo verificação com JWT (detalhado no Capítulo 8)
     const payload = verificarJwt(token);
     req.usuario = payload;
     next();
@@ -604,10 +592,10 @@ export const validarCriacaoUsuario = (req, res, next) => {
 router.post('/', validarCriacaoUsuario, criarUsuario);
 ```
 
-Veja o exemplo com a diagrama abaixo:
+Veja o exemplo com o diagrama abaixo:
 
 
-![Diagrama do Pipeline com Midlewares](../figures/diagrama-midleware-rotas.svg)
+![Diagrama do Pipeline com Middlewares](../figures/diagrama-midleware-rotas.svg)
 
 Para cada requisição recebida, o Express executa um pipeline sequencial e bem definido. No diagrama, a requisição `GET /usuarios/42` parte do cliente e atravessa primeiramente os **middlewares globais** registrados no `app.js` — `helmet`, `cors`, `express.json()` e `morgan` — que são executados independentemente da rota solicitada. Após essa camada, a requisição chega ao **agregador de rotas** (`routes/index.js`), que a direciona ao router correspondente com base no prefixo da URL: como a URL começa com `/usuarios`, o `usuarios.routes.js` é acionado; o `produtos.routes.js` é completamente ignorado.
 
@@ -666,7 +654,7 @@ Um controller é um módulo que agrupa as funções responsáveis por processar 
 
 ### 3.4.2 Implementação do Service
 
-Antes de apresentar o controller, é necessário definir a camada de serviço que ele consome. Neste capítulo, como o ORM ainda não foi introduzido (Capítulo 4), o `UsuariosService` utilizará um array em memória para simular a persistência de dados. Essa abordagem é intencional: ela permite focar no contrato entre controller e service sem depender de um banco de dados real.
+Antes de apresentar o controller, é necessário definir a camada de serviço que ele consome. Neste capítulo, como o ORM ainda não foi introduzido (Capítulo 5), o `UsuariosService` utilizará um array em memória para simular a persistência de dados. Essa abordagem é intencional: ela permite focar no contrato entre controller e service sem depender de um banco de dados real.
 
 ```javascript
 // src/services/usuarios.service.js
@@ -720,7 +708,7 @@ export class UsuariosService {
 }
 ```
 
-> 💡 Quando o Prisma ou Sequelize for introduzido no Capítulo 4, o `UsuariosService` será refatorado para substituir as operações sobre o array pelas chamadas equivalentes ao ORM — sem que o controller precise ser alterado. Essa estabilidade é exatamente o benefício da separação entre camadas.
+> 💡 Quando o Prisma ou Sequelize for introduzido no Capítulo 5, o `UsuariosService` será refatorado para substituir as operações sobre o array pelas chamadas equivalentes ao ORM — sem que o controller precise ser alterado. Essa estabilidade é exatamente o benefício da separação entre camadas.
 
 ### 3.4.3 Implementação de um controller
 
@@ -815,7 +803,7 @@ router.delete('/:id', removerUsuario);
 export default router;
 ```
 
-Essa separação revela uma divisão clara de papéis: o arquivo de rotas declara *quais* caminhos existem e *quais* middlewares os protegem; o controller define *como* cada requisição é processada; e a camada de serviço (tratada no Capítulo 3) encapsula *o que* a aplicação faz do ponto de vista do negócio.
+Essa separação revela uma divisão clara de papéis: o arquivo de rotas declara *quais* caminhos existem e *quais* middlewares os protegem; o controller define *como* cada requisição é processada; e a camada de serviço (tratada no Capítulo 4) encapsula *o que* a aplicação faz do ponto de vista do negócio.
 
 ---
 
@@ -847,11 +835,11 @@ minha-api/
 │   │   ├── validacao.middleware.js
 │   │   └── erros.middleware.js
 │   │
-│   ├── models/                # Modelos de dados / entidades (ORM – Cap. 4)
+│   ├── models/                # Modelos de dados / entidades (ORM – Cap. 5)
 │   │   ├── usuario.model.js
 │   │   └── produto.model.js
 │   │
-│   ├── repositories/          # Acesso ao banco de dados (Cap. 3)
+│   ├── repositories/          # Acesso ao banco de dados (Cap. 4)
 │   │   ├── usuarios.repository.js
 │   │   └── produtos.repository.js
 │   │
@@ -860,7 +848,7 @@ minha-api/
 │   │   ├── usuarios.routes.js
 │   │   └── produtos.routes.js
 │   │
-│   ├── services/              # Lógica de negócio (Cap. 3)
+│   ├── services/              # Lógica de negócio (Cap. 4)
 │   │   ├── usuarios.service.js
 │   │   └── produtos.service.js
 │   │
@@ -870,7 +858,7 @@ minha-api/
 │   │
 │   └── app.js                 # Configuração do Express
 │
-├── tests/                     # Testes automatizados (Cap. 7)
+├── tests/                     # Testes automatizados (Cap. 9)
 │   ├── integration/
 │   └── unit/
 │
@@ -975,6 +963,46 @@ export const middlewareDeErros = (err, req, res, next) => {
   res.status(500).json({ erro: 'Erro interno do servidor' });
 };
 ```
+
+---
+
+## Atividade de Revisão
+
+<div class="quiz" data-answer="c">
+  <p><strong>1.</strong> No Express, uma rota é sempre a combinação de quais elementos?</p>
+  <button data-option="a">Um middleware, um controller e um service.</button>
+  <button data-option="b">Uma URL, um cabeçalho e um corpo.</button>
+  <button data-option="c">Um verbo HTTP, um caminho e uma função handler.</button>
+  <button data-option="d">Um Router, um prefixo e uma porta.</button>
+  <p class="feedback"></p>
+</div>
+
+<div class="quiz" data-answer="b">
+  <p><strong>2.</strong> O que acontece se um middleware não chamar <code>next()</code> nem enviar uma resposta?</p>
+  <button data-option="a">O Express chama <code>next()</code> automaticamente.</button>
+  <button data-option="b">A requisição fica suspensa e o cliente sofre timeout.</button>
+  <button data-option="c">A rota seguinte é executada mesmo assim.</button>
+  <button data-option="d">O servidor retorna 500 imediatamente.</button>
+  <p class="feedback"></p>
+</div>
+
+<div class="quiz" data-answer="a">
+  <p><strong>3.</strong> Como o Express identifica um middleware de tratamento de erros?</p>
+  <button data-option="a">Pela assinatura com quatro parâmetros: <code>(err, req, res, next)</code>.</button>
+  <button data-option="b">Pelo nome da função conter "erro".</button>
+  <button data-option="c">Por ser registrado com <code>app.error()</code>.</button>
+  <button data-option="d">Por ser o primeiro middleware do <code>app.js</code>.</button>
+  <p class="feedback"></p>
+</div>
+
+<div class="quiz" data-answer="c">
+  <p><strong>4.</strong> Qual é a responsabilidade de um controller?</p>
+  <button data-option="a">Conter a lógica de negócio e acessar o banco de dados.</button>
+  <button data-option="b">Definir quais caminhos existem na aplicação.</button>
+  <button data-option="c">Coordenar o fluxo: ler <code>req</code>, chamar o service e responder com <code>res</code>.</button>
+  <button data-option="d">Aplicar os cabeçalhos de segurança da resposta.</button>
+  <p class="feedback"></p>
+</div>
 
 ---
 

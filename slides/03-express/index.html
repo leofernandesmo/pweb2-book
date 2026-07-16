@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítulo 3 — Express | Programação Web 2</title>
+
+  <link rel="stylesheet" href="../assets/reveal/dist/reset.css">
+  <link rel="stylesheet" href="../assets/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="../assets/reveal/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="../assets/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../assets/css/course-theme.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Capa -->
+      <section class="titulo" data-background-color="#0C3A1E">
+        <h1>Programação Web 2</h1>
+        <p class="subtitulo">Capítulo 3 &mdash; Express: rotas, middlewares, controllers</p>
+        <p class="rodape">
+          Node/Express &middot; Bacharelado em Desenvolvimento de Sistemas<br>
+          IFAL &mdash; Campus Maceió &middot; Prof. Leo Fernandes, PhD
+        </p>
+        <aside class="notes">
+          No Cap. 2 sentimos a dor do roteamento manual com http nativo. O Express vem resolver.
+        </aside>
+      </section>
+
+      <!-- Gancho -->
+      <section data-background-color="#14532D">
+        <h2>Lembra da dor?</h2>
+        <p>No módulo <code>http</code> nativo, cada rota era um <code>if</code>, sem middlewares,
+           com o HTTP na mão.</p>
+        <pre style="font-size:.55em"><code class="language-javascript" data-trim>if (req.method === "GET" && req.url === "/health") { ... }
+if (req.method === "GET" && req.url.startsWith("/student")) { ... }
+// ... e o código só cresce</code></pre>
+        <div class="caixa ambar">O <strong>Express</strong> troca essa bagunça por peças bem
+           definidas: <strong>rotas, middlewares, controllers</strong>.</div>
+        <aside class="notes">Retomar o Cap. 2. Express é minimalista (unopinionated): você compõe.</aside>
+      </section>
+
+      <!-- Objetivos -->
+      <section data-background-color="#14532D">
+        <h2>Quatro conceitos</h2>
+        <div class="colunas">
+          <div><div class="caixa"><strong>Rotas</strong><br>verbo + caminho + handler</div></div>
+          <div><div class="caixa"><strong>Middlewares</strong><br>o pipeline de <code>req→res</code></div></div>
+        </div>
+        <div class="colunas" style="margin-top:.6em">
+          <div><div class="caixa"><strong>Controllers</strong><br>separar responsabilidades</div></div>
+          <div><div class="caixa"><strong>Estrutura</strong><br>organização do projeto</div></div>
+        </div>
+        <aside class="notes">Os 4 blocos do capítulo. Integrá-los é o que forma uma API sólida.</aside>
+      </section>
+
+      <!-- ===================== BLOCO 1: Rotas ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Uma rota</h2>
+          <p>Associação entre um <strong>verbo HTTP</strong>, um <strong>caminho</strong> e uma
+             <strong>função handler</strong>.</p>
+          <pre><code class="language-javascript" data-trim data-line-numbers>import express from "express";
+const app = express();
+
+app.get("/usuarios", (req, res) => {
+  res.json({ mensagem: "..." });
+});
+
+app.listen(3000);</code></pre>
+          <aside class="notes">
+            req e res são enriquecidos pelo Express (res.json, req.params…). Rotas são avaliadas
+            na ordem de declaração.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Verbos e semântica REST</h3>
+          <table>
+            <thead><tr><th>Verbo</th><th>Uso</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><code>GET</code></td><td>ler recurso</td><td>200</td></tr>
+              <tr><td><code>POST</code></td><td>criar</td><td><strong>201</strong></td></tr>
+              <tr><td><code>PUT</code></td><td>substituir</td><td>200</td></tr>
+              <tr><td><code>PATCH</code></td><td>atualizar em parte</td><td>200</td></tr>
+              <tr><td><code>DELETE</code></td><td>remover</td><td><strong>204</strong></td></tr>
+            </tbody>
+          </table>
+          <div class="caixa">Respeitar a semântica torna a API <strong>previsível</strong> para
+             quem a consome.</div>
+          <aside class="notes">
+            201 Created e 204 No Content fogem do 200 padrão — por isso explícitos.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Três canais de entrada</h3>
+          <table>
+            <thead><tr><th>Canal</th><th>De onde</th><th>Para quê</th></tr></thead>
+            <tbody>
+              <tr><td><code>req.params</code></td><td><code>/usuarios/:id</code></td><td>identificar recurso</td></tr>
+              <tr><td><code>req.query</code></td><td><code>?pagina=2</code></td><td>filtro, ordenação</td></tr>
+              <tr><td><code>req.body</code></td><td>corpo (POST/PUT)</td><td>dados estruturados</td></tr>
+            </tbody>
+          </table>
+          <div class="caixa ambar"><code>params</code> e <code>query</code> chegam <strong>sempre
+             como string</strong> — converta com <code>Number(...)</code> quando precisar.</div>
+          <aside class="notes">
+            req.body exige o middleware express.json() (próximo bloco). Lembrar da conversão de tipo.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Router: dividir para organizar</h3>
+          <div class="colunas">
+            <div>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>// usuarios.routes.js
+import { Router } from "express";
+const router = Router();
+
+router.get("/", listar);
+router.get("/:id", obter);
+
+export default router;</code></pre>
+            </div>
+            <div>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>// app.js
+app.use("/usuarios", router);
+
+// router.get("/")    → GET /usuarios
+// router.get("/:id") → GET /usuarios/:id</code></pre>
+            </div>
+          </div>
+          <div class="caixa">Cada recurso em seu módulo; o prefixo é herdado no <code>app.use</code>.</div>
+          <aside class="notes">Router = mini-app: aceita rotas e middlewares próprios.</aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 2: Middlewares ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Middleware: o coração do Express</h2>
+          <pre><code class="language-javascript" data-trim>(req, res, next) => {
+  // faz algo com a requisição...
+  next(); // ...e passa o controle adiante
+}</code></pre>
+          <div class="caixa ambar">Se um middleware <strong>não</strong> chamar <code>next()</code>
+             nem responder, a requisição <strong>trava</strong> (timeout no cliente).</div>
+          <aside class="notes">
+            Toda app Express é uma sequência de middlewares, executada de cima para baixo.
+          </aside>
+        </section>
+
+        <section>
+          <h3>O pipeline</h3>
+          <div class="pipeline" style="font-size:.66em">
+            <span class="etapa">log (morgan)</span><span class="seta">→</span>
+            <span class="etapa">express.json()</span><span class="seta">→</span>
+            <span class="etapa">rota /saude</span><span class="seta">→</span>
+            <span class="etapa">res.json()</span>
+          </div>
+          <p style="margin-top:1em">A requisição atravessa a cadeia até alguém <strong>responder</strong>
+             — ou um erro ser lançado.</p>
+          <aside class="notes">Cada um chama next() até a rota final enviar a resposta.</aside>
+        </section>
+
+        <section>
+          <h3>Quatro tipos</h3>
+          <ul>
+            <li><strong>De aplicação</strong> — <code>app.use(...)</code>, para todas (ou um prefixo).</li>
+            <li><strong>De rota</strong> — presos a um <code>Router</code>.</li>
+            <li><strong>De erro</strong> — assinatura de <strong>4</strong> args: <code>(err, req, res, next)</code>.</li>
+            <li><strong>De terceiros</strong> — pacotes npm da comunidade.</li>
+          </ul>
+          <div class="caixa">O Express reconhece o middleware de erro pela assinatura de 4 parâmetros.</div>
+          <aside class="notes">next(err) pula direto para o middleware de erro.</aside>
+        </section>
+
+        <section>
+          <h3>Middlewares de terceiros essenciais</h3>
+          <table style="font-size:.9em">
+            <tbody>
+              <tr><td><code>helmet</code></td><td>cabeçalhos de segurança</td></tr>
+              <tr><td><code>cors</code></td><td>quais origens podem consumir a API</td></tr>
+              <tr><td><code>morgan</code></td><td>log das requisições</td></tr>
+              <tr><td><code>express-rate-limit</code></td><td>limita requisições por IP (429)</td></tr>
+              <tr><td><code>multer</code></td><td>upload de arquivos</td></tr>
+              <tr><td><code>compression</code></td><td>comprime a resposta (gzip)</td></tr>
+            </tbody>
+          </table>
+          <aside class="notes">A ordem importa: helmet/cors primeiro, erros por último.</aside>
+        </section>
+
+        <section>
+          <h3>A ordem importa (app.js)</h3>
+          <pre style="font-size:.5em"><code class="language-javascript" data-trim>app.use(helmet());                 // 1. segurança
+app.use(cors());                   // 2. origens
+app.use(compression());            // 3. performance
+app.use(morgan("dev"));            // 4. logging
+app.use(express.json());           // 5. parsing do corpo
+app.use("/api", router);           // 6. rotas
+app.use(middlewareDeErros);        // 7. erros — sempre por último</code></pre>
+          <aside class="notes">
+            Mnemônico: segurança → performance → log → parsing → rotas → erros.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Erros assíncronos: cuidado</h3>
+          <div class="colunas">
+            <div>
+              <p style="font-size:.8em">❌ exceção some:</p>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>app.get("/u", async (req, res) => {
+  const u = await buscar(); // pode falhar
+  res.json(u);
+});</code></pre>
+            </div>
+            <div>
+              <p style="font-size:.8em">✅ delega ao next:</p>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>app.get("/u", async (req, res, next) => {
+  try { res.json(await buscar()); }
+  catch (err) { next(err); }
+});</code></pre>
+            </div>
+          </div>
+          <div class="caixa ambar">Um <code>asyncHandler(fn)</code> aplica o try/catch automaticamente.</div>
+          <aside class="notes">
+            Em rotas async, exceção não capturada NÃO chega ao middleware de erro sozinha.
+          </aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 3: Controllers ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Controllers: separar papéis</h2>
+          <div class="pipeline" style="font-size:.7em">
+            <span class="etapa">Rota</span><span class="seta">→</span>
+            <span class="etapa">Controller</span><span class="seta">→</span>
+            <span class="etapa">Service</span>
+          </div>
+          <p style="margin-top:.8em">O controller só <strong>coordena</strong>: lê <code>req</code>,
+             chama o service, responde com <code>res</code>.</p>
+          <div class="caixa ambar">Controller <strong>não</strong> tem regra de negócio nem acesso
+             ao banco — isso é do <strong>service</strong>.</div>
+          <aside class="notes">Separation of Concerns. Rotas = quais; controller = como; service = o quê.</aside>
+        </section>
+
+        <section>
+          <h3>Controller enxuto + rota declarativa</h3>
+          <div class="colunas">
+            <div>
+              <pre style="font-size:.46em"><code class="language-javascript" data-trim>// controller
+export const obterUsuario =
+  async (req, res, next) => {
+  try {
+    const u = await service
+      .buscarPorId(Number(req.params.id));
+    if (!u) return res.status(404)
+      .json({ erro: "não encontrado" });
+    res.json(u);
+  } catch (e) { next(e); }
+};</code></pre>
+            </div>
+            <div>
+              <pre style="font-size:.46em"><code class="language-javascript" data-trim>// routes
+router.get("/", listarUsuarios);
+router.get("/:id", obterUsuario);
+router.post("/",
+  validar, criarUsuario);
+router.put("/:id", atualizarUsuario);
+router.delete("/:id", removerUsuario);</code></pre>
+            </div>
+          </div>
+          <div class="caixa">As rotas ficam <strong>declarativas</strong>; a lógica vive nos controllers.</div>
+          <aside class="notes">
+            O service usa array em memória por ora; troca por ORM depois sem mexer no controller.
+          </aside>
+        </section>
+      </section>
+
+      <!-- ===================== BLOCO 4: Estrutura ===================== -->
+      <section data-background-color="#14532D">
+        <section>
+          <h2>Estrutura de projeto</h2>
+          <pre style="font-size:.5em"><code class="language-text" data-trim>src/
+├── config/        env, banco
+├── controllers/   coordenam requisições
+├── middlewares/   auth, validação, erros
+├── routes/        index.js + um por recurso
+├── services/      regra de negócio
+├── utils/         AppError, asyncHandler
+└── app.js         configura o Express
+server.js          sobe o servidor</code></pre>
+          <aside class="notes">Organização por tipo de arquivo (comum em apps pequenas/médias).</aside>
+        </section>
+
+        <section>
+          <h3>app.js &ne; server.js</h3>
+          <div class="colunas">
+            <div>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>// app.js
+const app = express();
+app.use(/* middlewares */);
+app.use("/api", router);
+export default app;</code></pre>
+            </div>
+            <div>
+              <pre style="font-size:.5em"><code class="language-javascript" data-trim>// server.js
+import app from "./src/app.js";
+app.listen(PORTA);</code></pre>
+            </div>
+          </div>
+          <div class="caixa ambar">Separar permite <strong>testar</strong> o <code>app</code> (supertest)
+             sem subir a porta.</div>
+          <aside class="notes">Amarra com o Cap. 9 (testes). server.js só o entry point.</aside>
+        </section>
+
+        <section>
+          <h3>Erro padronizado</h3>
+          <pre style="font-size:.55em"><code class="language-javascript" data-trim>export class AppError extends Error {
+  constructor(mensagem, statusCode = 500) {
+    super(mensagem);
+    this.statusCode = statusCode;
+  }
+}
+// throw new AppError("Usuário não encontrado", 404);</code></pre>
+          <div class="caixa">O middleware de erro lê <code>statusCode</code> e monta a resposta —
+             sem <code>if</code> espalhado pelo código.</div>
+          <aside class="notes">Uma classe de erro com status → respostas de erro consistentes.</aside>
+        </section>
+      </section>
+
+      <!-- Resumo -->
+      <section class="titulo" data-background-color="#0C3A1E">
+        <h2 style="border:none">Resumo</h2>
+        <ul style="display:inline-block; text-align:left">
+          <li><strong>Rota</strong> = verbo + caminho + handler; dados via params/query/body.</li>
+          <li><strong>Middleware</strong> = <code>(req, res, next)</code>; a app é um pipeline.</li>
+          <li>Terceiros: helmet, cors, morgan… — <strong>a ordem importa</strong>.</li>
+          <li><strong>Controller</strong> coordena; o <strong>service</strong> tem a regra de negócio.</li>
+          <li><strong>app.js</strong> configura, <strong>server.js</strong> sobe — testável.</li>
+        </ul>
+        <p class="rodape">Próximo: Capítulo 4 — Arquitetura: MVC, Services e Repository</p>
+        <aside class="notes">Ponte para o Cap. 4: formalizar camadas (MVC, Repository).</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../assets/reveal/dist/reveal.js"></script>
+  <script src="../assets/reveal/plugin/notes/notes.js"></script>
+  <script src="../assets/reveal/plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: "c/t",
+      transition: "slide",
+      controls: true,
+      progress: true,
+      plugins: [ RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>
