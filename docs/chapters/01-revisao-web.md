@@ -321,6 +321,9 @@ Falta ainda um detalhe de segurança. Na Web atual, o padrão é o **HTTPS**, em
 
 ---
 
+### Resumo em audio
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay; encrypted-media" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2364881189&color=%230066cc&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/leo-fernandes-737478806" title="Leo Fernandes" target="_blank" style="color: #cccccc; text-decoration: none;">Leo Fernandes</a> · <a href="https://soundcloud.com/leo-fernandes-737478806/1-1-3-endere-amento-e" title="1.1.3 — Endereçamento e Infraestrutura" target="_blank" style="color: #cccccc; text-decoration: none;">1.1.3 — Endereçamento e Infraestrutura</a></div>
 
 
 ## 1.2 — Ferramentas Essenciais para Desenvolvimento Web
