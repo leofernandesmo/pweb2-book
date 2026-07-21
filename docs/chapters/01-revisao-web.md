@@ -87,6 +87,9 @@ O termo **servidor** possui uma dualidade semântica na informática. Fisicament
 O **navegador** é uma implementação específica de um cliente HTTP, projetado para interação humana. Sua complexidade técnica reside no **Motor de Renderização** (*Rendering Engine*), um componente de software responsável por receber o fluxo de dados brutos do servidor (texto HTML, regras CSS, scripts JS) e transformá-los em uma representação visual interativa. O navegador compila esses dados na memória do dispositivo construindo a **DOM** (Document Object Model), uma árvore estrutural de objetos que o usuário pode visualizar e manipular. Exemplos de motores de renderização incluem o *Blink* (usado no Chrome e Edge), *Gecko* (Firefox) e *WebKit* (Safari).
 
 
+### Resumo em audio
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay; encrypted-media" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2364880361&color=%230066cc&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/leo-fernandes-737478806" title="Leo Fernandes" target="_blank" style="color: #cccccc; text-decoration: none;">Leo Fernandes</a> · <a href="https://soundcloud.com/leo-fernandes-737478806/1-1-1-cliente-servidor-e" title="1.1.1 — Cliente, Servidor e Navegador" target="_blank" style="color: #cccccc; text-decoration: none;">1.1.1 — Cliente, Servidor e Navegador</a></div>
 
 
 ### 1.1.2 — Requisições e Respostas (HTTP)
